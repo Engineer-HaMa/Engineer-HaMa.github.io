@@ -1,0 +1,9 @@
+# The URL the site will be built for
+base_url = "https://example.com"
+
+theme = "goyo"
+
+[extra]
+logo_text = "HaMa's Blog"
+sidebar_expand_depth = 5
+disable_root_sidebar_hide = false
