@@ -1,6 +1,8 @@
 +++
 title = "논문 리뷰: Asterinas: A Linux ABI-Compatible, Rust-Based Framekernel OS with a Small and Sound TCB"
 date = 2025-07-15
+
+weight = 1
 +++
 
 # TL;DR

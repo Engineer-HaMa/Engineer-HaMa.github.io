@@ -1,6 +1,8 @@
 +++
 title = "How to write Rust in the kernel: 한국어 요약본"
 date = 2025-07-11
+
+weight = 3
 +++
 
 # tl;dr

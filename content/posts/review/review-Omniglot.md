@@ -2,6 +2,7 @@
 title = "논문 리뷰: Building Bridges: Safe Interactions with Foreign Languages through Omniglot"
 date = 2025-07-19
 
+weight = 2
 +++
 
 # TL;DR
