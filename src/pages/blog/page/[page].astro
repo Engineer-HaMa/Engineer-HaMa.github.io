@@ -1,0 +1,69 @@
+---
+import { getCollection } from 'astro:content';
+import { site } from '@config/site';
+import Page from '@layouts/Page.astro';
+import PostCard from '@components/blog/PostCard.astro';
+import Pagination from '@components/Pagination.astro';
+import { readingTime } from '@utils/reading-time';
+
+export async function getStaticPaths() {
+  const allPosts = (await getCollection('posts'))
+    .filter((p) => !p.data.hidden)
+    .sort((a, b) => {
+      if (a.data.pinned !== b.data.pinned) return a.data.pinned ? -1 : 1;
+      return b.data.date.getTime() - a.data.date.getTime();
+    });
+
+  const perPage = site.blog.postsPerPage;
+  const totalPages = Math.ceil(allPosts.length / perPage);
+
+  return Array.from({ length: totalPages - 1 }, (_, i) => {
+    const page = i + 2; // pages 2, 3, ...
+    return {
+      params: { page: String(page) },
+      props: {
+        posts: allPosts.slice((page - 1) * perPage, page * perPage),
+        currentPage: page,
+        totalPages,
+      },
+    };
+  });
+}
+
+const { posts, currentPage, totalPages } = Astro.props;
+const base = site.base;
+---
+
+<Page title={`Blog — Page ${currentPage}`} description={site.blog.description}>
+  <h1
+    class="text-3xl font-bold mb-6"
+    style="color: var(--global-text-color); font-family: var(--font-sans);"
+  >
+    {site.blog.name}
+    <span class="text-lg font-normal ml-2" style="color: var(--global-text-color-light);">
+      — page {currentPage}
+    </span>
+  </h1>
+
+  {
+    posts.map((post) => (
+      <PostCard
+        title={post.data.title}
+        slug={post.id}
+        date={post.data.date}
+        description={post.data.description}
+        tags={post.data.tags}
+        categories={post.data.categories}
+        readingTime={post.body ? readingTime(post.body) : undefined}
+      />
+    ))
+  }
+
+  <Pagination
+    currentPage={currentPage}
+    totalPages={totalPages}
+    prevUrl={currentPage === 2 ? `${base}/blog/` : `${base}/blog/page/${currentPage - 1}/`}
+    nextUrl={currentPage < totalPages ? `${base}/blog/page/${currentPage + 1}/` : undefined}
+    basePath={`${base}/blog/`}
+  />
+</Page>

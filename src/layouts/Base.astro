@@ -1,0 +1,188 @@
+---
+import { site } from '@config/site';
+import Footer from '@components/Footer.astro';
+import Navbar from '@components/Navbar.astro';
+import '@styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** OG preview image (absolute URL or path) */
+  image?: string;
+  noindex?: boolean;
+  /** Load KaTeX CSS for math rendering */
+  math?: boolean;
+}
+
+const {
+  title = site.author.name,
+  description = site.description,
+  image = site.og.image || undefined,
+  noindex = false,
+  math = false,
+} = Astro.props;
+
+const pageTitle = title === site.author.name ? title : `${title} | ${site.author.name}`;
+const canonicalURL = new URL(Astro.url.pathname, site.url);
+const ogImage = image ? new URL(image, site.url).toString() : undefined;
+---
+
+<!doctype html>
+<html lang={site.lang} data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <link rel="canonical" href={canonicalURL} />
+    <title>{pageTitle}</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href={`${site.base}/favicon.ico`} />
+
+    <!-- Google Fonts: Roboto + Roboto Condensed + Source Code Pro -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,400&family=Roboto+Condensed:wght@400;700&family=Source+Code+Pro:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- KaTeX CSS (math posts only) -->
+    {
+      math && (
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
+          integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5"
+          crossorigin="anonymous"
+        />
+      )
+    }
+
+    <!-- Open Graph -->
+    {
+      site.og.enabled && (
+        <>
+          <meta property="og:title" content={pageTitle} />
+          <meta property="og:description" content={description} />
+          <meta property="og:url" content={canonicalURL} />
+          <meta property="og:type" content="website" />
+          {ogImage && <meta property="og:image" content={ogImage} />}
+        </>
+      )
+    }
+
+    <!-- Analytics verification tags -->
+    {
+      site.analytics.googleVerification && (
+        <meta name="google-site-verification" content={site.analytics.googleVerification} />
+      )
+    }
+    {
+      site.analytics.bingVerification && (
+        <meta name="msvalidate.01" content={site.analytics.bingVerification} />
+      )
+    }
+
+    <!-- GA4 via Partytown (production only) -->
+    {
+      import.meta.env.PROD && site.analytics.ga4 && (
+        <>
+          <script
+            type="text/partytown"
+            src={`https://www.googletagmanager.com/gtag/js?id=${site.analytics.ga4}`}
+          />
+          <script type="text/partytown" define:vars={{ ga4: site.analytics.ga4 }}>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+              dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+            gtag('config', ga4);
+          </script>
+        </>
+      )
+    }
+
+    <!-- Cronitor RUM -->
+    {
+      import.meta.env.PROD && site.analytics.cronitor && (
+        <script
+          define:vars={{ siteId: site.analytics.cronitor }}
+          is:inline
+        >{`!function(p,a,t,h,w,n,k){p.cronitor||(p.cronitor=function(){(p.cronitor.q=p.cronitor.q||[]).push(arguments)}),h=a.getElementsByTagName("script")[0],(k=a.createElement("script")).setAttribute("async",!0),k.setAttribute("src","https://rum.cronitor.io/script.js"),k.setAttribute("data-site-id",siteId),h.parentNode.insertBefore(k,h)}(window,document);`}</script>
+      )
+    }
+
+    <!--
+      Dark mode: must run BEFORE any CSS to prevent FOUC.
+      Reads stored preference, falls back to system preference, then site default.
+    -->
+    <script is:inline define:vars={{ defaultTheme: site.theme.default }}>
+      (function () {
+        const stored = localStorage.getItem('theme');
+        let theme;
+        if (stored === 'light' || stored === 'dark') {
+          theme = stored;
+        } else if (defaultTheme === 'system') {
+          theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        } else {
+          theme = defaultTheme;
+        }
+        document.documentElement.setAttribute('data-theme', theme);
+        document.documentElement.setAttribute('data-theme-setting', stored || 'system');
+      })();
+    </script>
+  </head>
+
+  <body class="min-h-screen flex flex-col" style="padding-top: 57px; padding-bottom: 70px;">
+    <!-- Skip to main content (accessibility) -->
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 px-4 py-2 rounded"
+      style="background-color: var(--global-theme-color); color: var(--global-hover-text-color);"
+    >
+      Skip to main content
+    </a>
+
+    <Navbar />
+
+    <main id="main-content" class="flex-1">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <!-- Back to top button -->
+    <button id="back-to-top" aria-label="Back to top" title="Back to top">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="m18 15-6-6-6 6"></path>
+      </svg>
+    </button>
+
+    <script>
+      const btn = document.getElementById('back-to-top');
+      window.addEventListener(
+        'scroll',
+        () => {
+          btn?.classList.toggle('visible', window.scrollY > 300);
+        },
+        { passive: true },
+      );
+      btn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    </script>
+  </body>
+</html>

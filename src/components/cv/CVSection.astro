@@ -1,0 +1,18 @@
+---
+interface Props {
+  title: string;
+  id?: string;
+}
+
+const { title, id } = Astro.props;
+---
+
+<section {id} class="cv-section mb-8">
+  <h2
+    class="text-lg font-bold uppercase tracking-wide mb-3"
+    style="color: var(--global-theme-color); border-bottom: 2px solid var(--global-theme-color); padding-bottom: 0.25rem; font-family: var(--font-condensed);"
+  >
+    {title}
+  </h2>
+  <slot />
+</section>

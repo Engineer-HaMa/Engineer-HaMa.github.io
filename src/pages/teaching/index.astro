@@ -1,0 +1,136 @@
+---
+import { getCollection, render } from 'astro:content';
+import { site } from '@config/site';
+import Page from '@layouts/Page.astro';
+
+const all = await getCollection('teaching');
+const current = all
+  .filter((c) => c.data.category === 'current')
+  .sort((a, b) => (a.data.importance ?? 999) - (b.data.importance ?? 999));
+const past = all
+  .filter((c) => c.data.category === 'past')
+  .sort((a, b) => (a.data.importance ?? 999) - (b.data.importance ?? 999));
+
+// Pre-render content in frontmatter
+const renderedCurrent = await Promise.all(current.map(async (c) => ({ entry: c, rendered: await render(c) })));
+const renderedPast = await Promise.all(past.map(async (c) => ({ entry: c, rendered: await render(c) })));
+---
+
+<Page title="Teaching" description={`Teaching by ${site.author.name}`}>
+  <h1
+    class="text-3xl font-bold mb-8"
+    style="color: var(--global-text-color); font-family: var(--font-sans);"
+  >
+    Teaching
+  </h1>
+
+  {
+    renderedCurrent.length > 0 && (
+      <section class="mb-10">
+        <h2
+          class="text-xl font-bold mb-4"
+          style="color: var(--global-theme-color); border-bottom: 1px solid var(--global-divider-color); padding-bottom: 0.25rem;"
+        >
+          Current
+        </h2>
+        <div class="space-y-4">
+          {renderedCurrent.map(({ entry: course, rendered: { Content } }) => (
+            <div class="teaching-entry">
+              <div class="flex flex-wrap items-baseline justify-between gap-x-4">
+                <div>
+                  {course.data.code && (
+                    <span
+                      class="badge-abbr text-xs mr-2"
+                      style="background-color: var(--global-theme-color); color: var(--global-hover-text-color);"
+                    >
+                      {course.data.code}
+                    </span>
+                  )}
+                  {course.data.url ? (
+                    <a
+                      href={course.data.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="font-semibold"
+                      style="color: var(--global-text-color); text-decoration: none;"
+                    >
+                      {course.data.title}
+                    </a>
+                  ) : (
+                    <span class="font-semibold" style="color: var(--global-text-color);">
+                      {course.data.title}
+                    </span>
+                  )}
+                </div>
+                {course.data.term && (
+                  <span class="text-sm italic" style="color: var(--global-text-color-light);">
+                    {course.data.term}
+                  </span>
+                )}
+              </div>
+              {course.data.description && (
+                <p class="text-sm mt-1" style="color: var(--global-text-color-light);">
+                  {course.data.description}
+                </p>
+              )}
+              <div class="prose prose-sm max-w-none mt-2">
+                <Content />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    renderedPast.length > 0 && (
+      <section class="mb-10">
+        <h2
+          class="text-xl font-bold mb-4"
+          style="color: var(--global-theme-color); border-bottom: 1px solid var(--global-divider-color); padding-bottom: 0.25rem;"
+        >
+          Past
+        </h2>
+        <div class="space-y-4">
+          {renderedPast.map(({ entry: course, rendered: { Content } }) => (
+            <div class="teaching-entry">
+              <div class="flex flex-wrap items-baseline justify-between gap-x-4">
+                <div>
+                  {course.data.code && (
+                    <span
+                      class="badge-abbr text-xs mr-2"
+                      style="background-color: var(--global-text-color-light); color: var(--global-hover-text-color);"
+                    >
+                      {course.data.code}
+                    </span>
+                  )}
+                  <span class="font-semibold" style="color: var(--global-text-color);">
+                    {course.data.title}
+                  </span>
+                </div>
+                {course.data.term && (
+                  <span class="text-sm italic" style="color: var(--global-text-color-light);">
+                    {course.data.term}
+                  </span>
+                )}
+              </div>
+              {course.data.description && (
+                <p class="text-sm mt-1" style="color: var(--global-text-color-light);">
+                  {course.data.description}
+                </p>
+              )}
+              <div class="prose prose-sm max-w-none mt-2">
+                <Content />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {all.length === 0 && (
+    <p style="color: var(--global-text-color-light);">No teaching entries yet.</p>
+  )}
+</Page>

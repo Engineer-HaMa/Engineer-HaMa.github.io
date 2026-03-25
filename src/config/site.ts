@@ -1,0 +1,295 @@
+/**
+ * as-folio site configuration
+ *
+ * This file replaces _config.yml from al-folio.
+ * Update the values below to personalize your site.
+ * All configuration is fully typed — your editor will catch mistakes.
+ */
+
+export const site = {
+  // ─── Identity ──────────────────────────────────────────────────────────────
+
+  /** Site title. Shown in the browser tab and navbar. */
+  title: 'Albert Einstein',
+
+  /** Site description. Used in meta tags. */
+  description:
+    'A simple, clean, and responsive Astro template for academics. Powered by as-folio.',
+
+  /** Full URL of your deployed site (no trailing slash). */
+  url: 'https://example.github.io',
+
+  /**
+   * Base path. Leave '' for user/org pages (username.github.io).
+   * Set to '/repo-name' for project pages (username.github.io/repo-name).
+   */
+  base: '',
+
+  /** Language code for the site. */
+  lang: 'en',
+
+  // ─── Author ────────────────────────────────────────────────────────────────
+
+  author: {
+    /** Full name shown in navbar, about page heading, and footer. */
+    name: 'Albert Einstein',
+
+    /** Short email address (used in social links). */
+    email: 'einstein@example.com',
+
+    /** Path to profile photo. Place image in public/assets/img/. */
+    avatar: '/assets/img/prof_pic.svg',
+
+    /**
+     * Subtitle below your name on the about page.
+     * HTML is supported.
+     */
+    subtitle: `Theoretical Physicist
+      &nbsp;·&nbsp;
+      <a href="https://en.wikipedia.org/wiki/Institute_for_Advanced_Study">Institute for Advanced Study</a>,
+      Princeton`,
+
+    /**
+     * Address block below profile photo.
+     * HTML is supported.
+     */
+    moreInfo: `<p>Institute for Advanced Study</p>
+      <p>Einstein Drive</p>
+      <p>Princeton, NJ 08540</p>`,
+  },
+
+  // ─── Social links ──────────────────────────────────────────────────────────
+  //
+  // Supported platforms (set to undefined to hide):
+  //   email, x_username, linkedin_username, github_username, gitlab_username,
+  //   scholar_userid, orcid_id, inspire_id, researchgate_username,
+  //   arxiv_id, youtube_id, instagram_username, mastodon_url,
+  //   bluesky_handle, medium_username, cv_pdf, rss_icon
+
+  socials: {
+    email: 'einstein@example.com',
+    x_username: undefined as string | undefined,
+    linkedin_username: undefined as string | undefined,
+    github_username: undefined as string | undefined,
+    gitlab_username: undefined as string | undefined,
+    /** Google Scholar user ID — the part after user= in your Scholar URL */
+    scholar_userid: 'qc6CJjYAAAAJ',
+    orcid_id: undefined as string | undefined,
+    /** Inspire HEP author ID */
+    inspire_id: '1010907',
+    researchgate_username: undefined as string | undefined,
+    arxiv_id: undefined as string | undefined,
+    youtube_id: undefined as string | undefined,
+    instagram_username: undefined as string | undefined,
+    mastodon_url: undefined as string | undefined,
+    bluesky_handle: undefined as string | undefined,
+    medium_username: undefined as string | undefined,
+    /** Path to CV PDF in public/assets/pdf/ */
+    cv_pdf: '/assets/pdf/example_pdf.pdf',
+    /** Show RSS icon in social links */
+    rss_icon: true,
+  },
+
+  // ─── Navigation ────────────────────────────────────────────────────────────
+
+  navbar: {
+    /** Fix navbar to top of viewport. */
+    fixed: true,
+    /** Show social icons in navbar (about page only). */
+    socialIcons: false,
+  },
+
+  // ─── Footer ────────────────────────────────────────────────────────────────
+
+  footer: {
+    /**
+     * Text shown in footer. HTML is supported.
+     * Leave empty string to hide.
+     */
+    text: `Powered by <a href="https://github.com/dadangnh/as-folio" target="_blank" rel="noopener noreferrer">as-folio</a>.
+      Hosted by <a href="https://pages.github.com/" target="_blank" rel="noopener noreferrer">GitHub Pages</a>.`,
+    /** Show "Last updated" timestamp in footer. */
+    lastUpdated: false,
+    /** Path to impressum/legal page (EU GDPR). Leave undefined to hide. */
+    impressum: undefined as string | undefined,
+  },
+
+  // ─── CV page ───────────────────────────────────────────────────────────────
+
+  cv: {
+    /**
+     * Which CV data format to render.
+     * 'rendercv' → reads src/data/cv.yml (RenderCV YAML format)
+     * 'jsonresume' → reads src/data/resume.json (JSONResume format)
+     */
+    format: 'rendercv' as 'rendercv' | 'jsonresume',
+    /** Path to CV PDF for the download button in public/assets/pdf/. */
+    pdfPath: '/assets/pdf/example_pdf.pdf',
+  },
+
+  // ─── Blog ──────────────────────────────────────────────────────────────────
+
+  blog: {
+    /** Name shown in the blog page heading. */
+    name: 'as-folio',
+    description: 'A simple, clean, and responsive Astro template for academics.',
+    /** Number of posts per page. */
+    postsPerPage: 10,
+    /**
+     * Tags shown as badges on the blog listing page header.
+     * Users can click them to filter posts by tag.
+     */
+    displayTags: ['formatting', 'images', 'links', 'math', 'code', 'blockquotes'],
+    /** Categories shown as badges on the blog listing page header. */
+    displayCategories: [] as string[],
+    /**
+     * External post sources (fetched at build time).
+     * Each entry is either an RSS feed URL or a list of individual post objects.
+     */
+    externalSources: [] as Array<{
+      name: string;
+      rssUrl?: string;
+      posts?: Array<{ url: string; publishedDate: string }>;
+      categories?: string[];
+      tags?: string[];
+    }>,
+  },
+
+  // ─── About page sections ──────────────────────────────────────────────────
+
+  announcements: {
+    /** Show news/announcements section on the about page. */
+    enabled: true,
+    /** Enable vertical scroll if more than 3 items. */
+    scrollable: true,
+    /** Max news items to show (undefined = show all). */
+    limit: 5 as number | undefined,
+  },
+
+  latestPosts: {
+    /** Show latest blog posts section on the about page. */
+    enabled: true,
+    scrollable: true,
+    limit: 3 as number | undefined,
+  },
+
+  selectedPapers: {
+    /** Show selected publications section on the about page. */
+    enabled: true,
+  },
+
+  // ─── Features ─────────────────────────────────────────────────────────────
+
+  features: {
+    /** Enable dark/light mode toggle in navbar. */
+    darkmode: true,
+    /** Enable ⌘K search. */
+    search: true,
+    /** Enable reading progress bar on blog posts. */
+    progressBar: true,
+    /** Show back-to-top button. */
+    backToTop: true,
+    /** Enable automatic masonry layout for project cards. */
+    masonry: true,
+    /** Enable click-to-zoom on images (medium-zoom). */
+    mediumZoom: true,
+    /** Enable tooltip links for section headings. */
+    tooltips: false,
+    /** Enable GDPR-compliant cookie consent dialog. */
+    cookieConsent: false,
+    /** Enable newsletter subscription form. */
+    newsletter: false,
+    /**
+     * Enable video embedding for BibTeX entries.
+     * If false, video links open in a new tab instead.
+     */
+    videoEmbedding: false,
+  },
+
+  // ─── Giscus comments ──────────────────────────────────────────────────────
+  // Follow setup at https://giscus.app/ then fill in the values below.
+
+  giscus: {
+    /** Set to true once you've configured the fields below. */
+    enabled: false,
+    repo: '' as `${string}/${string}`,
+    repoId: '',
+    category: 'Comments',
+    categoryId: '',
+    /** How to map discussions to pages. */
+    mapping: 'title' as 'pathname' | 'url' | 'title' | 'og:title',
+    strict: true,
+    reactionsEnabled: true,
+    inputPosition: 'bottom' as 'top' | 'bottom',
+    darkTheme: 'dark',
+    lightTheme: 'light',
+    lang: 'en',
+  },
+
+  // ─── Analytics ────────────────────────────────────────────────────────────
+
+  analytics: {
+    /** Google Analytics 4 measurement ID (format: G-XXXXXXXXXX). */
+    ga4: '' as string,
+    /** Cronitor RUM analytics site ID. */
+    cronitor: '' as string,
+    /** Pirsch analytics site ID. */
+    pirsch: '' as string,
+    /** OpenPanel analytics client ID. */
+    openpanel: '' as string,
+    /** Google Search Console verification ID. */
+    googleVerification: '' as string,
+    /** Bing Webmaster verification ID. */
+    bingVerification: '' as string,
+  },
+
+  // ─── Open Graph ───────────────────────────────────────────────────────────
+
+  og: {
+    /** Include Open Graph meta tags. */
+    enabled: true,
+    /** Default OG image path (in public/). */
+    image: '' as string,
+  },
+
+  // ─── Newsletter ───────────────────────────────────────────────────────────
+
+  newsletter: {
+    /** Loops.so form endpoint. */
+    endpoint: '' as string,
+  },
+
+  // ─── Publications ─────────────────────────────────────────────────────────
+
+  publications: {
+    /**
+     * Show badges for individual publication entries.
+     * Can be disabled globally here; also toggleable per entry in BibTeX.
+     */
+    badges: {
+      altmetric: true,
+      dimensions: true,
+      googleScholar: true,
+      inspirehep: true,
+    },
+    /**
+     * Max number of authors shown before "and N more..." link.
+     * Set to undefined to always show all authors.
+     */
+    maxAuthorLimit: 3 as number | undefined,
+    /** Enable thumbnail images for publications (if `preview` set in BibTeX). */
+    thumbnails: true,
+  },
+
+  // ─── Theme defaults ───────────────────────────────────────────────────────
+
+  theme: {
+    /**
+     * Default color theme.
+     * 'system' follows OS preference.
+     */
+    default: 'system' as 'light' | 'dark' | 'system',
+  },
+} as const;
+
+export type SiteConfig = typeof site;

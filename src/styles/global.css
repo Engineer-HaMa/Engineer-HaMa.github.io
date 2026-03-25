@@ -1,0 +1,128 @@
+@import 'tailwindcss';
+@import './_colors.css';
+@import './_typography.css';
+
+/* ─── Layout utilities ───────────────────────────────────────────────────── */
+
+@layer utilities {
+  /**
+   * .page-container — max-width wrapper matching al-folio's 930px container.
+   * Use on all top-level page sections.
+   */
+  .page-container {
+    width: 100%;
+    max-width: 930px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Scrollable list (news, latest posts) */
+  .scrollable-list {
+    max-height: 280px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--global-divider-color) transparent;
+  }
+
+  /* z-depth shadow (card shadow, matches MDB's z-depth-1) */
+  .z-depth-1 {
+    box-shadow:
+      0 2px 2px 0 rgba(0, 0, 0, 0.14),
+      0 3px 1px -2px rgba(0, 0, 0, 0.12),
+      0 1px 5px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  /* Abbr labels (e.g., publication venue tags) */
+  .badge-abbr {
+    display: inline-block;
+    padding: 0.15em 0.5em;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    background-color: var(--global-theme-color);
+    color: var(--global-hover-text-color);
+  }
+}
+
+/* ─── Prose (Markdown body) ──────────────────────────────────────────────── */
+
+@layer base {
+  .prose {
+    color: var(--global-text-color);
+    line-height: 1.7;
+  }
+
+  .prose a {
+    color: var(--global-theme-color);
+  }
+
+  .prose a:hover {
+    color: var(--global-hover-color);
+  }
+
+  .prose img {
+    border-radius: 4px;
+  }
+
+  /* Shiki code blocks */
+  .prose pre {
+    border-radius: 6px;
+    padding: 1rem;
+    overflow-x: auto;
+  }
+
+  .prose table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  .prose table th,
+  .prose table td {
+    border: 1px solid var(--global-divider-color);
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+  }
+
+  .prose table th {
+    background-color: var(--global-code-bg-color);
+    font-weight: 600;
+  }
+
+  /* KaTeX display math */
+  .prose .math-display {
+    overflow-x: auto;
+    padding: 0.5rem 0;
+  }
+}
+
+/* ─── Back-to-top button ─────────────────────────────────────────────────── */
+
+#back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: var(--global-back-to-top-bg-color);
+  color: var(--global-back-to-top-text-color);
+  transition: opacity 0.2s ease;
+}
+
+#back-to-top.visible {
+  display: flex;
+}
+
+#back-to-top:hover {
+  opacity: 0.8;
+}

@@ -1,0 +1,93 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { site } from '@config/site';
+import Base from './Base.astro';
+import Giscus from '@components/Giscus.astro';
+import ReadingProgress from '@components/ReadingProgress.astro';
+import TOC from '@components/TOC.astro';
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+  headings?: MarkdownHeading[];
+}
+
+const { post, headings = [] } = Astro.props;
+const { title, description, date, tags = [], math = false } = post.data;
+
+const formattedDate = new Date(date).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+// Estimate reading time (200 wpm average)
+const readingTime = post.body ? Math.max(1, Math.ceil(post.body.split(/\s+/).length / 200)) : 1;
+---
+
+<Base title={title} description={description} math={math}>
+  {site.features.progressBar && <ReadingProgress />}
+
+  <div class="page-container py-8">
+    <div class="flex gap-8">
+      <!-- TOC sidebar (desktop only) -->
+      {
+        headings.length > 0 && (
+          <aside class="hidden lg:block w-52 flex-shrink-0">
+            <TOC headings={headings} />
+          </aside>
+        )
+      }
+
+      <!-- Post content -->
+      <article class="flex-1 min-w-0">
+        <!-- Header -->
+        <header class="mb-8">
+          <h1
+            class="text-3xl font-bold mb-3"
+            style="color: var(--global-text-color); font-family: var(--font-sans);"
+          >
+            {title}
+          </h1>
+
+          <div
+            class="flex flex-wrap items-center gap-3 text-sm"
+            style="color: var(--global-text-color-light);"
+          >
+            <time datetime={date instanceof Date ? date.toISOString() : String(date)}>
+              {formattedDate}
+            </time>
+            <span>·</span>
+            <span>{readingTime} min read</span>
+            {
+              tags.length > 0 && (
+                <>
+                  <span>·</span>
+                  <div class="flex flex-wrap gap-1">
+                    {tags.map((tag) => (
+                      <a
+                        href={`${site.base}/blog/tag/${tag}/`}
+                        class="badge-abbr text-xs"
+                        style="background-color: var(--global-theme-color); color: var(--global-hover-text-color);"
+                      >
+                        {tag}
+                      </a>
+                    ))}
+                  </div>
+                </>
+              )
+            }
+          </div>
+        </header>
+
+        <!-- Body -->
+        <div class="prose max-w-none">
+          <slot />
+        </div>
+
+        <!-- Comments -->
+        {site.giscus.enabled && <Giscus />}
+      </article>
+    </div>
+  </div>
+</Base>
