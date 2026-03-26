@@ -49,11 +49,8 @@ const related = post.data.relatedPosts ? relatedPosts(post, allPosts) : [];
       <!-- Post content -->
       <article class="flex-1 min-w-0">
         <!-- Header -->
-        <header class="mb-8">
-          <h1
-            class="text-3xl font-bold mb-3"
-            style="color: var(--global-text-color); font-family: var(--font-sans);"
-          >
+        <header class="post-header">
+          <h1 class="post-title" style="margin-bottom: 0.75rem;">
             {title}
           </h1>
 

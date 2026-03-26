@@ -353,6 +353,17 @@
     color: var(--global-theme-color);
   }
 
+  /* ─── Shared page-level heading (used on publications, cv, teaching, etc.) ── */
+  .post-header {
+    margin-bottom: 1.5rem;
+  }
+  h1.post-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--global-text-color);
+    font-family: var(--font-sans);
+  }
+
   /* ─── Profile (matches al-folio .profile) ────────────────────────── */
   .profile {
     width: 100%;
