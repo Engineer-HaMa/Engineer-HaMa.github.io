@@ -1,29 +1,18 @@
 ---
 import { site } from '@config/site';
 import Page from '@layouts/Page.astro';
-import { parseBibtex, getYear, getAuthors, getVenue, getTitle, getBoolField } from '@utils/bibtex';
+import { parseBibtex } from '@utils/bibtex';
+import BibSearch from '@components/publications/BibSearch.tsx';
 import bibRaw from '../../data/papers.bib?raw';
 
-const entries = parseBibtex(bibRaw).sort((a, b) => getYear(b) - getYear(a));
+const entries = parseBibtex(bibRaw).sort((a, b) => {
+  const yearA = parseInt(a.fields.year ?? '0', 10);
+  const yearB = parseInt(b.fields.year ?? '0', 10);
+  return yearB - yearA;
+});
 
-// Group by year
-const byYear = new Map<number, typeof entries>();
-for (const entry of entries) {
-  const year = getYear(entry);
-  if (!byYear.has(year)) byYear.set(year, []);
-  byYear.get(year)!.push(entry);
-}
-const years = [...byYear.keys()].sort((a, b) => b - a);
-
-function entryUrl(entry: (typeof entries)[number]): string {
-  const html = entry.fields.html;
-  const doi = entry.fields.doi;
-  if (html) return html;
-  if (doi) return `https://doi.org/${doi}`;
-  return '';
-}
-
-const maxAuthors = site.publications.maxAuthorLimit;
+const showAltmetric = site.publications.badges.altmetric;
+const showDimensions = site.publications.badges.dimensions;
 ---
 
 <Page title="Publications" description={`Publications by ${site.author.name}`}>
@@ -34,175 +23,19 @@ const maxAuthors = site.publications.maxAuthorLimit;
     Publications
   </h1>
 
-  {
-    years.map((year) => (
-      <section class="mb-10">
-        <h2
-          class="text-xl font-bold mb-4"
-          style="color: var(--global-theme-color); border-bottom: 1px solid var(--global-divider-color); padding-bottom: 0.25rem;"
-        >
-          {year}
-        </h2>
-
-        <ol class="space-y-6" style="list-style: none; padding: 0; margin: 0;">
-          {byYear.get(year)!.map((entry) => {
-            const abbr = entry.fields.abbr ?? '';
-            const title = getTitle(entry);
-            const url = entryUrl(entry);
-            const authorsRaw = getAuthors(entry);
-            const authorList = authorsRaw.split(', ');
-            const showMore = maxAuthors !== undefined && authorList.length > maxAuthors;
-            const visibleAuthors = showMore ? authorList.slice(0, maxAuthors) : authorList;
-            const venue = getVenue(entry);
-            const isSelected = getBoolField(entry, 'selected');
-            const abstract = entry.fields.abstract ?? '';
-            const doi = entry.fields.doi ?? '';
-            const pdfPath = entry.fields.pdf ?? '';
-            const codeUrl = entry.fields.code ?? '';
-            const hasAward = entry.fields.award ?? '';
-            const awardName = entry.fields.award_name ?? '';
-
-            return (
-              <li class={`pub-entry flex gap-4 ${isSelected ? 'selected' : ''}`}>
-                {/* Venue badge */}
-                <div class="flex-shrink-0 w-16 text-right">
-                  {abbr && (
-                    <span
-                      class="badge-abbr text-xs"
-                      style="background-color: var(--global-theme-color); color: var(--global-hover-text-color); display: inline-block;"
-                    >
-                      {abbr}
-                    </span>
-                  )}
-                </div>
-
-                <div class="flex-1 min-w-0">
-                  {/* Title */}
-                  {url ? (
-                    <a
-                      href={url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="font-semibold block pub-title"
-                      style="color: var(--global-text-color); text-decoration: none;"
-                    >
-                      {title}
-                    </a>
-                  ) : (
-                    <span class="font-semibold block" style="color: var(--global-text-color);">
-                      {title}
-                    </span>
-                  )}
-
-                  {/* Award badge */}
-                  {hasAward && (
-                    <span
-                      class="badge-abbr text-xs mt-1 inline-block"
-                      style="background-color: #c8a400; color: #fff;"
-                    >
-                      {awardName || hasAward}
-                    </span>
-                  )}
-
-                  {/* Authors */}
-                  <p class="text-sm mt-0.5" style="color: var(--global-text-color-light);">
-                    {visibleAuthors.map((author, i) => {
-                      const isMe = author
-                        .toLowerCase()
-                        .includes(site.author.name.split(' ').pop()!.toLowerCase());
-                      return (
-                        <>
-                          {isMe ? <strong>{author}</strong> : author}
-                          {i < visibleAuthors.length - 1 && ', '}
-                        </>
-                      );
-                    })}
-                    {showMore && (
-                      <span> and {authorList.length - maxAuthors!} more</span>
-                    )}
-                  </p>
-
-                  {/* Venue + year */}
-                  {venue && (
-                    <p class="text-sm italic mt-0.5" style="color: var(--global-text-color-light);">
-                      {venue}
-                      {year ? `, ${year}` : ''}
-                    </p>
-                  )}
-
-                  {/* Links row */}
-                  <div class="flex flex-wrap gap-2 mt-1">
-                    {doi && (
-                      <a
-                        href={`https://doi.org/${doi}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="badge-abbr text-xs"
-                        style="background-color: var(--global-divider-color); color: var(--global-text-color);"
-                      >
-                        DOI
-                      </a>
-                    )}
-                    {pdfPath && (
-                      <a
-                        href={pdfPath.startsWith('http') ? pdfPath : `/assets/pdf/${pdfPath}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="badge-abbr text-xs"
-                        style="background-color: var(--global-divider-color); color: var(--global-text-color);"
-                      >
-                        PDF
-                      </a>
-                    )}
-                    {codeUrl && (
-                      <a
-                        href={codeUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="badge-abbr text-xs"
-                        style="background-color: var(--global-divider-color); color: var(--global-text-color);"
-                      >
-                        Code
-                      </a>
-                    )}
-                  </div>
-
-                  {/* Abstract (collapsible) */}
-                  {abstract && (
-                    <details class="mt-2 text-sm">
-                      <summary
-                        class="cursor-pointer select-none"
-                        style="color: var(--global-theme-color);"
-                      >
-                        Abstract
-                      </summary>
-                      <p
-                        class="mt-1 pl-2 text-sm"
-                        style="color: var(--global-text-color-light); border-left: 2px solid var(--global-divider-color);"
-                      >
-                        {abstract}
-                      </p>
-                    </details>
-                  )}
-                </div>
-              </li>
-            );
-          })}
-        </ol>
-      </section>
-    ))
-  }
+  <BibSearch client:load entries={entries} />
 </Page>
+
+{showAltmetric && (
+  <script is:inline src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
+)}
+
+{showDimensions && (
+  <script is:inline async src="https://badge.dimensions.ai/badge.js"></script>
+)}
 
 <style>
   .pub-title:hover {
     color: var(--global-theme-color) !important;
-  }
-
-  .pub-entry.selected {
-    background-color: var(--global-hover-color);
-    border-radius: 4px;
-    padding: 0.5rem;
-    margin-left: -0.5rem;
   }
 </style>

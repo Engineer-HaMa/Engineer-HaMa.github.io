@@ -1,0 +1,82 @@
+---
+/**
+ * Figure — responsive image with optional caption.
+ * Replaces al-folio's figure.liquid include.
+ *
+ * Usage in MDX:
+ *   import Figure from '@components/Figure.astro';
+ *   <Figure src="/assets/img/projects/foo.jpg" alt="Description" caption="**Fig 1.** Caption text." />
+ */
+
+interface Props {
+  /** Image source path or URL. */
+  src: string;
+  /** Alt text (required for accessibility). */
+  alt: string;
+  /** Caption text — raw HTML is supported. */
+  caption?: string;
+  /** Horizontal alignment: 'left' | 'center' | 'right'. Defaults to 'center'. */
+  align?: 'left' | 'center' | 'right';
+  /** Width as a CSS value, e.g. '80%', '400px'. Defaults to '100%'. */
+  width?: string;
+  /** When true, adds no-zoom class to opt out of medium-zoom. */
+  noZoom?: boolean;
+}
+
+const {
+  src,
+  alt,
+  caption,
+  align = 'center',
+  width = '100%',
+  noZoom = false,
+} = Astro.props;
+
+const floatStyle =
+  align === 'left'
+    ? 'float: left; margin-right: 1.5rem; margin-bottom: 1rem;'
+    : align === 'right'
+      ? 'float: right; margin-left: 1.5rem; margin-bottom: 1rem;'
+      : 'margin-left: auto; margin-right: auto;';
+
+const figureStyle = `width: ${width}; ${floatStyle} clear: ${align === 'center' ? 'none' : align};`;
+---
+
+<figure style={figureStyle} class:list={['as-figure', align !== 'center' && 'as-figure--float']}>
+  <img
+    src={src}
+    alt={alt}
+    loading="lazy"
+    style="width: 100%; height: auto; display: block;"
+    class:list={[!noZoom && 'zoomable']}
+  />
+  {caption && (
+    <figcaption
+      class="as-figure__caption"
+      set:html={caption}
+    />
+  )}
+</figure>
+
+{/* Clearfix for floating figures — appended after the float so subsequent content is not wrapped */}
+{align !== 'center' && <div style="clear: both;" aria-hidden="true" />}
+
+<style>
+  .as-figure {
+    display: block;
+  }
+
+  .as-figure__caption {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    text-align: center;
+    color: var(--global-text-color-light);
+    font-style: italic;
+  }
+
+  /* Tighten margin when figure is inline-floated */
+  .as-figure--float {
+    margin-bottom: 0.5rem;
+  }
+</style>

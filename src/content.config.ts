@@ -27,6 +27,14 @@ const posts = defineCollection({
     image: z.string().optional(),
     /** Distill layout — renders as a Distill article. */
     distill: z.boolean().optional().default(false),
+    /** Authors for Distill-style posts. */
+    distillAuthors: z.array(z.object({
+      name: z.string(),
+      url: z.string().url().optional(),
+      affiliations: z.object({ name: z.string() }).optional(),
+    })).optional(),
+    /** BibTeX bibliography file reference for Distill posts. */
+    bibliography: z.string().optional(),
     /** Citation key for this post (used in bibliography). */
     citation_key: z.string().optional(),
   }),

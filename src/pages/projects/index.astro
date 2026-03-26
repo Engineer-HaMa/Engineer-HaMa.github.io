@@ -6,27 +6,61 @@ import Page from '@layouts/Page.astro';
 const projects = (await getCollection('projects')).sort(
   (a, b) => (a.data.importance ?? 999) - (b.data.importance ?? 999)
 );
+
+// Collect unique categories in sort-order (preserving first appearance order)
+const categories: string[] = [];
+for (const p of projects) {
+  if (p.data.category && !categories.includes(p.data.category)) {
+    categories.push(p.data.category);
+  }
+}
+const hasFilters = categories.length > 0;
 ---
 
 <Page title="Projects" description={`Projects by ${site.author.name}`}>
   <h1
-    class="text-3xl font-bold mb-8"
+    class="text-3xl font-bold mb-6"
     style="color: var(--global-text-color); font-family: var(--font-sans);"
   >
     Projects
   </h1>
 
+  <!-- Category filter buttons -->
+  {hasFilters && (
+    <div class="filter-bar mb-8 flex flex-wrap gap-2" role="group" aria-label="Filter projects by category">
+      <button
+        class="filter-btn"
+        data-category="all"
+        data-active="true"
+        aria-pressed="true"
+      >
+        All
+      </button>
+      {categories.map((cat) => (
+        <button
+          class="filter-btn"
+          data-category={cat}
+          data-active="false"
+          aria-pressed="false"
+        >
+          {cat}
+        </button>
+      ))}
+    </div>
+  )}
+
   {
     projects.length === 0 ? (
       <p style="color: var(--global-text-color-light);">No projects yet.</p>
     ) : (
-      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3" id="projects-grid">
         {projects.map((project) => {
           const href = project.data.redirect ?? project.data.url ?? `${site.base}/projects/${project.id}/`;
           return (
             <article
               class="project-card rounded-lg overflow-hidden z-depth-1"
               style="background-color: var(--global-card-bg-color); border: 1px solid var(--global-divider-color);"
+              data-category={project.data.category ?? 'uncategorized'}
             >
               {project.data.img && (
                 <a href={href} target={project.data.redirect ? '_blank' : undefined} rel={project.data.redirect ? 'noopener noreferrer' : undefined}>
@@ -83,8 +117,68 @@ const projects = (await getCollection('projects')).sort(
   }
 </Page>
 
+<script>
+  function initFilters() {
+    const buttons = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+    const cards = document.querySelectorAll<HTMLElement>('.project-card');
+
+    if (buttons.length === 0) return;
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const selected = btn.dataset.category ?? 'all';
+
+        // Update button states
+        buttons.forEach((b) => {
+          const active = b.dataset.category === selected;
+          b.dataset.active = String(active);
+          b.setAttribute('aria-pressed', String(active));
+        });
+
+        // Show / hide cards
+        cards.forEach((card) => {
+          const cardCategory = card.dataset.category ?? 'uncategorized';
+          const visible = selected === 'all' || cardCategory === selected;
+          card.style.display = visible ? '' : 'none';
+        });
+      });
+    });
+  }
+
+  initFilters();
+  document.addEventListener('astro:after-swap', initFilters);
+</script>
+
 <style>
   .project-title-link:hover {
     color: var(--global-theme-color) !important;
+  }
+
+  /* Filter buttons */
+  .filter-btn {
+    padding: 0.3rem 0.85rem;
+    border-radius: 9999px;
+    border: 1px solid var(--global-divider-color);
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease,
+      border-color 0.15s ease;
+    background-color: transparent;
+    color: var(--global-text-color-light);
+    font-family: var(--font-sans);
+  }
+
+  .filter-btn[data-active='true'] {
+    background-color: var(--global-theme-color);
+    color: var(--global-hover-text-color);
+    border-color: var(--global-theme-color);
+  }
+
+  .filter-btn:hover:not([data-active='true']) {
+    border-color: var(--global-theme-color);
+    color: var(--global-theme-color);
   }
 </style>
