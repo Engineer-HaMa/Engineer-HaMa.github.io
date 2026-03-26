@@ -4,6 +4,7 @@ code: PHY 301
 description: An overview of special relativity, quantum mechanics, and atomic physics for third-year undergraduates.
 term: Spring 2025
 institution: Institute for Advanced Study
+url: https://en.wikipedia.org/wiki/Modern_physics
 importance: 1
 category: current
 ---

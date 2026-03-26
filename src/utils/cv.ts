@@ -38,6 +38,7 @@ export interface RenderCV {
     email?: string;
     phone?: string;
     website?: string;
+    summary?: string;
     social_networks?: Array<{ network: string; username: string }>;
     sections: {
       education?: RenderCVEntry[];

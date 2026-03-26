@@ -7,6 +7,7 @@ cv:
   email: einstein@example.com
   phone: tel:+1-000-000-0000
   website: https://example.github.io
+  summary: A German-born theoretical physicist widely regarded as one of the greatest scientists of all time. Best known for developing the theory of relativity, the most important pillar along with quantum mechanics of modern physics.
   social_networks:
     - network: GitHub
       username: example

@@ -1,71 +1,36 @@
 ---
-import { Image } from 'astro:assets';
 import { site } from '@config/site';
 
 interface Props {
-  /** Image src — defaults to site.author.avatar */
   src?: string;
-  /** Alt text */
   alt?: string;
-  /** 'left' | 'right' — which side the photo floats on desktop */
   align?: 'left' | 'right';
-  /** Render as circle (profile-style). Default true. */
-  round?: boolean;
-  /** Width in pixels */
-  width?: number;
-  /** Height in pixels */
-  height?: number;
+  circular?: boolean;
 }
 
 const {
   src = site.author.avatar,
   alt = site.author.name,
   align = 'right',
-  round = true,
-  width = 270,
-  height = 270,
+  circular = false,
 } = Astro.props;
 
-const isExternal = src.startsWith('http');
+const imgClass = circular
+  ? 'img-fluid z-depth-1 rounded-circle'
+  : 'img-fluid z-depth-1 rounded';
 ---
 
-<div
-  class={`profile-photo ${align === 'right' ? 'float-right ml-6' : 'float-left mr-6'} mb-4 text-center`}
->
+<div class={`profile float-${align}`}>
+  <img
+    src={src}
+    alt={alt}
+    loading="eager"
+    class={imgClass}
+    onerror="this.src='/assets/img/prof_pic.jpg'"
+  />
   {
-    isExternal ? (
-      <img
-        src={src}
-        alt={alt}
-        width={width}
-        height={height}
-        loading="eager"
-        class={round ? 'rounded-full' : 'rounded'}
-        style={`width: ${width}px; height: ${height}px; object-fit: cover;`}
-      />
-    ) : (
-      <img
-        src={src}
-        alt={alt}
-        width={width}
-        height={height}
-        loading="eager"
-        class={round ? 'rounded-full' : 'rounded'}
-        style={`width: ${width}px; height: ${height}px; object-fit: cover;`}
-      />
+    site.author.moreInfo && (
+      <div class="more-info" set:html={site.author.moreInfo} />
     )
   }
 </div>
-
-<style>
-  .profile-photo {
-    flex-shrink: 0;
-  }
-
-  @media (max-width: 640px) {
-    .profile-photo {
-      float: none !important;
-      margin: 0 auto 1.5rem auto;
-    }
-  }
-</style>

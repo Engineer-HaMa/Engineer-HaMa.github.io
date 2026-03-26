@@ -15,23 +15,44 @@ const navActions = [
   { id: 'nav-cv', title: 'CV', section: 'Navigation', href: `${site.base}/cv/` },
   { id: 'nav-teaching', title: 'Teaching', section: 'Navigation', href: `${site.base}/teaching/` },
   { id: 'nav-people', title: 'People', section: 'Navigation', href: `${site.base}/people/` },
+  { id: 'nav-books', title: 'Books', section: 'Navigation', href: `${site.base}/books/` },
+  {
+    id: 'nav-repositories',
+    title: 'Repositories',
+    section: 'Navigation',
+    href: `${site.base}/repositories/`,
+  },
 ];
 
 const pagefindBase = site.base || '';
 ---
 
 <!-- ninja-keys web component -->
-<ninja-keys id="ninja-search" placeholder="Search or jump to…" hideBreadcrumbs>
-</ninja-keys>
+<ninja-keys
+  id="ninja-search"
+  placeholder="Search or jump to…"
+  hideBreadcrumbs
+  data-nav-actions={JSON.stringify(navActions)}
+  data-pagefind-base={pagefindBase}
+></ninja-keys>
 
-<script define:vars={{ navActions, pagefindBase }}>
-  import('ninja-keys').then(() => {
-    /** @type {import('ninja-keys').NinjaKeys} */
-    const nk = document.querySelector('#ninja-search');
+<script>
+  import 'ninja-keys';
+
+  async function initSearch() {
+    await customElements.whenDefined('ninja-keys');
+
+    /** @type {import('ninja-keys').NinjaKeys | null} */
+    const nk = document.querySelector('#ninja-search') as any;
     if (!nk) return;
 
-    // Build default nav action objects with click handlers
-    const defaultData = navActions.map((item) => ({
+    const navActionsRaw = (nk as HTMLElement).dataset.navActions ?? '[]';
+    const pagefindBase = (nk as HTMLElement).dataset.pagefindBase ?? '';
+    const navActionsDefs: Array<{ id: string; title: string; section: string; href: string }> =
+      JSON.parse(navActionsRaw);
+
+    // Build default nav actions with click handlers
+    const defaultData = navActionsDefs.map((item) => ({
       id: item.id,
       title: item.title,
       section: item.section,
@@ -44,25 +65,36 @@ const pagefindBase = site.base || '';
 
     // Open on search button click (both desktop + mobile #search-toggle buttons)
     document.querySelectorAll('#search-toggle').forEach((btn) => {
-      btn.addEventListener('click', () => nk.open());
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        nk.open();
+      });
+    });
+
+    // ⌘K / Ctrl+K keyboard shortcut
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        nk.open();
+      }
     });
 
     // Pagefind integration — loaded lazily on first search
-    let pagefind = null;
+    let pagefind: any = null;
 
     async function loadPagefind() {
       if (pagefind) return pagefind;
       try {
-        pagefind = await import(`${pagefindBase}/pagefind/pagefind.js`);
+        pagefind = await import(/* @vite-ignore */ `${pagefindBase}/pagefind/pagefind.js`);
         await pagefind.init();
       } catch {
-        // Pagefind not available (dev mode or first build)
+        // Pagefind not available in dev mode (requires a completed build)
         pagefind = null;
       }
       return pagefind;
     }
 
-    nk.addEventListener('change', async (/** @type {CustomEvent} */ e) => {
+    nk.addEventListener('change', async (e: CustomEvent) => {
       const query = (e.detail?.search ?? '').trim();
 
       if (!query) {
@@ -77,9 +109,9 @@ const pagefindBase = site.base || '';
       }
 
       const response = await pf.search(query);
-      const results = await Promise.all(response.results.slice(0, 8).map((r) => r.data()));
+      const results = await Promise.all(response.results.slice(0, 8).map((r: any) => r.data()));
 
-      const searchData = results.map((item) => ({
+      const searchData = results.map((item: any) => ({
         id: item.url,
         title: item.meta?.title || item.url,
         section: 'Search Results',
@@ -91,7 +123,11 @@ const pagefindBase = site.base || '';
 
       nk.data = searchData.length > 0 ? searchData : defaultData;
     });
-  });
+  }
+
+  // Initialize on page load and after Astro view transitions
+  initSearch();
+  document.addEventListener('astro:after-swap', initSearch);
 </script>
 
 <style is:global>

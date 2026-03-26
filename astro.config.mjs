@@ -78,6 +78,11 @@ export default defineConfig({
           'video',
           'music',
           'map-pin',
+          'hashtag',
+          'magnifying-glass',
+          'thumbtack',
+          'external-link-alt',
+          'circle-arrow-right',
         ],
         'fa-regular': ['comment', 'star', 'bookmark', 'heart'],
         academicons: [

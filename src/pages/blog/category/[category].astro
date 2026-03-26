@@ -3,11 +3,12 @@ import { getCollection } from 'astro:content';
 import { site } from '@config/site';
 import Page from '@layouts/Page.astro';
 import PostCard from '@components/blog/PostCard.astro';
-import { readingTime } from '@utils/reading-time';
 
 export async function getStaticPaths() {
   const allPosts = await getCollection('posts');
-  const allCategories = [...new Set(allPosts.flatMap((p) => p.data.categories))];
+  // Include all categories found in posts PLUS any categories listed in displayCategories config
+  const postCategories = allPosts.flatMap((p) => p.data.categories);
+  const allCategories = [...new Set([...postCategories, ...site.blog.displayCategories])];
 
   return allCategories.map((category) => ({
     params: { category },
@@ -51,17 +52,13 @@ const { posts } = Astro.props;
     posts.length === 0 ? (
       <p style="color: var(--global-text-color-light);">No posts found for this category.</p>
     ) : (
-      posts.map((post) => (
-        <PostCard
-          title={post.data.title}
-          slug={post.id}
-          date={post.data.date}
-          description={post.data.description}
-          tags={post.data.tags}
-          categories={post.data.categories}
-          readingTime={post.body ? readingTime(post.body) : undefined}
-        />
-      ))
+      <ul class="post-list">
+        {posts.map((post) => (
+          <li>
+            <PostCard post={post} />
+          </li>
+        ))}
+      </ul>
     )
   }
 </Page>

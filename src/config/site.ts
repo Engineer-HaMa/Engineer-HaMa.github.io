@@ -38,7 +38,7 @@ export const site = {
     email: 'einstein@example.com',
 
     /** Path to profile photo. Place image in public/assets/img/. */
-    avatar: '/assets/img/prof_pic.svg',
+    avatar: '/assets/img/prof_pic.jpg',
 
     /**
      * Subtitle below your name on the about page.
@@ -134,7 +134,7 @@ export const site = {
     name: 'as-folio',
     description: 'A simple, clean, and responsive Astro template for academics.',
     /** Number of posts per page. */
-    postsPerPage: 10,
+    postsPerPage: 5,
     /**
      * Tags shown as badges on the blog listing page header.
      * Users can click them to filter posts by tag.
@@ -259,6 +259,19 @@ export const site = {
     endpoint: '' as string,
   },
 
+  // ─── Teaching page ────────────────────────────────────────────────────────
+
+  teaching: {
+    /**
+     * Google Calendar ID for the "Upcoming Events" section.
+     * Set to a calendar address like 'user@gmail.com' to show the embed.
+     * Leave empty string to hide the calendar section entirely.
+     */
+    calendarId: 'test@gmail.com' as string,
+    /** Timezone for the Google Calendar embed (e.g., 'America/New_York'). */
+    timezone: 'America/New_York' as string,
+  },
+
   // ─── Publications ─────────────────────────────────────────────────────────
 
   publications: {
@@ -279,6 +292,21 @@ export const site = {
     maxAuthorLimit: 3 as number | undefined,
     /** Enable thumbnail images for publications (if `preview` set in BibTeX). */
     thumbnails: true,
+  },
+
+  // ─── Repositories ────────────────────────────────────────────────────────
+
+  repositories: {
+    /** Show GitHub user stats cards. */
+    githubUsers: true,
+    /** Show GitHub repository pin cards. */
+    githubRepos: true,
+    /** Show GitHub trophy stats (repo_trophies). */
+    trophies: true,
+    /** Theme for light mode (from github-readme-stats themes). */
+    themeLight: 'default' as string,
+    /** Theme for dark mode. */
+    themeDark: 'dark' as string,
   },
 
   // ─── Theme defaults ───────────────────────────────────────────────────────

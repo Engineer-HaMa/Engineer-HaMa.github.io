@@ -2,82 +2,130 @@
 title: Images, Figures, and Medium Zoom
 date: 2025-03-01
 description: How as-folio handles images in blog posts — responsive layout, captions, and click-to-zoom with medium-zoom.
-tags: [formatting, media]
+tags: [formatting, images]
 categories: [demo]
+image: /assets/img/9.jpg
 math: false
 toc: true
 relatedPosts: true
+pinned: true
 ---
 
-Images in as-folio posts are processed by Astro and get click-to-zoom behaviour via [medium-zoom](https://github.com/francoischalifour/medium-zoom) — click any image below to see it open full-screen with a smooth overlay animation.
+import Figure from '@components/Figure.astro';
+
+This is an example post with image galleries. Images in as-folio posts get click-to-zoom behaviour via [medium-zoom](https://github.com/francoischalifour/medium-zoom) — click any zoomable image below to see it open full-screen.
+
+## Simple row of images
+
+<div class="row mt-3">
+  <div class="col-sm mt-3 mt-md-0">
+    <Figure loading="eager" path="/assets/img/9.jpg" class="img-fluid rounded z-depth-1" />
+  </div>
+  <div class="col-sm mt-3 mt-md-0">
+    <Figure loading="eager" path="/assets/img/7.jpg" class="img-fluid rounded z-depth-1" />
+  </div>
+</div>
+<div class="caption">
+  A simple, elegant caption looks good between image rows, after each row, or doesn't have to be there at all.
+</div>
+
+## Zoomable images
+
+Images can be made zoomable by passing `zoomable`. Click the images below to zoom in.
+
+<div class="row mt-3">
+  <div class="col-sm mt-3 mt-md-0">
+    <Figure loading="eager" path="/assets/img/8.jpg" class="img-fluid rounded z-depth-1" zoomable />
+  </div>
+  <div class="col-sm mt-3 mt-md-0">
+    <Figure loading="eager" path="/assets/img/10.jpg" class="img-fluid rounded z-depth-1" zoomable />
+  </div>
+</div>
+
+The rest of the images in this post are all zoomable, arranged into different mini-galleries.
+
+<div class="row mt-3">
+  <div class="col-sm mt-3 mt-md-0">
+    <Figure path="/assets/img/11.jpg" class="img-fluid rounded z-depth-1" zoomable />
+  </div>
+  <div class="col-sm mt-3 mt-md-0">
+    <Figure path="/assets/img/12.jpg" class="img-fluid rounded z-depth-1" zoomable />
+  </div>
+  <div class="col-sm mt-3 mt-md-0">
+    <Figure path="/assets/img/7.jpg" class="img-fluid rounded z-depth-1" zoomable />
+  </div>
+</div>
+
+## Mixed-width grid (2/3 + 1/3)
+
+You can also have artistically styled 2/3 + 1/3 images:
+
+<div class="row justify-content-sm-center mt-3">
+  <div class="col-sm-8 mt-3 mt-md-0">
+    <Figure path="/assets/img/6.jpg" class="img-fluid rounded z-depth-1" zoomable />
+  </div>
+  <div class="col-sm-4 mt-3 mt-md-0">
+    <Figure path="/assets/img/11.jpg" class="img-fluid rounded z-depth-1" zoomable />
+  </div>
+</div>
+<div class="caption">
+  Artistically styled 2/3 + 1/3 images using Bootstrap's grid system.
+</div>
+
+## Three-column grid
+
+<div class="row mt-3">
+  <div class="col-sm mt-3 mt-md-0">
+    <Figure path="/assets/img/1.jpg" class="img-fluid rounded z-depth-1" zoomable />
+  </div>
+  <div class="col-sm mt-3 mt-md-0">
+    <Figure path="/assets/img/3.jpg" class="img-fluid rounded z-depth-1" zoomable />
+  </div>
+  <div class="col-sm mt-3 mt-md-0">
+    <Figure path="/assets/img/5.jpg" class="img-fluid rounded z-depth-1" zoomable />
+  </div>
+</div>
+<div class="caption">
+  Caption photos easily. Three equal-width columns using <code>col-sm</code>.
+</div>
+
+## Full-width image
+
+<div class="row mt-3">
+  <div class="col-sm mt-3 mt-md-0">
+    <Figure path="/assets/img/2.jpg" class="img-fluid rounded z-depth-1" zoomable caption="A full-width image spanning the entire content area." />
+  </div>
+</div>
+
+## Using the Figure component
+
+The `Figure` component mirrors al-folio's `figure.liquid` interface:
+
+```mdx
+import Figure from '@components/Figure.astro';
+
+<Figure path="/assets/img/1.jpg" class="img-fluid rounded z-depth-1" />
+<Figure path="/assets/img/2.jpg" class="img-fluid rounded z-depth-1" zoomable caption="My caption" />
+```
+
+Available props: `path`, `class`, `zoomable`, `caption`, `alt`, `title`, `loading`, `width`, `height`.
 
 ## Standard Markdown images
 
-Use standard Markdown syntax for inline images. They are responsive by default and will zoom on click:
+Standard Markdown images are also supported and get zoom behaviour automatically:
 
 ```md
-![Alt text describing the image](/assets/img/profile.jpg)
+![Alt text](/assets/img/profile.jpg)
 ```
 
-Add a title to turn it into a captioned figure:
-
-```md
-![Albert Einstein at his desk](/assets/img/einstein.jpg "Einstein, 1921")
-```
-
-## Disabling zoom on an image
-
-Add the `no-zoom` class to opt out of medium-zoom on a specific image:
+To disable zoom on a specific image, add the `no-zoom` class:
 
 ```html
 <img src="/assets/img/icon.png" alt="Small icon" class="no-zoom" width="32" />
 ```
 
-## Image sizing and alignment
-
-Use inline HTML for precise control over sizing and alignment:
-
-```html
-<!-- Centered, half-width -->
-<figure style="text-align: center;">
-  <img
-    src="/assets/img/profile.jpg"
-    alt="Profile photo"
-    style="width: 50%; border-radius: 8px;"
-  />
-  <figcaption>Figure 1 — A portrait photograph.</figcaption>
-</figure>
-```
-
-## Side-by-side images
-
-Use a flex wrapper to place images side by side on wider screens:
-
-```html
-<div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-  <figure style="flex: 1; min-width: 200px;">
-    <img src="/assets/img/a.jpg" alt="Image A" />
-    <figcaption>Left panel</figcaption>
-  </figure>
-  <figure style="flex: 1; min-width: 200px;">
-    <img src="/assets/img/b.jpg" alt="Image B" />
-    <figcaption>Right panel</figcaption>
-  </figure>
-</div>
-```
-
-## GIF and video alternatives
-
-For animated content, use a `<video>` element with the `autoplay`, `loop`, and `muted` attributes — it behaves like a GIF but is far smaller:
-
-```html
-<video autoplay loop muted playsinline width="600">
-  <source src="/assets/video/demo.mp4" type="video/mp4" />
-</video>
-```
-
 ## Tips
 
-- Keep source images ≤ 2 MB; Astro's `<Image>` component will generate WebP versions at multiple resolutions automatically.
-- Always write descriptive `alt` text — it improves accessibility and helps search engines index your content.
-- The medium-zoom overlay respects dark mode: the background is `rgba(0,0,0,0.7)` which renders well in both themes.
+- Keep source images ≤ 2 MB for best performance.
+- Always write descriptive `alt` text — it improves accessibility and search indexing.
+- The medium-zoom overlay respects dark mode: the background renders well in both themes.

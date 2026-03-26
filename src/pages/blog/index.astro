@@ -4,8 +4,9 @@ import { site } from '@config/site';
 import Page from '@layouts/Page.astro';
 import PostCard from '@components/blog/PostCard.astro';
 import Pagination from '@components/Pagination.astro';
-import { readingTime } from '@utils/reading-time';
+import { Icon } from 'astro-icon/components';
 import { fetchExternalPosts } from '@utils/external-posts';
+import { readingTime } from '@utils/reading-time';
 
 const localPosts = (await getCollection('posts'))
   .filter((p) => !p.data.hidden)
@@ -16,106 +17,148 @@ const localPosts = (await getCollection('posts'))
 
 const externalPosts = await fetchExternalPosts();
 
-// Merge and sort all posts by date (local posts pinned first)
 type LocalPost = (typeof localPosts)[number];
-type MixedPost = LocalPost | { external: true; data: { title: string; date: Date; description?: string; tags: string[]; categories: string[] }; id: string; url: string };
+type ExternalPost = {
+  external: true;
+  id: string;
+  url: string;
+  data: {
+    title: string;
+    date: Date;
+    description?: string;
+    tags: string[];
+    categories: string[];
+    image?: string;
+  };
+  body?: undefined;
+};
 
-const allPosts: MixedPost[] = [
+const allPosts: (LocalPost | ExternalPost)[] = [
   ...localPosts,
   ...externalPosts.map((ep) => ({
     external: true as const,
     id: ep.url,
     url: ep.url,
+    body: undefined,
     data: {
       title: ep.title,
       date: ep.publishedDate,
       description: ep.description,
       tags: ep.tags,
       categories: ep.categories,
+      image: undefined,
     },
   })),
 ].sort((a, b) => {
-  const aPin = 'data' in a && 'pinned' in a.data ? (a.data as { pinned?: boolean }).pinned : false;
-  const bPin = 'data' in b && 'pinned' in b.data ? (b.data as { pinned?: boolean }).pinned : false;
+  const aPin = 'pinned' in a.data ? (a.data as { pinned?: boolean }).pinned : false;
+  const bPin = 'pinned' in b.data ? (b.data as { pinned?: boolean }).pinned : false;
   if (aPin !== bPin) return aPin ? -1 : 1;
   return b.data.date.getTime() - a.data.date.getTime();
 });
+
+// Pinned (featured) local posts shown in card grid at top
+const pinnedPosts = localPosts.filter((p) => p.data.pinned);
 
 const perPage = site.blog.postsPerPage;
 const totalPages = Math.ceil(allPosts.length / perPage);
 const pagePosts = allPosts.slice(0, perPage);
 
-const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))].sort();
-const allCategories = [...new Set(allPosts.flatMap((p) => p.data.categories))].sort();
+const displayTags = site.blog.displayTags;
+const displayCategories = site.blog.displayCategories;
+
+// Grid column count for featured cards
+const featuredCols = pinnedPosts.length >= 3 ? '3' : '2';
 ---
 
 <Page title="Blog" description={site.blog.description}>
-  <h1
-    class="text-3xl font-bold mb-2"
-    style="color: var(--global-text-color); font-family: var(--font-sans);"
-  >
-    {site.blog.name}
-  </h1>
-  <p class="mb-6 text-sm" style="color: var(--global-text-color-light);">
-    {site.blog.description}
-  </p>
+  <!-- Header bar -->
+  <div class="header-bar">
+    <h1>{site.blog.name}</h1>
+    <h2>{site.blog.description}</h2>
+  </div>
 
-  <!-- Tag filters -->
-  {
-    (site.blog.displayTags.length > 0 || allTags.length > 0) && (
-      <div class="flex flex-wrap gap-2 mb-6">
-        {allTags.map((tag) => (
-          <a
-            href={`${site.base}/blog/tag/${tag}/`}
-            class="badge-abbr text-xs"
-            style="background-color: var(--global-theme-color); color: var(--global-hover-text-color);"
-          >
-            {tag}
-          </a>
+  <!-- Tag / category list -->
+  {(displayTags.length > 0 || displayCategories.length > 0) && (
+    <div class="tag-category-list">
+      <ul class="p-0 m-0">
+        {displayTags.map((tag, i) => (
+          <>
+            <li>
+              <Icon name="fa-solid:hashtag" />{' '}
+              <a href={`${site.base}/blog/tag/${tag}/`}>{tag}</a>
+            </li>
+            {i < displayTags.length - 1 && <p>&bull;</p>}
+          </>
         ))}
-        {allCategories.map((cat) => (
-          <a
-            href={`${site.base}/blog/category/${cat}/`}
-            class="badge-abbr text-xs"
-            style="background-color: var(--global-text-color-light); color: var(--global-hover-text-color);"
-          >
-            {cat}
-          </a>
+        {displayTags.length > 0 && displayCategories.length > 0 && <p>&bull;</p>}
+        {displayCategories.map((cat, i) => (
+          <>
+            <li>
+              <Icon name="fa-solid:tag" />{' '}
+              <a href={`${site.base}/blog/category/${cat}/`}>{cat}</a>
+            </li>
+            {i < displayCategories.length - 1 && <p>&bull;</p>}
+          </>
         ))}
+      </ul>
+    </div>
+  )}
+
+  <!-- Featured / Pinned posts card grid -->
+  {pinnedPosts.length > 0 && (
+    <>
+      <br />
+      <div class="container featured-posts">
+        <div class={`row row-cols-${featuredCols}`}>
+          {pinnedPosts.map((post) => {
+            const mins = post.body ? readingTime(post.body) : 1;
+            const year = post.data.date.getFullYear();
+            return (
+              <div class="col mb-4">
+                <a href={`${site.base}/blog/${post.id}/`}>
+                  <div class="card hoverable">
+                    <div class="row g-0">
+                      <div class="col-md-12">
+                        <div class="card-body">
+                          <div class="float-right">
+                            <Icon name="fa-solid:thumbtack" style="font-size:0.75rem;" />
+                          </div>
+                          <h3 class="card-title text-lowercase">{post.data.title}</h3>
+                          {post.data.description && (
+                            <p class="card-text">{post.data.description}</p>
+                          )}
+                          <p class="post-meta">
+                            {mins} min read &nbsp;&middot;&nbsp;
+                            <a href={`${site.base}/blog/`}>
+                              <Icon name="fa-solid:calendar" style="font-size:0.75rem;" /> {year}
+                            </a>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            );
+          })}
+        </div>
       </div>
-    )
-  }
+      <hr style="margin-bottom: 2rem;" />
+    </>
+  )}
 
   <!-- Post list -->
-  {
-    pagePosts.length === 0 ? (
-      <p style="color: var(--global-text-color-light);">No posts yet. Check back soon!</p>
-    ) : (
-      pagePosts.map((post) =>
-        'external' in post && post.external ? (
-          <PostCard
-            title={post.data.title}
-            slug=""
-            externalUrl={post.url}
-            date={post.data.date}
-            description={post.data.description}
-            tags={post.data.tags}
-            categories={post.data.categories}
-          />
-        ) : (
-          <PostCard
-            title={(post as LocalPost).data.title}
-            slug={(post as LocalPost).id}
-            date={(post as LocalPost).data.date}
-            description={(post as LocalPost).data.description}
-            tags={(post as LocalPost).data.tags}
-            categories={(post as LocalPost).data.categories}
-            readingTime={(post as LocalPost).body ? readingTime((post as LocalPost).body!) : undefined}
-          />
-        )
-      )
-    )
-  }
+  {pagePosts.length === 0 ? (
+    <p style="color: var(--global-text-color-light); padding-top: 2rem;">No posts yet. Check back soon!</p>
+  ) : (
+    <ul class="post-list">
+      {pagePosts.map((post) => (
+        <li>
+          <PostCard post={post} />
+        </li>
+      ))}
+    </ul>
+  )}
 
   <Pagination
     currentPage={1}

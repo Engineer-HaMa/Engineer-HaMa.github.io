@@ -118,6 +118,28 @@ const ogImage = image ? new URL(image, site.url).toString() : undefined;
       )
     }
 
+    <!-- Pirsch analytics -->
+    {
+      import.meta.env.PROD && site.analytics.pirsch && (
+        <script
+          defer
+          src="https://api.pirsch.io/pa.js"
+          id="pianjs"
+          data-code={site.analytics.pirsch}
+        ></script>
+      )
+    }
+
+    <!-- OpenPanel analytics -->
+    {
+      import.meta.env.PROD && site.analytics.openpanel && (
+        <script
+          define:vars={{ clientId: site.analytics.openpanel }}
+          is:inline
+        >{`(function(w,d,s){var c=d.createElement(s);c.src="https://openpanel.dev/op1.js";c.defer=true;c.setAttribute("data-client-id",clientId);d.head.appendChild(c);})(window,document,"script");`}</script>
+      )
+    }
+
     <!--
       Dark mode: must run BEFORE any CSS to prevent FOUC.
       Reads stored preference, falls back to system preference, then site default.
@@ -158,7 +180,61 @@ const ogImage = image ? new URL(image, site.url).toString() : undefined;
       <slot />
     </main>
 
+    <!-- Newsletter (shown in footer area if enabled) -->
+    {site.features.newsletter && <slot name="newsletter" />}
+
     <Footer />
+
+    <!-- Cookie consent (vanilla-cookieconsent via CDN) -->
+    {
+      site.features.cookieConsent && (
+        <>
+          <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.0.1/dist/cookieconsent.css"
+          />
+          <script
+            src="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.0.1/dist/cookieconsent.umd.js"
+            defer
+          ></script>
+          <script is:inline>{`
+            window.addEventListener('load', function() {
+              if (typeof CookieConsent === 'undefined') return;
+              CookieConsent.run({
+                categories: {
+                  necessary: { enabled: true, readOnly: true },
+                  analytics: {}
+                },
+                language: {
+                  default: 'en',
+                  translations: {
+                    en: {
+                      consentModal: {
+                        title: 'We use cookies',
+                        description: 'This site uses cookies to improve your experience and analyze traffic.',
+                        acceptAllBtn: 'Accept all',
+                        acceptNecessaryBtn: 'Reject all',
+                        showPreferencesBtn: 'Manage preferences'
+                      },
+                      preferencesModal: {
+                        title: 'Cookie preferences',
+                        acceptAllBtn: 'Accept all',
+                        acceptNecessaryBtn: 'Reject all',
+                        savePreferencesBtn: 'Save preferences',
+                        sections: [
+                          { title: 'Necessary cookies', description: 'Required for the site to function.', linkedCategory: 'necessary' },
+                          { title: 'Analytics cookies', description: 'Help us understand how visitors interact with the site.', linkedCategory: 'analytics' }
+                        ]
+                      }
+                    }
+                  }
+                }
+              });
+            });
+          `}</script>
+        </>
+      )
+    }
 
     <!-- Back to top button -->
     <button id="back-to-top" aria-label="Back to top" title="Back to top">

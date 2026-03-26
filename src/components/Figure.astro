@@ -1,82 +1,83 @@
 ---
 /**
- * Figure — responsive image with optional caption.
- * Replaces al-folio's figure.liquid include.
+ * Figure — equivalent to al-folio's figure.liquid include.
  *
- * Usage in MDX:
+ * Usage in MDX (al-folio compatible):
  *   import Figure from '@components/Figure.astro';
- *   <Figure src="/assets/img/projects/foo.jpg" alt="Description" caption="**Fig 1.** Caption text." />
+ *
+ *   <Figure path="/assets/img/1.jpg" class="img-fluid rounded z-depth-1" />
+ *   <Figure path="/assets/img/2.jpg" class="img-fluid rounded z-depth-1" zoomable caption="My caption" />
+ *   <Figure path="/assets/img/3.jpg" class="img-fluid rounded z-depth-1" slot="first" />
+ *
+ * Legacy API (as-folio v1):
+ *   <Figure src="/assets/img/1.jpg" alt="desc" caption="text" align="center" />
  */
 
 interface Props {
-  /** Image source path or URL. */
-  src: string;
-  /** Alt text (required for accessibility). */
-  alt: string;
-  /** Caption text — raw HTML is supported. */
+  /** Image path — primary prop (matches al-folio figure.liquid) */
+  path?: string;
+  /** Legacy: same as path */
+  src?: string;
+  /** CSS classes on the img element (e.g., "img-fluid rounded z-depth-1") */
+  class?: string;
+  /** Alt text */
+  alt?: string;
+  /** Title attribute */
+  title?: string;
+  /** Caption shown below the image */
   caption?: string;
-  /** Horizontal alignment: 'left' | 'center' | 'right'. Defaults to 'center'. */
-  align?: 'left' | 'center' | 'right';
-  /** Width as a CSS value, e.g. '80%', '400px'. Defaults to '100%'. */
-  width?: string;
-  /** When true, adds no-zoom class to opt out of medium-zoom. */
-  noZoom?: boolean;
+  /** Enable medium-zoom click-to-zoom (adds data-zoomable attribute) */
+  zoomable?: boolean;
+  /** Loading strategy */
+  loading?: 'lazy' | 'eager';
+  /** Width attribute */
+  width?: string | number;
+  /** Height attribute */
+  height?: string | number;
+  /** For image comparison slider (slot="first" or slot="second") */
+  slot?: string;
 }
 
 const {
+  path,
   src,
-  alt,
+  class: className = 'img-fluid rounded z-depth-1',
+  alt = '',
+  title,
   caption,
-  align = 'center',
+  zoomable = false,
+  loading = 'lazy',
   width = '100%',
-  noZoom = false,
+  height = 'auto',
+  slot: slotName,
 } = Astro.props;
 
-const floatStyle =
-  align === 'left'
-    ? 'float: left; margin-right: 1.5rem; margin-bottom: 1rem;'
-    : align === 'right'
-      ? 'float: right; margin-left: 1.5rem; margin-bottom: 1rem;'
-      : 'margin-left: auto; margin-right: auto;';
-
-const figureStyle = `width: ${width}; ${floatStyle} clear: ${align === 'center' ? 'none' : align};`;
+const imgSrc = path ?? src ?? '';
 ---
 
-<figure style={figureStyle} class:list={['as-figure', align !== 'center' && 'as-figure--float']}>
+<figure {...(slotName ? { slot: slotName } : {})}>
   <img
-    src={src}
+    src={imgSrc}
+    class={className}
     alt={alt}
-    loading="lazy"
-    style="width: 100%; height: auto; display: block;"
-    class:list={[!noZoom && 'zoomable']}
+    title={title}
+    loading={loading}
+    width={width}
+    height={height}
+    {...(zoomable ? { 'data-zoomable': true } : {})}
+    onerror="this.style.opacity='0.3';this.style.border='2px dashed #ccc'"
   />
-  {caption && (
-    <figcaption
-      class="as-figure__caption"
-      set:html={caption}
-    />
-  )}
+  {caption && <figcaption class="caption">{caption}</figcaption>}
 </figure>
 
-{/* Clearfix for floating figures — appended after the float so subsequent content is not wrapped */}
-{align !== 'center' && <div style="clear: both;" aria-hidden="true" />}
-
 <style>
-  .as-figure {
+  figure {
+    margin: 0;
+    padding: 0;
+  }
+  figure img {
     display: block;
-  }
-
-  .as-figure__caption {
-    margin-top: 0.5rem;
-    font-size: 0.85rem;
-    line-height: 1.4;
-    text-align: center;
-    color: var(--global-text-color-light);
-    font-style: italic;
-  }
-
-  /* Tighten margin when figure is inline-floated */
-  .as-figure--float {
-    margin-bottom: 0.5rem;
+    width: 100%;
+    height: auto;
   }
 </style>

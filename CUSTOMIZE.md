@@ -1,0 +1,570 @@
+# Customization Guide
+
+This guide walks through every aspect of personalizing your as-folio site.
+
+---
+
+## Table of contents
+
+1. [Site identity](#1-site-identity)
+2. [Profile photo](#2-profile-photo)
+3. [Social links](#3-social-links)
+4. [About page content](#4-about-page-content)
+5. [Blog posts](#5-blog-posts)
+6. [Publications (BibTeX)](#6-publications-bibtex)
+7. [Projects](#7-projects)
+8. [CV](#8-cv)
+9. [Books](#9-books)
+10. [Teaching](#10-teaching)
+11. [People / Lab members](#11-people--lab-members)
+12. [Repositories page](#12-repositories-page)
+13. [Announcements](#13-announcements)
+14. [Dark mode](#14-dark-mode)
+15. [Comments (Giscus)](#15-comments-giscus)
+16. [Analytics](#16-analytics)
+17. [Newsletter](#17-newsletter)
+18. [Cookie consent](#18-cookie-consent)
+19. [Search](#19-search)
+20. [Deployment base path](#20-deployment-base-path)
+21. [Enabling / disabling features](#21-enabling--disabling-features)
+22. [Custom styles](#22-custom-styles)
+
+---
+
+## 1. Site identity
+
+Edit `src/config/site.ts`:
+
+```typescript
+export const site = {
+  title: 'Your Name',
+  description: 'Brief description of your site',
+  url: 'https://your-username.github.io',
+  base: '',   // see §20 for project pages
+  lang: 'en',
+
+  author: {
+    name: 'Your Name',
+    email: 'you@example.com',
+    subtitle: 'Professor of Physics · MIT',
+    moreInfo: `
+      <p>Department of Physics</p>
+      <p>77 Massachusetts Avenue</p>
+      <p>Cambridge, MA 02139</p>
+    `,
+  },
+};
+```
+
+`subtitle` and `moreInfo` support HTML.
+
+---
+
+## 2. Profile photo
+
+Replace `public/assets/img/prof_pic.jpg` (or `.svg`, `.png`, `.webp`) with your own photo.
+
+Update the path in `site.ts`:
+
+```typescript
+author: {
+  avatar: '/assets/img/prof_pic.jpg',
+}
+```
+
+Recommended: square image, at least 400×400 px.
+
+---
+
+## 3. Social links
+
+Set any platform to `undefined` to hide it:
+
+```typescript
+socials: {
+  email: 'you@example.com',
+  github_username: 'your-github',
+  x_username: undefined,               // hide X/Twitter
+  linkedin_username: 'your-linkedin',
+  scholar_userid: 'YOUR_SCHOLAR_ID',   // part after user= in Scholar URL
+  orcid_id: '0000-0000-0000-0000',
+  inspire_id: undefined,
+  researchgate_username: undefined,
+  arxiv_id: undefined,
+  youtube_id: undefined,
+  instagram_username: undefined,
+  mastodon_url: undefined,
+  bluesky_handle: 'you.bsky.social',
+  medium_username: undefined,
+  cv_pdf: '/assets/pdf/cv.pdf',        // link to your CV PDF
+  rss_icon: true,
+},
+```
+
+---
+
+## 4. About page content
+
+Edit `src/pages/index.astro` to change the bio text. The About page auto-pulls from:
+
+- **Announcements**: up to `site.announcements.limit` items from `src/content/announcements/`
+- **Latest posts**: up to `site.latestPosts.limit` posts from `src/content/posts/`
+- **Selected papers**: entries with `selected = {true}` in `src/data/papers.bib`
+
+All three sections can be disabled in `site.ts`.
+
+---
+
+## 5. Blog posts
+
+Create `.md` or `.mdx` files in `src/content/posts/`:
+
+```yaml
+---
+title: "Post Title"
+date: 2024-06-01
+description: "Shown in listings and meta tags"
+tags: [physics, math]
+categories: [science]
+math: true          # enable KaTeX rendering
+toc: true           # sidebar table of contents (default: true)
+pinned: false       # pin to top of blog listing
+hidden: false       # hide from listing (accessible via URL)
+image: /assets/img/post-thumb.jpg
+---
+
+Post body in Markdown/MDX.
+
+Inline math: $E = mc^2$
+
+Display math:
+$$
+\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}
+$$
+```
+
+### MDX components available in posts
+
+```mdx
+import VideoEmbed from '@components/VideoEmbed.astro';
+import AudioPlayer from '@components/AudioPlayer.astro';
+import Tabs from '@components/Tabs.astro';
+
+<VideoEmbed src="https://www.youtube.com/watch?v=..." />
+<AudioPlayer src="/assets/audio/demo.mp3" />
+```
+
+### Per-post CDN widgets
+
+Enable in frontmatter:
+
+| Flag | What it loads |
+|---|---|
+| `mermaid: true` | Mermaid diagrams |
+| `chart_js: true` | Chart.js |
+| `echarts: true` | Apache ECharts |
+| `vega: true` | Vega/Vega-Lite |
+| `plotly: true` | Plotly.js |
+| `pseudocode: true` | pseudocode.js |
+| `typograms: true` | Typograms |
+| `tikzjax: true` | TikzJax |
+| `map: true` | Leaflet maps |
+| `img_comparison: true` | Image comparison slider |
+| `code_diff: true` | Diff2Html |
+| `gallery: true` | PhotoSwipe gallery |
+
+---
+
+## 6. Publications (BibTeX)
+
+Edit `src/data/papers.bib`. Standard BibTeX format with extra fields:
+
+```bibtex
+@article{yourkey2024,
+  title    = {Your Paper Title},
+  author   = {Your Name and Coauthor Name},
+  journal  = {Journal of Example},
+  year     = {2024},
+  volume   = {42},
+  pages    = {1--10},
+
+  % as-folio extra fields:
+  selected = {true},    % show on About page under Selected Publications
+  abbr     = {J. Ex.},  % short venue label shown as badge
+  pdf      = {https://arxiv.org/pdf/...},
+  code     = {https://github.com/you/repo},
+  slides   = {/assets/pdf/talk.pdf},
+  poster   = {/assets/pdf/poster.pdf},
+  video    = {https://www.youtube.com/watch?v=...},
+  website  = {https://project-page.example.com},
+  html     = {https://journal.example.com/article},
+  preview  = {/assets/img/paper-thumb.jpg},
+  abstract = {Your abstract text here.},
+}
+```
+
+The publication page groups entries by year, newest first. BibTeX is parsed at build time — no runtime dependency.
+
+---
+
+## 7. Projects
+
+Create `.md` files in `src/content/projects/`:
+
+```yaml
+---
+title: "Project Name"
+description: "What this project does"
+img: /assets/img/projects/my-project.jpg
+img_alt: "Screenshot of the project"
+github: username/repo                  # links to GitHub
+github_stars: username/repo            # shows live star count
+url: https://project-website.com       # external URL
+importance: 1                          # sort order (lower = first)
+category: open source                  # groups cards under this heading
+redirect: https://external-url.com     # redirect instead of showing project page
+related_publications: [key1, key2]     # cite from papers.bib
+giscus_comments: false
+---
+
+Project description content (Markdown).
+```
+
+Add images to `public/assets/img/projects/`.
+
+---
+
+## 8. CV
+
+The CV page supports two formats — switch with `site.cv.format`.
+
+### RenderCV format (`src/data/cv.yml`)
+
+```yaml
+cv:
+  name: Your Name
+  label: Professor of Physics
+  email: you@example.com
+
+  sections:
+    education:
+      - institution: MIT
+        area: Physics
+        studyType: PhD
+        startDate: "2010-09-01"
+        endDate: "2015-06-01"
+    experience:
+      - company: Your University
+        position: Professor
+        startDate: "2015-09-01"
+        endDate: "present"
+        highlights:
+          - Teaching and research
+```
+
+### JSONResume format (`src/data/resume.json`)
+
+Standard [JSONResume](https://jsonresume.org/) schema.
+
+### CV PDF
+
+Place your CV PDF in `public/assets/pdf/` and set:
+
+```typescript
+cv: {
+  pdfPath: '/assets/pdf/your-cv.pdf',
+}
+```
+
+---
+
+## 9. Books
+
+Create `.md` files in `src/content/books/`:
+
+```yaml
+---
+title: "Book Title"
+author: Author Name
+isbn: "9780000000000"       # for Open Library cover lookup
+olid: "OL00000000M"         # Open Library ID (alternative to ISBN)
+cover: /assets/img/book_covers/mybook.jpg  # or use ISBN/OLID
+status: finished            # reading | finished | queued | paused | abandoned | interested | reread
+stars: 5                    # 1–5
+started: 2024-01-01
+finished: 2024-03-15
+released: 1984              # original publication year
+categories: science fiction
+buy_link: https://bookshop.org/...
+goodreads_review: "123456789"
+importance: 1               # sort order within the same year
+---
+
+Optional personal notes about the book.
+```
+
+Books are grouped by year read (most recent first). Books without dates go in a "To Read" section.
+
+---
+
+## 10. Teaching
+
+Create `.md` files in `src/content/teaching/`:
+
+```yaml
+---
+title: "Introduction to Quantum Mechanics"
+code: "PHYS 401"
+description: "Undergraduate course covering wave functions and operators"
+term: "Spring 2024"
+institution: "Your University"
+url: https://course-website.example.com
+importance: 1
+category: current          # 'current' or 'past'
+---
+
+Course description content (optional).
+```
+
+---
+
+## 11. People / Lab members
+
+Create `.md` files in `src/content/people/`:
+
+```yaml
+---
+name: "Lab Member Name"
+role: "PhD Student"
+photo: /assets/img/people/member.jpg
+description: "Research interests: quantum computing, information theory"
+website: https://member-site.com
+github: github-username
+scholar: SCHOLAR_ID
+orcid: 0000-0000-0000-0000
+importance: 1
+group: current             # 'current' or 'alumni'
+---
+```
+
+---
+
+## 12. Repositories page
+
+Edit `src/data/repositories.yml`:
+
+```yaml
+github_users:
+  - your-github-username
+  - collaborator-username
+
+github_repos:
+  - username/repo-name
+  - username/another-repo
+```
+
+The page renders GitHub user stat cards and repo pins via `github-readme-stats` (image URLs, no API key required).
+
+Themes are configured in `site.ts`:
+
+```typescript
+repositories: {
+  githubUsers: true,
+  githubRepos: true,
+  trophies: true,
+  themeLight: 'default',
+  themeDark: 'dark',
+},
+```
+
+---
+
+## 13. Announcements
+
+Create `.md` files in `src/content/announcements/`:
+
+```yaml
+---
+date: 2024-06-01
+pinned: false
+---
+
+Announcement text here. HTML and Markdown are supported.
+[Link text](https://example.com) works too.
+```
+
+Announcements appear on the About page (if `site.announcements.enabled: true`) and on the dedicated `/news` page.
+
+---
+
+## 14. Dark mode
+
+Dark mode is enabled by default (`site.features.darkmode: true`). The initial theme follows the OS preference.
+
+To default to a specific theme:
+
+```typescript
+theme: {
+  default: 'light',   // 'light' | 'dark' | 'system'
+},
+```
+
+Users can always toggle with the sun/moon button in the navbar.
+
+---
+
+## 15. Comments (Giscus)
+
+1. Go to [giscus.app](https://giscus.app) and follow the setup instructions
+2. Copy the values into `site.ts`:
+
+```typescript
+giscus: {
+  enabled: true,
+  repo: 'username/repo',
+  repoId: 'R_...',
+  category: 'Comments',
+  categoryId: 'DIC_...',
+  mapping: 'title',
+  strict: true,
+  reactionsEnabled: true,
+  inputPosition: 'bottom',
+  darkTheme: 'dark',
+  lightTheme: 'light',
+  lang: 'en',
+},
+```
+
+Giscus appears on all blog posts. Enable per-project with `giscus_comments: true` in project frontmatter.
+
+---
+
+## 16. Analytics
+
+Set any analytics provider in `site.ts` (leave others as empty string `''`):
+
+```typescript
+analytics: {
+  ga4: 'G-XXXXXXXXXX',          // Google Analytics 4
+  cronitor: 'YOUR_SITE_ID',     // Cronitor RUM
+  pirsch: 'YOUR_CODE',          // Pirsch.io
+  openpanel: 'YOUR_CLIENT_ID',  // OpenPanel
+  googleVerification: '',       // Google Search Console
+  bingVerification: '',         // Bing Webmaster
+},
+```
+
+All analytics scripts are loaded via Partytown (web worker) to avoid blocking the main thread. Only non-empty strings are injected.
+
+---
+
+## 17. Newsletter
+
+Integration with [Loops.so](https://loops.so):
+
+1. Create a form in Loops and copy the form endpoint
+2. Enable in `site.ts`:
+
+```typescript
+features: {
+  newsletter: true,
+},
+newsletter: {
+  endpoint: 'https://app.loops.so/api/newsletter-form/YOUR_ID',
+},
+```
+
+The newsletter form appears in the footer.
+
+---
+
+## 18. Cookie consent
+
+Enable GDPR-compliant cookie consent:
+
+```typescript
+features: {
+  cookieConsent: true,
+},
+```
+
+The dialog uses [vanilla-cookieconsent](https://github.com/orestbida/cookieconsent) loaded from CDN. Users must accept before analytics scripts run.
+
+---
+
+## 19. Search
+
+Search is enabled by default. It's powered by [Pagefind](https://pagefind.app) (build-time index) with [ninja-keys](https://github.com/ssleptsov/ninja-keys) for the ⌘K command palette UI.
+
+To disable:
+
+```typescript
+features: {
+  search: false,
+},
+```
+
+The search index is rebuilt on every `yarn build` run.
+
+---
+
+## 20. Deployment base path
+
+**User/org pages** (`username.github.io`):
+
+```typescript
+url: 'https://username.github.io',
+base: '',
+```
+
+**Project pages** (`username.github.io/repo-name`):
+
+```typescript
+url: 'https://username.github.io/repo-name',
+base: '/repo-name',
+```
+
+Also update `astro.config.mjs` if the base changes (it reads from `site.ts` by default — check the config).
+
+---
+
+## 21. Enabling / disabling features
+
+All feature flags live in the `features` block of `site.ts`:
+
+```typescript
+features: {
+  darkmode: true,       // dark/light toggle in navbar
+  search: true,         // ⌘K search
+  progressBar: true,    // reading progress bar on posts
+  backToTop: true,      // floating back-to-top button
+  masonry: true,        // auto masonry layout for projects
+  mediumZoom: true,     // click-to-zoom on images
+  cookieConsent: false, // GDPR cookie dialog
+  newsletter: false,    // newsletter form in footer
+  videoEmbedding: false,// embed video links in bib entries
+},
+```
+
+---
+
+## 22. Custom styles
+
+The CSS custom properties used by as-folio match al-folio exactly. Override them in `src/styles/_colors.css`:
+
+```css
+:root {
+  --global-theme-color: #B509AC;   /* accent color (default: purple) */
+  --global-bg-color: #FFFFFF;
+  --global-text-color: #000000;
+  /* ... see _colors.css for full list */
+}
+
+[data-theme='dark'] {
+  --global-theme-color: #B509AC;
+  --global-bg-color: #1a1a1a;
+  --global-text-color: #e0e0e0;
+}
+```
+
+To change the accent color, update `--global-theme-color` in both `:root` and `[data-theme='dark']`.

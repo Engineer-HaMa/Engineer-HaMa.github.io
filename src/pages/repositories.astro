@@ -1,0 +1,191 @@
+---
+import { site } from '@config/site';
+import Page from '@layouts/Page.astro';
+import yaml from 'js-yaml';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+
+const reposYaml = readFileSync(resolve('src/data/repositories.yml'), 'utf-8');
+const reposData = yaml.load(reposYaml) as {
+  github_users?: string[];
+  github_repos?: string[];
+  repo_description_lines_max?: number;
+};
+
+const users: string[] = reposData.github_users ?? [];
+const repos: string[] = reposData.github_repos ?? [];
+const maxLines = reposData.repo_description_lines_max ?? 2;
+---
+
+<Page title="Repositories" description={`GitHub repositories`}>
+  <div class="post">
+    <header class="post-header">
+      <h1 class="post-title">repositories</h1>
+      <p class="post-description">
+        Edit <code>src/data/repositories.yml</code> to configure GitHub users and repositories.
+      </p>
+    </header>
+    <article>
+      {site.repositories.githubUsers && users.length > 0 && (
+        <>
+          <h2 class="section-heading">GitHub users</h2>
+          <div class="repo-grid">
+            {users.map((username) => (
+              <div class="repo-card">
+                <a href={`https://github.com/${username}`} target="_blank" rel="noopener noreferrer">
+                  <img
+                    class="only-light"
+                    alt={username}
+                    src={`https://github-readme-stats.vercel.app/api/?username=${username}&theme=${site.repositories.themeLight}&show_icons=true`}
+                    loading="lazy"
+                  />
+                  <img
+                    class="only-dark"
+                    alt={username}
+                    src={`https://github-readme-stats.vercel.app/api/?username=${username}&theme=${site.repositories.themeDark}&show_icons=true`}
+                    loading="lazy"
+                  />
+                </a>
+              </div>
+            ))}
+          </div>
+
+          {site.repositories.trophies && (
+            <>
+              <div class="divider"></div>
+              {users.map((username) => (
+                <>
+                  {users.length > 1 && <h4 class="trophy-user">{username}</h4>}
+                  <div class="repo-grid">
+                    <div class="repo-card repo-card--wide">
+                      <a href={`https://github.com/${username}`} target="_blank" rel="noopener noreferrer">
+                        <img
+                          class="only-light"
+                          alt={`${username} trophies`}
+                          src={`https://github-profile-trophy.vercel.app/?username=${username}&theme=flat`}
+                          loading="lazy"
+                        />
+                        <img
+                          class="only-dark"
+                          alt={`${username} trophies`}
+                          src={`https://github-profile-trophy.vercel.app/?username=${username}&theme=gitdimmed`}
+                          loading="lazy"
+                        />
+                      </a>
+                    </div>
+                  </div>
+                </>
+              ))}
+            </>
+          )}
+        </>
+      )}
+
+      {site.repositories.githubRepos && repos.length > 0 && (
+        <>
+          <div class="divider"></div>
+          <h2 class="section-heading">GitHub repositories</h2>
+          <div class="repo-grid">
+            {repos.map((repo) => {
+              const [owner, repoName] = repo.split('/');
+              const showOwner = !users.includes(owner);
+              return (
+                <div class="repo-card">
+                  <a href={`https://github.com/${repo}`} target="_blank" rel="noopener noreferrer">
+                    <img
+                      class="only-light"
+                      alt={repo}
+                      src={`https://github-readme-stats.vercel.app/api/pin/?username=${owner}&repo=${repoName}&theme=${site.repositories.themeLight}&show_owner=${showOwner}&description_lines_count=${maxLines}`}
+                      loading="lazy"
+                    />
+                    <img
+                      class="only-dark"
+                      alt={repo}
+                      src={`https://github-readme-stats.vercel.app/api/pin/?username=${owner}&repo=${repoName}&theme=${site.repositories.themeDark}&show_owner=${showOwner}&description_lines_count=${maxLines}`}
+                      loading="lazy"
+                    />
+                  </a>
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
+    </article>
+  </div>
+</Page>
+
+<style>
+  .post {
+    padding-top: 0;
+  }
+  .post-header {
+    margin-bottom: 1.5rem;
+  }
+  .post-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--global-text-color);
+    font-family: var(--font-sans);
+    margin-bottom: 0.25rem;
+  }
+  .post-description {
+    color: var(--global-text-color-light);
+    font-size: 0.95rem;
+  }
+  .post-description code {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.875em;
+    background: var(--global-card-bg-color);
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+  }
+  .section-heading {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--global-text-color);
+    font-family: var(--font-sans);
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .divider {
+    border-top: 1px solid var(--global-divider-color);
+    margin: 2rem 0;
+  }
+  .trophy-user {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--global-text-color-light);
+    margin-bottom: 0.5rem;
+    font-family: var(--font-sans);
+  }
+  .repo-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+  .repo-card {
+    max-width: 400px;
+    flex: 1 1 300px;
+  }
+  .repo-card--wide {
+    max-width: 100%;
+    flex: 1 1 600px;
+  }
+  .repo-card a {
+    display: block;
+    text-decoration: none;
+  }
+  .repo-card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+  }
+  /* Dark mode visibility helpers */
+  [data-theme='light'] .only-dark,
+  [data-theme='dark'] .only-light {
+    display: none;
+  }
+</style>

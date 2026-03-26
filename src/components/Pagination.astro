@@ -31,7 +31,7 @@ function buildPageList(current: number, total: number): (number | '...')[] {
 const pageList = buildPageList(currentPage, totalPages);
 
 function pageUrl(n: number): string {
-  return n === 1 ? basePath : `${basePath}${n}/`;
+  return n === 1 ? basePath : `${basePath}page/${n}/`;
 }
 ---
 

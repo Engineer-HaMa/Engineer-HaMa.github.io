@@ -37,6 +37,32 @@ const posts = defineCollection({
     bibliography: z.string().optional(),
     /** Citation key for this post (used in bibliography). */
     citation_key: z.string().optional(),
+    /** Load Mermaid diagram rendering on this post. */
+    mermaid: z.boolean().optional().default(false),
+    /** Load Chart.js on this post. */
+    chart_js: z.boolean().optional().default(false),
+    /** Load Apache ECharts on this post. */
+    echarts: z.boolean().optional().default(false),
+    /** Load Vega/Vega-Lite on this post. */
+    vega: z.boolean().optional().default(false),
+    /** Load Plotly.js on this post. */
+    plotly: z.boolean().optional().default(false),
+    /** Load pseudocode.js on this post. */
+    pseudocode: z.boolean().optional().default(false),
+    /** Load Typograms on this post. */
+    typograms: z.boolean().optional().default(false),
+    /** Load TikzJax on this post. */
+    tikzjax: z.boolean().optional().default(false),
+    /** Load Leaflet maps on this post. */
+    map: z.boolean().optional().default(false),
+    /** Load img-comparison-slider on this post. */
+    img_comparison: z.boolean().optional().default(false),
+    /** Load Diff2Html on this post. */
+    code_diff: z.boolean().optional().default(false),
+    /** Load PhotoSwipe gallery on this post. */
+    gallery: z.boolean().optional().default(false),
+    /** Enable Disqus comments on this post. */
+    disqus: z.boolean().optional().default(false),
   }),
 });
 
@@ -131,4 +157,38 @@ const announcements = defineCollection({
   }),
 });
 
-export const collections = { posts, projects, people, teaching, announcements };
+// ─── Books ─────────────────────────────────────────────────────────────────
+
+const books = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/books' }),
+  schema: z.object({
+    title: z.string(),
+    author: z.string(),
+    /** Path to cover image in public/assets/img/book_covers/ */
+    cover: z.string().optional(),
+    /** Open Library ID for cover lookup (e.g. OL43499941M) */
+    olid: z.coerce.string().optional(),
+    /** ISBN for cover lookup (digits only, dashes optional) */
+    isbn: z.coerce.string().optional(),
+    /** Reading status */
+    status: z.enum(['reading', 'finished', 'queued', 'paused', 'abandoned', 'interested', 'reread']).optional(),
+    /** Star rating 1-5 */
+    stars: z.number().min(1).max(5).optional(),
+    /** Date started reading */
+    started: z.coerce.date().optional(),
+    /** Date finished reading */
+    finished: z.coerce.date().optional(),
+    /** Original publication year */
+    released: z.number().optional(),
+    /** Link to buy the book */
+    buy_link: z.string().url().optional(),
+    /** Goodreads review ID */
+    goodreads_review: z.string().optional(),
+    /** Comma-separated categories/genres */
+    categories: z.string().optional(),
+    /** Sort order */
+    importance: z.number().optional().default(999),
+  }),
+});
+
+export const collections = { posts, projects, people, teaching, announcements, books };

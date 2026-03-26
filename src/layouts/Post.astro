@@ -18,7 +18,12 @@ interface Props {
 }
 
 const { post, headings = [] } = Astro.props;
-const { title, description, date, tags = [], categories = [], math = false } = post.data;
+const {
+  title, description, date, tags = [], categories = [], math = false,
+  mermaid = false, chart_js = false, echarts = false, vega = false, plotly = false,
+  pseudocode = false, typograms = false, tikzjax = false, map = false,
+  img_comparison = false, code_diff = false, gallery = false, disqus = false,
+} = post.data;
 
 const rt = post.body ? calcReadingTime(post.body) : 1;
 
@@ -109,6 +114,115 @@ const related = post.data.relatedPosts ? relatedPosts(post, allPosts) : [];
   initZoom();
   document.addEventListener('astro:after-swap', initZoom);
 </script>
+
+<!-- ── Per-post CDN widgets ──────────────────────────────────────────────── -->
+
+{mermaid && (
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default' });
+    document.querySelectorAll('pre.language-mermaid code, code.language-mermaid').forEach((el) => {
+      const pre = el.closest('pre') ?? el;
+      const div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = el.textContent ?? '';
+      pre.replaceWith(div);
+    });
+    mermaid.run();
+  </script>
+)}
+
+{chart_js && (
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js" defer></script>
+)}
+
+{echarts && (
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js" defer></script>
+)}
+
+{vega && (
+  <>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6" defer></script>
+  </>
+)}
+
+{plotly && (
+  <script src="https://cdn.jsdelivr.net/npm/plotly.js@2/dist/plotly.min.js" defer></script>
+)}
+
+{pseudocode && (
+  <>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@2.4.1/build/pseudocode.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/pseudocode@2.4.1/build/pseudocode.min.js" defer></script>
+  </>
+)}
+
+{typograms && (
+  <script src="/assets/js/typograms.js" type="module"></script>
+)}
+
+{tikzjax && (
+  <>
+    <link rel="stylesheet" href="https://tikzjax.com/v1/fonts.css" />
+    <script src="https://tikzjax.com/v1/tikzjax.js"></script>
+  </>
+)}
+
+{map && (
+  <>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+  </>
+)}
+
+{img_comparison && (
+  <>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/img-comparison-slider@8/dist/index.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/img-comparison-slider@8/dist/styles.css" />
+  </>
+)}
+
+{code_diff && (
+  <>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui.min.js" defer></script>
+  </>
+)}
+
+{gallery && (
+  <>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe.css" />
+    <script type="module">{`
+      import PhotoSwipeLightbox from 'https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe-lightbox.esm.js';
+      const lightbox = new PhotoSwipeLightbox({
+        gallery: '#post-content',
+        children: 'a[data-pswp-width]',
+        pswpModule: () => import('https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe.esm.js'),
+      });
+      lightbox.init();
+    `}</script>
+  </>
+)}
+
+{disqus && (
+  <>
+    <div id="disqus_thread" class="mt-8 pt-6" style="border-top: 1px solid var(--global-divider-color);"></div>
+    <script is:inline define:vars={{ disqusUrl: Astro.url.href, disqusId: post.id }}>
+      var disqus_config = function () {
+        this.page.url = disqusUrl;
+        this.page.identifier = disqusId;
+      };
+      (function() {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://YOUR-DISQUS-SHORTNAME.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+      })();
+    </script>
+  </>
+)}
 
 <style>
   .copy-btn {

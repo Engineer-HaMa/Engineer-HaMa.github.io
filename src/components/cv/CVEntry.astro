@@ -4,7 +4,7 @@ interface Props {
   title: string;
   /** Secondary line (institution, company, journal). */
   subtitle?: string;
-  /** Location string. */
+  /** Location string — shown below date badge. */
   location?: string;
   /** Date range or single date string (already formatted). */
   dates?: string;
@@ -17,61 +17,51 @@ interface Props {
 const { title, subtitle, location, dates, highlights = [], url } = Astro.props;
 ---
 
-<div class="cv-entry mb-4">
-  <div class="flex flex-wrap items-baseline justify-between gap-x-4">
-    <div class="flex-1 min-w-0">
-      {
-        url ? (
-          <a
-            href={url}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="font-semibold"
-            style="color: var(--global-text-color); text-decoration: none;"
-          >
-            {title}
-          </a>
-        ) : (
-          <span class="font-semibold" style="color: var(--global-text-color);">
-            {title}
-          </span>
-        )
-      }
-      {
-        subtitle && (
-          <span class="text-sm" style="color: var(--global-text-color-light);">
-            {' '}
-            — {subtitle}
-          </span>
-        )
-      }
-      {
-        location && (
-          <span class="text-sm" style="color: var(--global-text-color-light);">
-            , {location}
-          </span>
-        )
-      }
+<li class="list-group-item">
+  <div class="row">
+    <div class="col-xs-2 col-sm-2 col-md-2 text-center date-column">
+      <table class="table-cv">
+        <tbody>
+          <tr>
+            <td>
+              {dates && (
+                <span
+                  class="badge font-weight-bold danger-color-dark text-uppercase align-middle"
+                  style="min-width: 75px;"
+                >
+                  {dates}
+                </span>
+              )}
+            </td>
+          </tr>
+          {location && (
+            <tr>
+              <td>
+                <p class="location">{location}</p>
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
     </div>
-    {
-      dates && (
-        <div
-          class="text-sm flex-shrink-0"
-          style="color: var(--global-text-color-light); font-style: italic;"
-        >
-          {dates}
-        </div>
-      )
-    }
+    <div class="col-xs-10 col-sm-10 col-md-10 mt-2 mt-md-0">
+      {url ? (
+        <h6 class="title font-weight-bold ml-1 ml-md-4">
+          <a href={url} target="_blank" rel="noopener noreferrer">{title}</a>
+        </h6>
+      ) : (
+        <h6 class="title font-weight-bold ml-1 ml-md-4">{title}</h6>
+      )}
+      {subtitle && (
+        <h6 class="ml-1 ml-md-4" style="font-size: 0.95rem;">{subtitle}</h6>
+      )}
+      {highlights.length > 0 && (
+        <ul class="items">
+          {highlights.map((h) => (
+            <li><span class="item" set:html={h} /></li>
+          ))}
+        </ul>
+      )}
+    </div>
   </div>
-
-  {
-    highlights.length > 0 && (
-      <ul class="mt-1 ml-4 text-sm space-y-0.5" style="color: var(--global-text-color);">
-        {highlights.map((h) => (
-          <li class="list-disc" set:html={h} />
-        ))}
-      </ul>
-    )
-  }
-</div>
+</li>

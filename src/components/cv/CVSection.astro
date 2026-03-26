@@ -7,12 +7,10 @@ interface Props {
 const { title, id } = Astro.props;
 ---
 
-<section {id} class="cv-section mb-8">
-  <h2
-    class="text-lg font-bold uppercase tracking-wide mb-3"
-    style="color: var(--global-theme-color); border-bottom: 2px solid var(--global-theme-color); padding-bottom: 0.25rem; font-family: var(--font-condensed);"
-  >
-    {title}
-  </h2>
-  <slot />
-</section>
+<a class="anchor" id={id}></a>
+<div class="card mt-3 p-3">
+  <h3 class="card-title font-weight-medium">{title}</h3>
+  <div>
+    <slot />
+  </div>
+</div>

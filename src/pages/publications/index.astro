@@ -13,17 +13,25 @@ const entries = parseBibtex(bibRaw).sort((a, b) => {
 
 const showAltmetric = site.publications.badges.altmetric;
 const showDimensions = site.publications.badges.dimensions;
+const maxAuthorLimit = site.publications.maxAuthorLimit;
+const showThumbnails = site.publications.thumbnails;
 ---
 
 <Page title="Publications" description={`Publications by ${site.author.name}`}>
-  <h1
-    class="text-3xl font-bold mb-8"
-    style="color: var(--global-text-color); font-family: var(--font-sans);"
-  >
-    Publications
-  </h1>
+  <div class="post">
+    <header class="post-header">
+      <h1 class="post-title">publications</h1>
+    </header>
 
-  <BibSearch client:load entries={entries} />
+    <article>
+      <BibSearch
+        client:load
+        entries={entries}
+        maxAuthorLimit={maxAuthorLimit}
+        showThumbnails={showThumbnails}
+      />
+    </article>
+  </div>
 </Page>
 
 {showAltmetric && (
@@ -33,9 +41,3 @@ const showDimensions = site.publications.badges.dimensions;
 {showDimensions && (
   <script is:inline async src="https://badge.dimensions.ai/badge.js"></script>
 )}
-
-<style>
-  .pub-title:hover {
-    color: var(--global-theme-color) !important;
-  }
-</style>

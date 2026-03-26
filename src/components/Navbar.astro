@@ -7,9 +7,11 @@ const navItems = [
   { label: 'blog', href: `${site.base}/blog/` },
   { label: 'publications', href: `${site.base}/publications/` },
   { label: 'projects', href: `${site.base}/projects/` },
+  { label: 'repositories', href: `${site.base}/repositories/` },
   { label: 'cv', href: `${site.base}/cv/` },
   { label: 'teaching', href: `${site.base}/teaching/` },
   { label: 'people', href: `${site.base}/people/` },
+  { label: 'books', href: `${site.base}/books/` },
 ];
 
 const pathname = Astro.url.pathname;
@@ -104,13 +106,14 @@ function isActive(href: string): boolean {
       <ThemeToggle />
       <button
         id="navbar-toggler"
+        class="navbar-toggler collapsed"
         aria-label="Toggle navigation"
         aria-expanded="false"
         style="padding: 0.25rem; border: 0; background: inherit; cursor: pointer;"
       >
-        <span class="icon-bar top-bar" style="display: block; width: 22px; height: 2px; background-color: var(--global-text-color); border-radius: 1px; margin-bottom: 4px; transition: all 0.2s;"></span>
-        <span class="icon-bar middle-bar" style="display: block; width: 22px; height: 2px; background-color: var(--global-text-color); border-radius: 1px; margin-bottom: 4px; transition: all 0.2s;"></span>
-        <span class="icon-bar bottom-bar" style="display: block; width: 22px; height: 2px; background-color: var(--global-text-color); border-radius: 1px; transition: all 0.2s;"></span>
+        <span class="icon-bar top-bar" style="display: block; width: 22px; height: 2px; background-color: var(--global-text-color); border-radius: 1px; margin-bottom: 4px;"></span>
+        <span class="icon-bar middle-bar" style="display: block; width: 22px; height: 2px; background-color: var(--global-text-color); border-radius: 1px; margin-bottom: 4px;"></span>
+        <span class="icon-bar bottom-bar" style="display: block; width: 22px; height: 2px; background-color: var(--global-text-color); border-radius: 1px;"></span>
       </button>
     </div>
   </div>
@@ -135,14 +138,51 @@ function isActive(href: string): boolean {
   </div>
 </nav>
 
+<style>
+  .icon-bar {
+    transition: all 0.2s;
+  }
+
+  /* When toggler is open (does NOT have .collapsed) */
+  .navbar-toggler:not(.collapsed) .top-bar {
+    transform: rotate(45deg);
+    transform-origin: 10% 10%;
+  }
+  .navbar-toggler:not(.collapsed) .middle-bar {
+    opacity: 0;
+  }
+  .navbar-toggler:not(.collapsed) .bottom-bar {
+    transform: rotate(-45deg);
+    transform-origin: 10% 90%;
+  }
+
+  /* When toggler is collapsed */
+  .navbar-toggler.collapsed .top-bar {
+    transform: rotate(0);
+  }
+  .navbar-toggler.collapsed .middle-bar {
+    opacity: 1;
+  }
+  .navbar-toggler.collapsed .bottom-bar {
+    transform: rotate(0);
+  }
+</style>
+
 <script>
   const toggler = document.getElementById('navbar-toggler');
   const collapse = document.getElementById('navbar-collapse');
 
   toggler?.addEventListener('click', () => {
-    const isOpen = collapse?.classList.contains('hidden') === false;
-    collapse?.classList.toggle('hidden', isOpen);
-    toggler.setAttribute('aria-expanded', String(!isOpen));
+    const isOpen = !collapse?.classList.contains('hidden');
+    if (isOpen) {
+      collapse?.classList.add('hidden');
+      toggler.setAttribute('aria-expanded', 'false');
+      toggler.classList.add('collapsed');
+    } else {
+      collapse?.classList.remove('hidden');
+      toggler.setAttribute('aria-expanded', 'true');
+      toggler.classList.remove('collapsed');
+    }
   });
 
   // Close on navigation
@@ -150,6 +190,7 @@ function isActive(href: string): boolean {
     link.addEventListener('click', () => {
       collapse?.classList.add('hidden');
       toggler?.setAttribute('aria-expanded', 'false');
+      toggler?.classList.add('collapsed');
     });
   });
 </script>

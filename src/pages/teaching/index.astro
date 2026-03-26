@@ -1,136 +1,165 @@
 ---
 import { getCollection, render } from 'astro:content';
+import { Icon } from 'astro-icon/components';
 import { site } from '@config/site';
 import Page from '@layouts/Page.astro';
 
 const all = await getCollection('teaching');
-const current = all
-  .filter((c) => c.data.category === 'current')
-  .sort((a, b) => (a.data.importance ?? 999) - (b.data.importance ?? 999));
-const past = all
-  .filter((c) => c.data.category === 'past')
-  .sort((a, b) => (a.data.importance ?? 999) - (b.data.importance ?? 999));
 
-// Pre-render content in frontmatter
-const renderedCurrent = await Promise.all(current.map(async (c) => ({ entry: c, rendered: await render(c) })));
-const renderedPast = await Promise.all(past.map(async (c) => ({ entry: c, rendered: await render(c) })));
+// Extract year from term string, e.g. "Fall 2024" → 2024
+function termYear(term?: string): number {
+  if (!term) return 0;
+  const m = term.match(/\d{4}/);
+  return m ? parseInt(m[0]) : 0;
+}
+
+// Pre-render all entries
+const rendered = await Promise.all(
+  all.map(async (c) => ({ entry: c, rendered: await render(c) }))
+);
+
+// Build year → entries map (sorted descending by year, then by importance)
+const byYear = new Map<number, typeof rendered>();
+for (const item of rendered) {
+  const year = termYear(item.entry.data.term);
+  if (!byYear.has(year)) byYear.set(year, []);
+  byYear.get(year)!.push(item);
+}
+for (const items of byYear.values()) {
+  items.sort((a, b) => (a.entry.data.importance ?? 999) - (b.entry.data.importance ?? 999));
+}
+const years = [...byYear.keys()].sort((a, b) => b - a);
+
+const calendarId = site.teaching.calendarId;
+const timezone = site.teaching.timezone;
 ---
 
 <Page title="Teaching" description={`Teaching by ${site.author.name}`}>
-  <h1
-    class="text-3xl font-bold mb-8"
-    style="color: var(--global-text-color); font-family: var(--font-sans);"
-  >
-    Teaching
-  </h1>
+  <div class="post">
+    <header class="post-header">
+      <h1 class="post-title">teaching</h1>
+      <p class="post-description">
+        Course materials, schedules, and resources for classes taught.
+      </p>
+    </header>
 
-  {
-    renderedCurrent.length > 0 && (
-      <section class="mb-10">
-        <h2
-          class="text-xl font-bold mb-4"
-          style="color: var(--global-theme-color); border-bottom: 1px solid var(--global-divider-color); padding-bottom: 0.25rem;"
-        >
-          Current
-        </h2>
-        <div class="space-y-4">
-          {renderedCurrent.map(({ entry: course, rendered: { Content } }) => (
-            <div class="teaching-entry">
-              <div class="flex flex-wrap items-baseline justify-between gap-x-4">
-                <div>
-                  {course.data.code && (
-                    <span
-                      class="badge-abbr text-xs mr-2"
-                      style="background-color: var(--global-theme-color); color: var(--global-hover-text-color);"
-                    >
-                      {course.data.code}
-                    </span>
-                  )}
-                  {course.data.url ? (
-                    <a
-                      href={course.data.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="font-semibold"
-                      style="color: var(--global-text-color); text-decoration: none;"
-                    >
-                      {course.data.title}
-                    </a>
-                  ) : (
-                    <span class="font-semibold" style="color: var(--global-text-color);">
-                      {course.data.title}
-                    </span>
-                  )}
-                </div>
-                {course.data.term && (
-                  <span class="text-sm italic" style="color: var(--global-text-color-light);">
-                    {course.data.term}
-                  </span>
-                )}
+    <article>
+      <!-- Google Calendar section -->
+      {calendarId && (
+        <div class="post mt-4">
+          <h2 class="mb-3">
+            <Icon name="fa-solid:calendar" style="font-size: 0.9em; margin-right: 0.4em;" />
+            Upcoming Events
+          </h2>
+          <button
+            class="btn-calendar-toggle"
+            id="calendar-toggle-btn"
+          >
+            Show Calendar
+          </button>
+          <div id="calendar-container" style="display: none;">
+            <iframe
+              id="calendar-iframe"
+              data-calendar-id={calendarId}
+              data-timezone={timezone}
+              style="border: 0; width: 100%; height: 600px;"
+              frameborder="0"
+              scrolling="no"
+            ></iframe>
+          </div>
+        </div>
+      )}
+
+      <!-- Courses grouped by year -->
+      {all.length === 0 ? (
+        <p style="color: var(--global-text-color-light);">No teaching entries yet.</p>
+      ) : (
+        <div class="courses">
+          {years.map((year) => (
+            <>
+              <h2 class="year">{year > 0 ? year : 'Other'}</h2>
+              <div class="course-list">
+                {byYear.get(year)!.map(({ entry: course, rendered: { Content } }) => (
+                  <div class="course-item">
+                    <h3 class="course-title">
+                      {course.data.url ? (
+                        <a
+                          href={course.data.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {course.data.title}
+                        </a>
+                      ) : (
+                        course.data.title
+                      )}
+                    </h3>
+                    <div class="course-meta">
+                      {course.data.code && <span class="course-term">{course.data.code}</span>}
+                      {course.data.term && <span class="course-term">{course.data.term}</span>}
+                      {course.data.institution && (
+                        <span class="course-instructor">{course.data.institution}</span>
+                      )}
+                    </div>
+                    {course.data.description && (
+                      <div class="course-description">
+                        <p>{course.data.description}</p>
+                      </div>
+                    )}
+                    <div class="prose prose-sm max-w-none mt-2">
+                      <Content />
+                    </div>
+                  </div>
+                ))}
               </div>
-              {course.data.description && (
-                <p class="text-sm mt-1" style="color: var(--global-text-color-light);">
-                  {course.data.description}
-                </p>
-              )}
-              <div class="prose prose-sm max-w-none mt-2">
-                <Content />
-              </div>
-            </div>
+            </>
           ))}
         </div>
-      </section>
-    )
-  }
-
-  {
-    renderedPast.length > 0 && (
-      <section class="mb-10">
-        <h2
-          class="text-xl font-bold mb-4"
-          style="color: var(--global-theme-color); border-bottom: 1px solid var(--global-divider-color); padding-bottom: 0.25rem;"
-        >
-          Past
-        </h2>
-        <div class="space-y-4">
-          {renderedPast.map(({ entry: course, rendered: { Content } }) => (
-            <div class="teaching-entry">
-              <div class="flex flex-wrap items-baseline justify-between gap-x-4">
-                <div>
-                  {course.data.code && (
-                    <span
-                      class="badge-abbr text-xs mr-2"
-                      style="background-color: var(--global-text-color-light); color: var(--global-hover-text-color);"
-                    >
-                      {course.data.code}
-                    </span>
-                  )}
-                  <span class="font-semibold" style="color: var(--global-text-color);">
-                    {course.data.title}
-                  </span>
-                </div>
-                {course.data.term && (
-                  <span class="text-sm italic" style="color: var(--global-text-color-light);">
-                    {course.data.term}
-                  </span>
-                )}
-              </div>
-              {course.data.description && (
-                <p class="text-sm mt-1" style="color: var(--global-text-color-light);">
-                  {course.data.description}
-                </p>
-              )}
-              <div class="prose prose-sm max-w-none mt-2">
-                <Content />
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-    )
-  }
-
-  {all.length === 0 && (
-    <p style="color: var(--global-text-color-light);">No teaching entries yet.</p>
-  )}
+      )}
+    </article>
+  </div>
 </Page>
+
+<script>
+  function initCalendar() {
+    const btn = document.getElementById('calendar-toggle-btn') as HTMLButtonElement | null;
+    const container = document.getElementById('calendar-container') as HTMLDivElement | null;
+    const iframe = document.getElementById('calendar-iframe') as HTMLIFrameElement | null;
+    if (!btn || !container || !iframe) return;
+
+    function getCalendarBgColor() {
+      const theme = document.documentElement.getAttribute('data-theme');
+      const isDark = theme === 'dark' || (theme === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      return isDark ? '333333' : 'f9f9f9';
+    }
+
+    function buildCalendarUrl() {
+      const calendarId = iframe!.dataset.calendarId;
+      const timezone = iframe!.dataset.timezone || 'UTC';
+      if (!calendarId) return '';
+      const params = new URLSearchParams({
+        src: calendarId,
+        ctz: timezone,
+        mode: 'WEEK',
+        showTitle: '0',
+        showPrint: '0',
+        showCalendars: '0',
+        showTabs: '0',
+        bgcolor: getCalendarBgColor(),
+      });
+      return `https://calendar.google.com/calendar/embed?${params.toString()}`;
+    }
+
+    btn.addEventListener('click', () => {
+      const isHidden = container!.style.display === 'none';
+      container!.style.display = isHidden ? 'block' : 'none';
+      btn.textContent = isHidden ? 'Hide Calendar' : 'Show Calendar';
+      if (isHidden && iframe!.src === '') {
+        iframe!.src = buildCalendarUrl();
+      }
+    });
+  }
+
+  initCalendar();
+  document.addEventListener('astro:after-swap', initCalendar);
+</script>

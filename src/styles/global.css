@@ -2,6 +2,9 @@
 @import './_colors.css';
 @import './_typography.css';
 
+/* Configure dark: variant to use data-theme attribute (matches Base.astro) */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
 /* ─── Layout utilities ───────────────────────────────────────────────────── */
 
 @layer utilities {
@@ -26,15 +29,339 @@
     scrollbar-color: var(--global-divider-color) transparent;
   }
 
-  /* z-depth shadow (card shadow, matches MDB's z-depth-1) */
+  /* ─── MDB z-depth shadow system (all 5 levels, matches al-folio) ─── */
+  .z-depth-0 {
+    box-shadow: none !important;
+  }
   .z-depth-1 {
     box-shadow:
       0 2px 2px 0 rgba(0, 0, 0, 0.14),
       0 3px 1px -2px rgba(0, 0, 0, 0.12),
       0 1px 5px 0 rgba(0, 0, 0, 0.2);
   }
+  .z-depth-1-half {
+    box-shadow:
+      0 3px 3px 0 rgba(0, 0, 0, 0.14),
+      0 1px 7px 0 rgba(0, 0, 0, 0.12),
+      0 3px 1px -1px rgba(0, 0, 0, 0.2);
+  }
+  .z-depth-2 {
+    box-shadow:
+      0 4px 5px 0 rgba(0, 0, 0, 0.14),
+      0 1px 10px 0 rgba(0, 0, 0, 0.12),
+      0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  }
+  .z-depth-3 {
+    box-shadow:
+      0 8px 17px 2px rgba(0, 0, 0, 0.14),
+      0 3px 14px 2px rgba(0, 0, 0, 0.12),
+      0 5px 5px -3px rgba(0, 0, 0, 0.2);
+  }
+  .z-depth-4 {
+    box-shadow:
+      0 16px 24px 2px rgba(0, 0, 0, 0.14),
+      0 6px 30px 5px rgba(0, 0, 0, 0.12),
+      0 8px 10px -7px rgba(0, 0, 0, 0.3);
+  }
+  .z-depth-5 {
+    box-shadow:
+      0 24px 38px 3px rgba(0, 0, 0, 0.14),
+      0 9px 46px 8px rgba(0, 0, 0, 0.12),
+      0 11px 15px -7px rgba(0, 0, 0, 0.4);
+  }
 
-  /* Abbr labels (e.g., publication venue tags) */
+  /* ─── Bootstrap-compat image utilities ─────────────────────────── */
+  .img-fluid {
+    max-width: 100%;
+    height: auto;
+  }
+  .rounded {
+    border-radius: 0.25rem !important;
+  }
+  .rounded-circle {
+    border-radius: 50% !important;
+  }
+  .float-right {
+    float: right;
+  }
+  .float-left {
+    float: left;
+  }
+
+  /* ─── Figure caption (matches al-folio .caption) ────────────────── */
+  .caption {
+    font-size: 0.875rem;
+    margin-top: 0.75rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: var(--global-text-color-light);
+  }
+
+  /* ─── Bootstrap-compat grid (used in MDX content) ───────────────── */
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -0.75rem;
+    margin-left: -0.75rem;
+  }
+  .row.g-0 {
+    margin-right: 0;
+    margin-left: 0;
+  }
+  .row.g-0 > * {
+    padding-right: 0;
+    padding-left: 0;
+  }
+  .col-sm,
+  .col {
+    flex: 1 0 0%;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+    min-width: 0;
+  }
+  .col-sm-3 {
+    flex: 0 0 auto;
+    width: 25%;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+  }
+  .col-sm-4 {
+    flex: 0 0 auto;
+    width: 33.333%;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+  }
+  .col-sm-6 {
+    flex: 0 0 auto;
+    width: 50%;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+  }
+  .col-sm-8 {
+    flex: 0 0 auto;
+    width: 66.667%;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+  }
+  .col-sm-9 {
+    flex: 0 0 auto;
+    width: 75%;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+  }
+  .col-sm-12,
+  .col-md-12 {
+    flex: 0 0 auto;
+    width: 100%;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+  }
+  .justify-content-sm-center {
+    justify-content: center;
+  }
+  .mt-3 {
+    margin-top: 1rem !important;
+  }
+  .mt-md-0 {
+    margin-top: 0 !important;
+  }
+  .mb-4 {
+    margin-bottom: 1.5rem !important;
+  }
+  .ml-auto {
+    margin-left: auto;
+  }
+  .mr-auto {
+    margin-right: auto;
+  }
+  /* Column images fill their container */
+  .col-sm img,
+  .col img,
+  .col-sm-3 img,
+  .col-sm-4 img,
+  .col-sm-6 img,
+  .col-sm-8 img,
+  .col-sm-9 img,
+  .col-md-12 img {
+    width: 100%;
+    height: auto;
+  }
+
+  /* ─── Icon inline override (Tailwind v4 resets svg to display:block) */
+  .post-tags svg,
+  .post-meta svg,
+  .post-list svg,
+  .tag-category-list svg,
+  .featured-posts svg,
+  .pagination-btn svg {
+    display: inline !important;
+    vertical-align: -0.125em;
+    width: 0.875em;
+    height: 0.875em;
+  }
+
+  /* ─── Blog-specific classes (matches al-folio) ───────────────────── */
+  .header-bar {
+    border-bottom: 1px solid var(--global-divider-color);
+    text-align: center;
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+  }
+  .header-bar h1 {
+    color: var(--global-theme-color);
+    font-size: 5rem;
+    font-family: var(--font-sans);
+    font-weight: 700;
+  }
+  .header-bar h2 {
+    color: var(--global-text-color-light);
+    font-size: 1.25rem;
+  }
+  .tag-category-list {
+    border-bottom: 1px solid var(--global-divider-color);
+    text-align: center;
+    padding-top: 1rem;
+    padding-bottom: 0.5rem;
+  }
+  .tag-category-list ul {
+    justify-content: center;
+    display: flow-root;
+    padding: 0;
+    margin: 0;
+  }
+  .tag-category-list ul li,
+  .tag-category-list ul p {
+    list-style: none;
+    display: inline-block;
+    padding: 0.5rem 0.5rem;
+    color: var(--global-text-color-light);
+  }
+  .tag-category-list ul li a {
+    color: var(--global-text-color-light);
+    text-decoration: none;
+  }
+  .tag-category-list ul li a:hover {
+    color: var(--global-theme-color);
+  }
+  .post-list {
+    margin: 0;
+    margin-bottom: 40px;
+    padding: 0;
+  }
+  .post-list li {
+    border-bottom: 1px solid var(--global-divider-color);
+    list-style: none;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  .post-list .post-meta {
+    color: var(--global-text-color-light);
+    font-size: 0.875rem;
+    margin-bottom: 0;
+  }
+  .post-list .post-tags {
+    color: var(--global-text-color-light);
+    font-size: 0.875rem;
+    padding-top: 0.25rem;
+  }
+  .post-list .post-tags a {
+    color: var(--global-text-color-light);
+    text-decoration: none;
+  }
+  .post-list .post-tags a:hover {
+    color: var(--global-theme-color);
+  }
+  .post-list li a.post-title {
+    color: var(--global-text-color);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .post-list li a.post-title:hover {
+    color: var(--global-theme-color);
+  }
+
+  /* ─── Profile (matches al-folio .profile) ────────────────────────── */
+  .profile {
+    width: 100%;
+  }
+  .profile .more-info {
+    margin-bottom: 5px;
+    margin-top: 5px;
+    font-family: monospace;
+    font-size: 0.85rem;
+  }
+  .profile .more-info p {
+    display: inline-block;
+    margin: 0;
+  }
+  .profile.float-right {
+    margin-left: 1rem;
+  }
+  .profile.float-left {
+    margin-right: 1rem;
+  }
+  @media (min-width: 576px) {
+    .profile {
+      width: 30%;
+    }
+    .profile .more-info p {
+      display: block;
+    }
+  }
+
+  /* ─── Social icons (matches al-folio .social) ───────────────────── */
+  .social {
+    text-align: center;
+  }
+  .social .contact-icons {
+    font-size: 2.8rem;
+  }
+  .social .contact-icons a {
+    color: var(--global-text-color);
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+  }
+  .social .contact-icons a:hover {
+    color: var(--global-theme-color);
+    text-decoration: none;
+  }
+  .social .contact-note {
+    font-size: 0.8rem;
+    color: var(--global-text-color-light);
+  }
+
+  /* ─── Post detail (matches al-folio .post) ───────────────────────── */
+  .post .post-meta {
+    color: var(--global-text-color-light);
+    font-size: 0.875rem;
+    margin-bottom: 0;
+  }
+  .post .post-tags {
+    color: var(--global-text-color-light);
+    font-size: 0.875rem;
+    padding-top: 0.25rem;
+    padding-bottom: 1rem;
+  }
+  .post .post-tags a {
+    color: var(--global-text-color-light);
+    text-decoration: none;
+  }
+  .post .post-tags a:hover {
+    color: var(--global-theme-color);
+  }
+  .post-description {
+    margin-bottom: 2rem;
+    font-size: 0.875rem;
+  }
+  .post-description a {
+    color: inherit;
+  }
+  .post-description a:hover {
+    color: var(--global-theme-color);
+    text-decoration: none;
+  }
+
+  /* ─── Abbr labels ────────────────────────────────────────────────── */
   .badge-abbr {
     display: inline-block;
     padding: 0.15em 0.5em;
@@ -44,6 +371,546 @@
     letter-spacing: 0.03em;
     background-color: var(--global-theme-color);
     color: var(--global-hover-text-color);
+  }
+
+  /* ─── Bootstrap grid additions (col-sm-2, col-sm-10, row-cols) ───── */
+  .col-sm-2 {
+    flex: 0 0 auto;
+    width: 16.667%;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+  }
+  .col-sm-10 {
+    flex: 0 0 auto;
+    width: 83.333%;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+  }
+  .col-md-6 {
+    flex: 0 0 auto;
+    width: 50%;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+  }
+  .row-cols-2 > * {
+    flex: 0 0 auto;
+    width: 50%;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+  }
+  .row-cols-3 > * {
+    flex: 0 0 auto;
+    width: 33.333%;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+  }
+  @media (max-width: 576px) {
+    .row-cols-2 > *, .row-cols-3 > * { width: 100%; }
+    .col-sm-2, .col-sm-10 { width: 100%; }
+  }
+  .no-gutters {
+    margin-right: 0;
+    margin-left: 0;
+  }
+  .no-gutters > * {
+    padding-right: 0;
+    padding-left: 0;
+  }
+  .p-3 { padding: 1rem !important; }
+  .mt-4 { margin-top: 1.5rem !important; }
+  .mb-3 { margin-bottom: 1rem !important; }
+  .mb-0 { margin-bottom: 0 !important; }
+  .ml-1 { margin-left: 0.25rem !important; }
+  .ml-2 { margin-right: 0.5rem !important; }
+  .ml-md-4 { margin-left: 1.5rem !important; }
+  .mr-2 { margin-right: 0.5rem !important; }
+  .p-1 { padding: 0.25rem !important; }
+  .pr-2 { padding-right: 0.5rem !important; }
+  .pl-2 { padding-left: 0.5rem !important; }
+  .font-weight-bold { font-weight: 700 !important; }
+  .font-weight-medium { font-weight: 500 !important; }
+  .font-weight-light { font-weight: 300 !important; }
+  .text-lowercase { text-transform: lowercase !important; }
+  .text-uppercase { text-transform: uppercase !important; }
+  .text-center { text-align: center !important; }
+  .text-right { text-align: right !important; }
+  .d-flex { display: flex !important; }
+  .flex-wrap { flex-wrap: wrap !important; }
+  .align-items-center { align-items: center !important; }
+  .w-100 { width: 100% !important; }
+  .h-100 { height: 100% !important; }
+  .list-group {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    margin-bottom: 0;
+    border-radius: 0.25rem;
+  }
+  .list-group-flush > .list-group-item {
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+  }
+  .list-group-item {
+    position: relative;
+    display: block;
+    padding: 0.75rem 1.25rem;
+    border: 1px solid var(--global-divider-color);
+  }
+  .list-group-flush > .list-group-item + .list-group-item {
+    border-top: 0;
+  }
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .table-sm td, .table-sm th {
+    padding: 0.25rem;
+  }
+  .table-borderless td, .table-borderless th {
+    border: 0;
+  }
+  .table-cv {
+    background-color: transparent !important;
+    font-size: 0.875rem;
+  }
+  .table-cv td, .table-cv th {
+    padding: 2px 4px;
+    vertical-align: top;
+  }
+
+  /* ─── Featured posts (blog index card grid) ─────────────────────── */
+  .featured-posts a {
+    color: var(--global-text-color);
+    text-decoration: none;
+  }
+  .featured-posts a:hover {
+    color: var(--global-theme-color);
+  }
+  .featured-posts a:hover .card-title {
+    color: var(--global-theme-color);
+  }
+  .featured-posts .card-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--global-text-color-light);
+    font-size: 0.875rem;
+  }
+  .featured-posts .post-meta {
+    color: var(--global-text-color-light);
+    font-size: 0.875rem;
+    margin-bottom: 0;
+    padding-top: 0.5rem;
+  }
+
+  /* ─── Bootstrap-style .card (used by featured posts) ────────────── */
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background-color: var(--global-card-bg-color);
+    border: 1px solid var(--global-divider-color);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .card.hoverable {
+    transition: box-shadow 0.25s ease;
+  }
+  .card.hoverable:hover {
+    box-shadow: 0 5px 11px rgba(0,0,0,0.18), 0 4px 15px rgba(0,0,0,0.15);
+  }
+  .card-body {
+    padding: 1.25rem;
+    flex: 1;
+  }
+  .card-title {
+    color: var(--global-text-color);
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-family: var(--font-sans);
+    transition: color 0.15s ease;
+  }
+  .card-text {
+    color: var(--global-text-color-light);
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
+  .card-img-top {
+    width: 100%;
+    height: 200px;
+    display: block;
+    object-fit: cover;
+  }
+  /* CV card variant */
+  .card.mt-3 { margin-top: 1rem !important; }
+
+  /* Bootstrap xs columns (always-on, used in CV two-column layout) */
+  .col-xs-2 {
+    flex: 0 0 auto;
+    width: 16.667%;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+  }
+  .col-xs-10 {
+    flex: 0 0 auto;
+    width: 83.333%;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+  }
+  @media (max-width: 480px) {
+    .col-xs-2, .col-xs-10 { width: 100%; }
+  }
+
+  /* Bootstrap .badge base (used for CV date badges) */
+  .badge {
+    display: inline-block;
+    padding: 0.25em 0.4em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+  }
+  .align-middle { vertical-align: middle !important; }
+
+  /* MDB danger-color-dark — use theme color so CV matches site palette */
+  .danger-color-dark {
+    background-color: var(--global-theme-color) !important;
+    color: #fff !important;
+  }
+
+  /* CV h6 headings */
+  .cv h6 {
+    font-size: 1rem;
+    font-weight: 400;
+    margin-bottom: 0.25rem;
+    color: var(--global-text-color);
+  }
+  .cv h6.title {
+    font-weight: 700;
+  }
+  .cv h6 a {
+    color: var(--global-text-color);
+    text-decoration: none;
+  }
+  .cv h6 a:hover {
+    color: var(--global-theme-color);
+  }
+
+  /* CV skill-item (skills, languages, interests) */
+  .skill-item {
+    padding: 0.35rem 0;
+    font-size: 0.875rem;
+    color: var(--global-text-color);
+  }
+
+  /* Anchor for CV TOC links */
+  a.anchor {
+    display: block;
+    position: relative;
+    top: -60px;
+    visibility: hidden;
+  }
+
+  /* ─── Publications styles (matches al-folio _publications.scss) ──── */
+  .publications {
+    margin-top: 2rem;
+  }
+  .publications h2.year {
+    color: var(--global-divider-color);
+    border-top: 1px solid var(--global-divider-color);
+    padding-top: 1rem;
+    margin-top: 2rem;
+    text-align: right;
+    font-family: var(--font-sans);
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  .publications ol.bibliography {
+    list-style: none;
+    padding: 0;
+    margin-top: 0;
+  }
+  .publications ol.bibliography li {
+    margin-bottom: 1rem;
+  }
+  .publications ol.bibliography li .abbr {
+    margin-bottom: 0.5rem;
+  }
+  .publications ol.bibliography li .abbr abbr {
+    display: inline-block;
+    background-color: var(--global-theme-color);
+    margin-bottom: 0.5rem;
+    color: var(--global-card-bg-color) !important;
+    padding: 0.2em 0.6em;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  .publications ol.bibliography li .abbr abbr a {
+    color: white;
+    text-decoration: none;
+  }
+  .publications ol.bibliography li .preview {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .publications ol.bibliography li .title {
+    font-weight: 700;
+    color: var(--global-text-color);
+  }
+  .publications ol.bibliography li .author {
+    color: var(--global-text-color);
+    font-size: 0.875rem;
+  }
+  .publications ol.bibliography li .author a {
+    border-bottom: 1px dashed var(--global-theme-color);
+    color: var(--global-text-color);
+    text-decoration: none;
+  }
+  .publications ol.bibliography li .author a:hover {
+    border-bottom-style: solid;
+    text-decoration: none;
+  }
+  .publications ol.bibliography li .author > em {
+    border-bottom: 1px solid;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .publications ol.bibliography li .periodical {
+    color: var(--global-text-color-light);
+    font-size: 0.875rem;
+  }
+  .publications ol.bibliography li .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-top: 0.25rem;
+  }
+  .publications ol.bibliography li .links a.btn,
+  .publications ol.bibliography li .links button.btn {
+    color: var(--global-text-color);
+    border: 1px solid var(--global-text-color);
+    padding: 0.15rem 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 400;
+    border-radius: 2px;
+    text-decoration: none;
+    cursor: pointer;
+    background: transparent;
+    font-family: inherit;
+  }
+  .publications ol.bibliography li .links a.btn:hover,
+  .publications ol.bibliography li .links button.btn:hover {
+    color: var(--global-theme-color);
+    border-color: var(--global-theme-color);
+  }
+  .publications ol.bibliography li .links a.award.btn,
+  .publications ol.bibliography li .links button.award.btn {
+    border-color: var(--global-highlight-color, #a00000);
+    color: var(--global-highlight-color, #a00000);
+  }
+  .publications ol.bibliography li .hidden {
+    font-size: 0.875rem;
+    max-height: 0;
+    overflow: hidden;
+    text-align: justify;
+    transition: all 0.15s ease;
+  }
+  .publications ol.bibliography li .hidden.open {
+    max-height: 100em;
+    transition: all 0.15s ease;
+  }
+  .publications ol.bibliography li .abstract.hidden {
+    border: dashed 1px transparent;
+  }
+  .publications ol.bibliography li .abstract.hidden.open {
+    border-color: var(--global-text-color);
+  }
+  .publications ol.bibliography li .hidden p {
+    line-height: 1.4em;
+    margin: 10px;
+  }
+  .publications ol.bibliography li .hidden pre {
+    font-size: 0.875rem;
+    line-height: 1.4em;
+    padding: 10px;
+    background: var(--global-code-bg-color);
+    border-radius: 4px;
+    overflow-x: auto;
+  }
+  .publications ol.bibliography li .badges {
+    padding-bottom: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  /* ─── CV card layout (matches al-folio _cv.scss) ─────────────────── */
+  .cv .card {
+    border: 1px solid var(--global-divider-color);
+    border-radius: 4px;
+    background: var(--global-card-bg-color);
+    margin-top: 1rem;
+    padding: 1rem;
+  }
+  .cv .card-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--global-text-color);
+    margin-bottom: 0.75rem;
+  }
+  .date-column {
+    text-align: center;
+    padding-right: 0.5rem;
+  }
+  .date-column .badge-date {
+    display: inline-block;
+    background-color: var(--global-theme-color);
+    color: #fff;
+    padding: 0.2em 0.5em;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .date-column .location {
+    font-size: 0.7rem;
+    white-space: nowrap;
+    color: var(--global-text-color-light);
+    margin-top: 0.25rem;
+  }
+  .cv .list-group-item {
+    padding: 0.75rem 0;
+    border: 0;
+    border-bottom: 1px solid var(--global-divider-color);
+    background: transparent;
+  }
+  .cv .list-group-item:last-child {
+    border-bottom: 0;
+  }
+  .cv .entry-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--global-text-color);
+  }
+  .cv .entry-institution {
+    font-size: 0.9rem;
+    color: var(--global-text-color-light);
+  }
+  .cv .entry-summary {
+    font-size: 0.875rem;
+    font-style: italic;
+    color: var(--global-text-color-light);
+    margin-top: 0.25rem;
+  }
+  .cv ul.items {
+    padding-left: 1.5rem;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: var(--global-text-color);
+  }
+  .cv ul.items li { margin-bottom: 0.1rem; }
+  .btncv {
+    color: var(--global-text-color) !important;
+    border: 1px solid var(--global-text-color) !important;
+    border-radius: 2px;
+    padding: 0.25rem 1rem;
+    text-decoration: none;
+    font-weight: 400;
+    font-size: 0.7rem;
+    text-align: center;
+    text-transform: uppercase;
+    white-space: nowrap;
+    display: inline-block;
+  }
+  .btncv:hover {
+    color: var(--global-theme-color) !important;
+    border-color: var(--global-theme-color) !important;
+  }
+
+  /* ─── Teaching page (matches al-folio _teachings.scss) ──────────── */
+  .courses {
+    margin-top: 1.5rem;
+  }
+  .courses h2.year {
+    color: var(--global-divider-color);
+    border-bottom: 1px solid var(--global-divider-color);
+    padding-bottom: 0.5rem;
+    padding-top: 2rem;
+    margin-top: 2rem;
+    font-family: var(--font-sans);
+    font-size: 1.25rem;
+  }
+  .course-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+    margin-top: 1rem;
+  }
+  .course-item {
+    border: 1px solid var(--global-divider-color);
+    border-radius: 4px;
+    padding: 1rem;
+    background: var(--global-card-bg-color);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .course-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .course-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .course-title a {
+    color: var(--global-theme-color);
+    text-decoration: none;
+  }
+  .course-title a:hover {
+    color: var(--global-hover-color);
+    text-decoration: underline;
+  }
+  .course-meta {
+    font-size: 0.8rem;
+    color: var(--global-text-color-light);
+    margin-bottom: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .course-description {
+    font-size: 0.875rem;
+    color: var(--global-text-color-light);
+  }
+  /* Calendar toggle button */
+  .btn-calendar-toggle {
+    display: inline-block;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    border: 1px solid var(--global-theme-color);
+    color: var(--global-theme-color);
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
+    text-decoration: none;
+    margin-bottom: 1rem;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .btn-calendar-toggle:hover {
+    background: var(--global-theme-color);
+    color: #fff;
   }
 }
 

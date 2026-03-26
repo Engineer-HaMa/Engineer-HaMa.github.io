@@ -4,7 +4,6 @@ import { site } from '@config/site';
 import Page from '@layouts/Page.astro';
 import PostCard from '@components/blog/PostCard.astro';
 import Pagination from '@components/Pagination.astro';
-import { readingTime } from '@utils/reading-time';
 
 export async function getStaticPaths() {
   const allPosts = (await getCollection('posts'))
@@ -35,29 +34,18 @@ const base = site.base;
 ---
 
 <Page title={`Blog — Page ${currentPage}`} description={site.blog.description}>
-  <h1
-    class="text-3xl font-bold mb-6"
-    style="color: var(--global-text-color); font-family: var(--font-sans);"
-  >
-    {site.blog.name}
-    <span class="text-lg font-normal ml-2" style="color: var(--global-text-color-light);">
-      — page {currentPage}
-    </span>
-  </h1>
+  <div class="header-bar">
+    <h1>{site.blog.name}</h1>
+    <h2>Page {currentPage} of {totalPages}</h2>
+  </div>
 
-  {
-    posts.map((post) => (
-      <PostCard
-        title={post.data.title}
-        slug={post.id}
-        date={post.data.date}
-        description={post.data.description}
-        tags={post.data.tags}
-        categories={post.data.categories}
-        readingTime={post.body ? readingTime(post.body) : undefined}
-      />
-    ))
-  }
+  <ul class="post-list">
+    {posts.map((post) => (
+      <li>
+        <PostCard post={post} />
+      </li>
+    ))}
+  </ul>
 
   <Pagination
     currentPage={currentPage}

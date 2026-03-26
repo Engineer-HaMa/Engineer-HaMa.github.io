@@ -1,67 +1,149 @@
 ---
+import type { CollectionEntry } from 'astro:content';
+import { Icon } from 'astro-icon/components';
 import { site } from '@config/site';
-import PostMeta from './PostMeta.astro';
+import { readingTime } from '@utils/reading-time';
 
-interface Props {
-  title: string;
-  slug: string;
-  date: Date | string;
-  description?: string;
-  tags?: string[];
-  categories?: string[];
-  readingTime?: number;
-  /** External URL — overrides slug-based href and opens in a new tab */
-  externalUrl?: string;
-  /** Show full excerpt or compact card */
-  compact?: boolean;
+/** A local post from the 'posts' collection. */
+type LocalPost = CollectionEntry<'posts'>;
+
+/** A synthetic external post object (constructed in blog listing pages). */
+interface ExternalPost {
+  external: true;
+  id: string;
+  url: string;
+  data: {
+    title: string;
+    date: Date;
+    description?: string;
+    tags: string[];
+    categories: string[];
+    image?: string;
+  };
+  body?: undefined;
 }
 
-const {
-  title,
-  slug,
-  date,
-  description,
-  tags = [],
-  categories = [],
-  readingTime,
-  externalUrl,
-  compact = false,
-} = Astro.props;
+type PostEntry = LocalPost | ExternalPost;
 
-const href = externalUrl ?? `${site.base}/blog/${slug}/`;
-const isExternal = Boolean(externalUrl);
+interface Props {
+  post: PostEntry;
+}
+
+const { post } = Astro.props;
+
+const isExternal = 'external' in post && post.external === true;
+
+const title = post.data.title;
+const date = post.data.date;
+const description = post.data.description;
+const tags = post.data.tags ?? [];
+const categories = post.data.categories ?? [];
+// Use `image` field as thumbnail (matches schema field name)
+const thumbnail = (post.data as { image?: string }).image;
+
+const href = isExternal
+  ? (post as ExternalPost).url
+  : `${site.base}/blog/${post.id}/`;
+
+const minutes = !isExternal && (post as LocalPost).body
+  ? readingTime((post as LocalPost).body!)
+  : undefined;
+
+const d = date instanceof Date ? date : new Date(date);
+const formattedDate = d.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+const year = d.getFullYear();
 ---
 
-<article class={`post-card ${compact ? 'compact' : ''} mb-6`}>
-  <div
-    style="border-bottom: 1px solid var(--global-divider-color); padding-bottom: 1.5rem;"
-  >
-    <h2 class="text-xl font-bold mb-1" style="font-family: var(--font-sans);">
+{thumbnail ? (
+  <div class="row">
+    <div class="col-sm-9">
+      <h3>
+        <a
+          class="post-title"
+          href={href}
+          {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+        >
+          {title}
+          {isExternal && <span style="font-size: 0.7em; opacity: 0.6; margin-left: 0.25em;">&#x2197;</span>}
+        </a>
+      </h3>
+      {description && <p>{description}</p>}
+      <p class="post-meta">
+        {minutes && <>{minutes} min read &nbsp;&middot;&nbsp; </>}
+        <time datetime={d.toISOString()}>{formattedDate}</time>
+      </p>
+      <p class="post-tags">
+        <a href={`${site.base}/blog/`}>
+          <Icon name="fa-solid:calendar" />&nbsp;{year}
+        </a>
+        {tags.map((tag) => (
+          <>
+            &nbsp;&middot;&nbsp;
+            <a href={`${site.base}/blog/tag/${tag}/`}>
+              <Icon name="fa-solid:hashtag" />&nbsp;{tag}
+            </a>
+          </>
+        ))}
+        {categories.map((cat) => (
+          <>
+            &nbsp;&middot;&nbsp;
+            <a href={`${site.base}/blog/category/${cat}/`}>
+              <Icon name="fa-solid:tag" />&nbsp;{cat}
+            </a>
+          </>
+        ))}
+      </p>
+    </div>
+    <div class="col-sm-3">
+      <img
+        class="img-fluid rounded z-depth-1"
+        src={thumbnail}
+        alt=""
+        loading="lazy"
+      />
+    </div>
+  </div>
+) : (
+  <>
+    <h3>
       <a
+        class="post-title"
         href={href}
-        style="color: var(--global-text-color); text-decoration: none;"
-        class="post-title-link"
         {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
       >
         {title}
-        {isExternal && <span style="font-size: 0.7em; opacity: 0.6; margin-left: 0.25em;">↗</span>}
+        {isExternal && <span style="font-size: 0.7em; opacity: 0.6; margin-left: 0.25em;">&#x2197;</span>}
       </a>
-    </h2>
-
-    <PostMeta date={date} tags={tags} categories={categories} readingTime={readingTime} />
-
-    {
-      description && !compact && (
-        <p class="mt-2 text-sm" style="color: var(--global-text-color-light); line-height: 1.6;">
-          {description}
-        </p>
-      )
-    }
-  </div>
-</article>
-
-<style>
-  .post-title-link:hover {
-    color: var(--global-theme-color) !important;
-  }
-</style>
+    </h3>
+    {description && <p>{description}</p>}
+    <p class="post-meta">
+      {minutes && <>{minutes} min read &nbsp;&middot;&nbsp; </>}
+      <time datetime={d.toISOString()}>{formattedDate}</time>
+    </p>
+    <p class="post-tags">
+      <a href={`${site.base}/blog/`}>
+        <Icon name="fa-solid:calendar" />&nbsp;{year}
+      </a>
+      {tags.map((tag) => (
+        <>
+          &nbsp;&middot;&nbsp;
+          <a href={`${site.base}/blog/tag/${tag}/`}>
+            <Icon name="fa-solid:hashtag" />&nbsp;{tag}
+          </a>
+        </>
+      ))}
+      {categories.map((cat) => (
+        <>
+          &nbsp;&middot;&nbsp;
+          <a href={`${site.base}/blog/category/${cat}/`}>
+            <Icon name="fa-solid:tag" />&nbsp;{cat}
+          </a>
+        </>
+      ))}
+    </p>
+  </>
+)}
