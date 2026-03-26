@@ -6,21 +6,33 @@ Guidelines for AI agents (Claude Code, Codex, Copilot Workspace, etc.) contribut
 
 ## Repository layout
 
-```
-as-folio-template/
-├── al-folio/     ← upstream Jekyll reference (READ ONLY — never modify)
-├── as-folio/     ← this Astro template (your working directory)
-└── docs/         ← planning documents
+```text
+as-folio/
+├── src/
+│   ├── config/site.ts        ← single config file (start here)
+│   ├── content/              ← collections: posts, projects, people, teaching, books, announcements
+│   ├── data/                 ← papers.bib, cv.yml, resume.json, repositories.yml
+│   ├── layouts/              ← Base.astro, Page.astro, Post.astro, Distill.astro
+│   ├── components/           ← UI components
+│   ├── pages/                ← Astro route pages
+│   └── styles/               ← global.css, _colors.css, _typography.css
+├── public/                   ← static assets (images, favicon, PDFs)
+├── astro.config.mjs
+├── package.json
+├── CLAUDE.md                 ← coding conventions and architecture (read this first)
+├── AGENTS.md                 ← this file
+├── README.md
+├── QUICKSTART.md
+└── CUSTOMIZE.md
 ```
 
-Your working directory is `as-folio/`. All paths below are relative to it.
+All paths in this file are relative to the repository root.
 
 ---
 
 ## Build command
 
 ```bash
-cd as-folio
 yarn build        # must exit 0 before submitting any PR
 ```
 
@@ -40,24 +52,31 @@ Run this after every non-trivial change. If the build fails, fix it before proce
 ## Key rules
 
 ### Package manager
+
 Use `yarn`. Never `npm` or `npx`. Never `yarn add --dev` — use `yarn add -D`.
 
 ### Content Layer API
+
 Use Astro 6 API: `const { Content } = await render(entry)` — not `entry.render()`.
 
 ### CSS
+
 - CSS custom properties for all theming (see `src/styles/_colors.css`)
 - Dark mode via `[data-theme='dark']` selector — never Tailwind's `dark:` prefix
 - No `innerHTML` with untrusted content — use `textContent`
 
 ### Config changes
+
 Any new feature must have:
+
 - A flag in `site.ts` with a JSDoc comment
 - Documentation in `CUSTOMIZE.md`
 - Build verified to exit 0
 
 ### Schema changes
+
 When adding BibTeX fields, frontmatter fields, or collection fields:
+
 - Update `src/content.config.ts` with the Zod schema
 - Use `z.coerce.string()` for fields that YAML may parse as numbers (ISBN, IDs)
 - Add `optional()` with a default for fields that may not be present
@@ -113,7 +132,6 @@ const { pirsch } = site.analytics;
 
 ## Files you should NOT modify
 
-- `../al-folio/**` — upstream reference, read-only
 - `yarn.lock` — managed by yarn automatically
 - `dist/` — build output, not tracked in git
 - `.husky/` — hooks managed by husky
@@ -123,7 +141,7 @@ const { pirsch } = site.analytics;
 ## Files you will frequently modify
 
 | File | Purpose |
-|---|---|
+| --- | --- |
 | `src/config/site.ts` | Add feature flags, config options |
 | `src/content.config.ts` | Add collection fields |
 | `src/layouts/Post.astro` | Add per-post CDN widgets |
@@ -157,4 +175,3 @@ The build is the primary acceptance test. All pages must generate without errors
 - [ ] New feature documented in `CUSTOMIZE.md`
 - [ ] New collection fields added to `src/content.config.ts`
 - [ ] Demo content updated if needed
-- [ ] No modifications to `../al-folio/`

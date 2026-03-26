@@ -1,6 +1,6 @@
 # as-folio
 
-**A clean, responsive Astro template for academics and researchers.**
+**A clean, responsive Astro template for academic portfolios.**
 
 [![Astro](https://img.shields.io/badge/Astro-6-FF5D01?logo=astro&logoColor=white)](https://astro.build)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
@@ -271,7 +271,7 @@ yarn build       # verify production build
 
 ## Acknowledgements
 
-as-folio is inspired by the [al-folio](https://github.com/alshedivat/al-folio) Jekyll theme, which pioneered the academic portfolio format. al-folio's feature set and visual design served as the specification for this Astro implementation. All code in this repository is an independent, original implementation.
+as-folio began as an Astro reimplementation of the [al-folio](https://github.com/alshedivat/al-folio) Jekyll theme and has since evolved into an independent project. All code in this repository is an original implementation.
 
 ---
 

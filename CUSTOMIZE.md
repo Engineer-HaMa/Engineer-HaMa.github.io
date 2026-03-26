@@ -28,6 +28,7 @@ This guide walks through every aspect of personalizing your as-folio site.
 20. [Deployment base path](#20-deployment-base-path)
 21. [Enabling / disabling features](#21-enabling--disabling-features)
 22. [Custom styles](#22-custom-styles)
+23. [Footer position](#23-footer-position)
 
 ---
 
@@ -550,7 +551,7 @@ features: {
 
 ## 22. Custom styles
 
-The CSS custom properties used by as-folio match al-folio exactly. Override them in `src/styles/_colors.css`:
+All theming is done through CSS custom properties defined in `src/styles/_colors.css`. Override them to change colors, fonts, and spacing site-wide:
 
 ```css
 :root {
@@ -568,3 +569,26 @@ The CSS custom properties used by as-folio match al-folio exactly. Override them
 ```
 
 To change the accent color, update `--global-theme-color` in both `:root` and `[data-theme='dark']`.
+
+---
+
+## 23. Footer position
+
+Control where and whether the footer appears with `site.footer.position`:
+
+```typescript
+footer: {
+  text: 'Powered by as-folio.',
+  lastUpdated: false,
+  impressum: undefined,
+  position: 'sticky',   // 'sticky' | 'normal' | 'hidden'
+},
+```
+
+| Value | Behaviour |
+|---|---|
+| `'sticky'` | Footer is always visible at the bottom of the viewport (default, matches al-folio) |
+| `'normal'` | Footer sits at the natural bottom of the page content — only visible after scrolling down |
+| `'hidden'` | Footer is not rendered at all |
+
+When `'sticky'`, the body automatically gains `padding-bottom` to prevent page content from being obscured by the footer. The back-to-top button is also repositioned to sit above it.

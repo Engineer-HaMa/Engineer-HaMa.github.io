@@ -6,9 +6,8 @@ Instructions for Claude Code when working on this repository.
 
 ## Project overview
 
-**as-folio** is a standalone Astro v6 template for academic portfolios. It mirrors the
-feature set of the al-folio Jekyll theme but is implemented entirely in Astro, TypeScript,
-and Tailwind CSS v4. The upstream Jekyll reference lives at `../al-folio/` (read-only).
+**as-folio** is a standalone Astro v6 template for academic portfolios, built with
+TypeScript and Tailwind CSS v4.
 
 Key constraint: this is a **reusable template**, not a personal site. Demo content uses
 Einstein, Torvalds, and Dadang NH as personas. All configuration is exposed via
@@ -33,32 +32,38 @@ yarn format         # Prettier
 ## Architecture
 
 ### Config
+
 - `src/config/site.ts` — all site settings, typed, JSDoc-documented. This is the one file
   template users edit. Add new config here (with JSDoc) when adding features.
 
 ### Content Layer (Astro 6)
+
 - `src/content.config.ts` — collection schemas using `glob` loader + Zod
 - Collections: `posts`, `projects`, `people`, `teaching`, `announcements`, `books`
 - Use `z.coerce.string()` for ISBN/OLID fields (YAML parses bare numbers as JS numbers)
 - Use `render(entry)` not `entry.render()` (Astro 6 API)
 
 ### CSS
+
 - Tailwind v4 via `@tailwindcss/vite` plugin — no `tailwind.config.js`
-- CSS custom properties in `src/styles/_colors.css` match al-folio exactly (preserve names)
+- CSS custom properties defined in `src/styles/_colors.css`
 - Dark mode via `[data-theme='dark']` selector on `<html>` (not Tailwind's `dark:` variant)
 - Never use `dark:` Tailwind prefix — use CSS variable overrides instead
 
 ### Icons
+
 - `astro-icon` with `@iconify-json/fa-brands`, `@iconify-json/fa-solid`, `@iconify-json/fa-regular`
 - `@iconify-json/academicons` for academic social icons
 - Usage: `<Icon name="fa-brands:github" />` or `<Icon name="academicons:google-scholar" />`
 
 ### BibTeX
+
 - `src/utils/bib.ts` — uses `citation-js` at build time, produces typed `BibEntry[]`
 - `src/data/papers.bib` — Einstein demo papers
 - Never fetch BibTeX at runtime; always parse at build time in `getStaticPaths` or page frontmatter
 
 ### Analytics
+
 - All analytics scripts loaded via Partytown (`@astrojs/partytown`)
 - Only inject scripts when the relevant `site.analytics.*` field is non-empty
 
@@ -67,22 +72,26 @@ yarn format         # Prettier
 ## Coding conventions
 
 ### Astro components
+
 - All CSS in `<style>` blocks (scoped) or inline `style` attributes using CSS variables
 - Avoid Tailwind classes for component-level layout — use CSS custom properties for theming
 - Script blocks use vanilla JS only (no framework imports in `<script>`)
 - Use `is:inline` only when the script must run before hydration (e.g., dark mode FOUC prevention)
 
 ### TypeScript
+
 - Strict mode is on. No `any` types without a comment explaining why.
 - Use `as const` on config objects to preserve literal types
 - Prefer `z.coerce.string()` over `z.string()` for data that YAML may parse as numbers
 
 ### Security
+
 - Never use `innerHTML` or `set:html` with user-provided content
 - Use `textContent` for dynamic text in client scripts
 - Sanitize any content coming from external APIs before rendering
 
 ### No backwards-compat hacks
+
 - Delete unused code outright — don't leave `// removed` comments or re-export removed types
 - Don't add `_var` renaming just to silence "unused" warnings — fix the actual issue
 
@@ -102,7 +111,7 @@ yarn format         # Prettier
 ## Common pitfalls
 
 | Issue | Fix |
-|---|---|
+| ----- | --- |
 | `render()` error | Use `const { Content } = await render(entry)` (Astro 6 API) |
 | YAML number parsed as string | Use `z.coerce.string()` in schema |
 | Dark mode flash | Ensure `<script is:inline>` with `localStorage` check is in `<head>` before CSS |
@@ -121,18 +130,8 @@ yarn build
 ```
 
 The build must:
+
 - Exit with code 0
 - Have 0 TypeScript errors
 - Produce all expected pages in `dist/`
 - Include `dist/pagefind/` (search index)
-
----
-
-## Upstream reference
-
-`../al-folio/` is the read-only Jekyll reference. Use it to:
-- Check what CSS classes/variables al-folio uses (for visual parity)
-- Read the demo content for inspiration
-- Verify feature behavior
-
-**Never modify files in `../al-folio/`.**
