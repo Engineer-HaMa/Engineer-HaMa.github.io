@@ -1,6 +1,8 @@
 @import 'tailwindcss';
 @import './_colors.css';
 @import './_typography.css';
+/* KaTeX math CSS — bundled locally so it's always available (no CDN dependency) */
+@import 'katex/dist/katex.min.css';
 
 /* Configure dark: variant to use data-theme attribute (matches Base.astro) */
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
@@ -964,6 +966,21 @@
     overflow-x: auto;
     padding: 0.5rem 0;
   }
+}
+
+/* ─── Shiki dual-theme dark mode ─────────────────────────────────────────── */
+/* Shiki embeds light colors as inline styles and dark colors as CSS vars.   */
+/* This maps our [data-theme='dark'] toggle to those variables.              */
+
+html[data-theme='dark'] .astro-code {
+  background-color: var(--shiki-dark-bg) !important;
+  color: var(--shiki-dark) !important;
+}
+html[data-theme='dark'] .astro-code span {
+  color: var(--shiki-dark) !important;
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
 }
 
 /* ─── Back-to-top button ─────────────────────────────────────────────────── */
