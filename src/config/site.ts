@@ -112,6 +112,13 @@ export const site = {
     lastUpdated: false,
     /** Path to impressum/legal page (EU GDPR). Leave undefined to hide. */
     impressum: undefined as string | undefined,
+    /**
+     * Footer display mode:
+     * 'sticky'  — always visible at the bottom of the viewport (al-folio default)
+     * 'normal'  — sits at the natural bottom of page content (only visible when scrolled down)
+     * 'hidden'  — footer is not rendered at all
+     */
+    position: 'sticky' as 'sticky' | 'normal' | 'hidden',
   },
 
   // ─── CV page ───────────────────────────────────────────────────────────────

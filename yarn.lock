@@ -910,6 +910,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fontsource/roboto-condensed@npm:^5.2.8":
+  version: 5.2.8
+  resolution: "@fontsource/roboto-condensed@npm:5.2.8"
+  checksum: 10c0/b6af7f0a89b7d0b5a1953d008dba9e048f64cc4459931b7fd21d875f97e6aeb36431a1a825e2778748ff1ae22f920fd0f49f901dfb1169ab2441a3ad57ab5434
+  languageName: node
+  linkType: hard
+
+"@fontsource/roboto@npm:^5.2.10":
+  version: 5.2.10
+  resolution: "@fontsource/roboto@npm:5.2.10"
+  checksum: 10c0/abadfcaefbe2196bbd36d9258b336063f721894a3624a9639da00792583c565bfd0748ef978f91a38c3c0de8d247615c9be92a763184c085c630fa43f04b1cd9
+  languageName: node
+  linkType: hard
+
+"@fontsource/source-code-pro@npm:^5.2.7":
+  version: 5.2.7
+  resolution: "@fontsource/source-code-pro@npm:5.2.7"
+  checksum: 10c0/bc661c628352579d773dab6de9280522d55e8af9ff4fc74ac4c03cd0845755e9b89944bf898b66372ebf0fb1f09a875167dff7111a013087ae1bd8cef852383d
+  languageName: node
+  linkType: hard
+
 "@gar/promise-retry@npm:^1.0.0":
   version: 1.0.3
   resolution: "@gar/promise-retry@npm:1.0.3"
@@ -3006,6 +3027,9 @@ __metadata:
     "@astrojs/rss": "npm:^4.0.17"
     "@astrojs/sitemap": "npm:^3.7.1"
     "@eslint/js": "npm:^9"
+    "@fontsource/roboto": "npm:^5.2.10"
+    "@fontsource/roboto-condensed": "npm:^5.2.8"
+    "@fontsource/source-code-pro": "npm:^5.2.7"
     "@iconify-json/academicons": "npm:^1.2.1"
     "@iconify-json/fa-brands": "npm:^1.2.2"
     "@iconify-json/fa-regular": "npm:^1.2.1"

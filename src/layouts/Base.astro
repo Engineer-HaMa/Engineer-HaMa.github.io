@@ -43,13 +43,7 @@ const ogImage = image ? new URL(image, site.url).toString() : undefined;
     <link rel="icon" href={`${site.base}/favicon.svg`} type="image/svg+xml" />
     <link rel="alternate icon" href={`${site.base}/favicon.ico`} />
 
-    <!-- Google Fonts: Roboto + Roboto Condensed + Source Code Pro -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,400&family=Roboto+Condensed:wght@400;700&family=Source+Code+Pro:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Fonts are self-hosted via Fontsource (imported in global.css) — no FOUT -->
 
     <!-- KaTeX CSS is bundled via global.css (@import 'katex/dist/katex.min.css') -->
 
@@ -151,7 +145,11 @@ const ogImage = image ? new URL(image, site.url).toString() : undefined;
     </script>
   </head>
 
-  <body class="min-h-screen flex flex-col" style="padding-top: 57px; padding-bottom: 70px;">
+  <body
+    class="min-h-screen flex flex-col"
+    style="padding-top: 57px;"
+    data-footer-position={site.footer.position}
+  >
     <!-- Skip to main content (accessibility) -->
     <a
       href="#main-content"
@@ -173,7 +171,7 @@ const ogImage = image ? new URL(image, site.url).toString() : undefined;
     <!-- Newsletter (shown in footer area if enabled) -->
     {site.features.newsletter && <slot name="newsletter" />}
 
-    <Footer />
+    {site.footer.position !== 'hidden' && <Footer />}
 
     <!-- Cookie consent (vanilla-cookieconsent via CDN) -->
     {

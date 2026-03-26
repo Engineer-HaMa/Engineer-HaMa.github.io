@@ -4,6 +4,77 @@
 /* KaTeX math CSS — bundled locally so it's always available (no CDN dependency) */
 @import 'katex/dist/katex.min.css';
 
+/* ─── Self-hosted fonts — Latin subset only, font-display: fallback (no FOUT) ── */
+/* Custom @font-face rules referencing Fontsource WOFF2 files (Latin only).
+   font-display: fallback = 100ms block period, then 3s swap window.
+   If font loads within that window it swaps; otherwise fallback persists
+   for the rest of the page load. Cached on subsequent visits = instant. */
+
+/* Roboto 300 */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-display: fallback;
+  font-weight: 300;
+  src: url('@fontsource/roboto/files/roboto-latin-300-normal.woff2') format('woff2');
+}
+/* Roboto 400 */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-display: fallback;
+  font-weight: 400;
+  src: url('@fontsource/roboto/files/roboto-latin-400-normal.woff2') format('woff2');
+}
+/* Roboto 400 italic */
+@font-face {
+  font-family: 'Roboto';
+  font-style: italic;
+  font-display: fallback;
+  font-weight: 400;
+  src: url('@fontsource/roboto/files/roboto-latin-400-italic.woff2') format('woff2');
+}
+/* Roboto 700 */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-display: fallback;
+  font-weight: 700;
+  src: url('@fontsource/roboto/files/roboto-latin-700-normal.woff2') format('woff2');
+}
+/* Roboto Condensed 400 */
+@font-face {
+  font-family: 'Roboto Condensed';
+  font-style: normal;
+  font-display: fallback;
+  font-weight: 400;
+  src: url('@fontsource/roboto-condensed/files/roboto-condensed-latin-400-normal.woff2') format('woff2');
+}
+/* Roboto Condensed 700 */
+@font-face {
+  font-family: 'Roboto Condensed';
+  font-style: normal;
+  font-display: fallback;
+  font-weight: 700;
+  src: url('@fontsource/roboto-condensed/files/roboto-condensed-latin-700-normal.woff2') format('woff2');
+}
+/* Source Code Pro 400 */
+@font-face {
+  font-family: 'Source Code Pro';
+  font-style: normal;
+  font-display: fallback;
+  font-weight: 400;
+  src: url('@fontsource/source-code-pro/files/source-code-pro-latin-400-normal.woff2') format('woff2');
+}
+/* Source Code Pro 600 */
+@font-face {
+  font-family: 'Source Code Pro';
+  font-style: normal;
+  font-display: fallback;
+  font-weight: 600;
+  src: url('@fontsource/source-code-pro/files/source-code-pro-latin-600-normal.woff2') format('woff2');
+}
+
 /* Configure dark: variant to use data-theme attribute (matches Base.astro) */
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
@@ -983,6 +1054,12 @@ html[data-theme='dark'] .astro-code span {
   text-decoration: var(--shiki-dark-text-decoration) !important;
 }
 
+/* ─── Sticky footer: add body padding so content isn't hidden behind it ───── */
+
+body[data-footer-position='sticky'] {
+  padding-bottom: 60px; /* approx footer height */
+}
+
 /* ─── Back-to-top button ─────────────────────────────────────────────────── */
 
 #back-to-top {
@@ -994,7 +1071,7 @@ html[data-theme='dark'] .astro-code span {
   border-radius: 50%;
   border: none;
   cursor: pointer;
-  z-index: 10;
+  z-index: 200; /* above sticky footer (z-index: 100) */
   display: none;
   align-items: center;
   justify-content: center;
@@ -1009,4 +1086,9 @@ html[data-theme='dark'] .astro-code span {
 
 #back-to-top:hover {
   opacity: 0.8;
+}
+
+/* Lift the button above the sticky footer */
+body[data-footer-position='sticky'] #back-to-top {
+  bottom: 70px;
 }
