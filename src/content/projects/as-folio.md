@@ -4,6 +4,7 @@ description: A modern Astro template for academics — 100% al-folio feature par
 importance: 10
 category: open source
 github: dadangnh/as-folio
+github_stars: dadangnh/as-folio
 url: https://github.com/dadangnh/as-folio
 ---
 

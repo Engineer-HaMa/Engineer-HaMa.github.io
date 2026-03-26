@@ -3,6 +3,9 @@ title: Special Theory of Relativity
 description: A revolutionary framework reconciling classical mechanics with electromagnetism by postulating the constancy of the speed of light and the equivalence of inertial reference frames.
 importance: 1
 category: physics
+related_publications:
+  - einstein1905relativity
+  - einstein1905massenergy
 ---
 
 The Special Theory of Relativity, published in 1905 in the paper *Zur Elektrodynamik bewegter Körper* ("On the Electrodynamics of Moving Bodies"), was constructed on two deceptively simple postulates: first, that the laws of physics are the same in all inertial reference frames; and second, that the speed of light in a vacuum is the same for all observers, regardless of the motion of the light source. These postulates together forced a radical revision of our understanding of space and time, dissolving the Newtonian notion of absolute simultaneity and replacing it with a four-dimensional spacetime continuum.
