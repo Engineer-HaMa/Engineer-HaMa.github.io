@@ -5,13 +5,41 @@ import Page from '@layouts/Page.astro';
 import PostCard from '@components/blog/PostCard.astro';
 import Pagination from '@components/Pagination.astro';
 import { readingTime } from '@utils/reading-time';
+import { fetchExternalPosts } from '@utils/external-posts';
 
-const allPosts = (await getCollection('posts'))
+const localPosts = (await getCollection('posts'))
   .filter((p) => !p.data.hidden)
   .sort((a, b) => {
     if (a.data.pinned !== b.data.pinned) return a.data.pinned ? -1 : 1;
     return b.data.date.getTime() - a.data.date.getTime();
   });
+
+const externalPosts = await fetchExternalPosts();
+
+// Merge and sort all posts by date (local posts pinned first)
+type LocalPost = (typeof localPosts)[number];
+type MixedPost = LocalPost | { external: true; data: { title: string; date: Date; description?: string; tags: string[]; categories: string[] }; id: string; url: string };
+
+const allPosts: MixedPost[] = [
+  ...localPosts,
+  ...externalPosts.map((ep) => ({
+    external: true as const,
+    id: ep.url,
+    url: ep.url,
+    data: {
+      title: ep.title,
+      date: ep.publishedDate,
+      description: ep.description,
+      tags: ep.tags,
+      categories: ep.categories,
+    },
+  })),
+].sort((a, b) => {
+  const aPin = 'data' in a && 'pinned' in a.data ? (a.data as { pinned?: boolean }).pinned : false;
+  const bPin = 'data' in b && 'pinned' in b.data ? (b.data as { pinned?: boolean }).pinned : false;
+  if (aPin !== bPin) return aPin ? -1 : 1;
+  return b.data.date.getTime() - a.data.date.getTime();
+});
 
 const perPage = site.blog.postsPerPage;
 const totalPages = Math.ceil(allPosts.length / perPage);
@@ -63,17 +91,29 @@ const allCategories = [...new Set(allPosts.flatMap((p) => p.data.categories))].s
     pagePosts.length === 0 ? (
       <p style="color: var(--global-text-color-light);">No posts yet. Check back soon!</p>
     ) : (
-      pagePosts.map((post) => (
-        <PostCard
-          title={post.data.title}
-          slug={post.id}
-          date={post.data.date}
-          description={post.data.description}
-          tags={post.data.tags}
-          categories={post.data.categories}
-          readingTime={post.body ? readingTime(post.body) : undefined}
-        />
-      ))
+      pagePosts.map((post) =>
+        'external' in post && post.external ? (
+          <PostCard
+            title={post.data.title}
+            slug=""
+            externalUrl={post.url}
+            date={post.data.date}
+            description={post.data.description}
+            tags={post.data.tags}
+            categories={post.data.categories}
+          />
+        ) : (
+          <PostCard
+            title={(post as LocalPost).data.title}
+            slug={(post as LocalPost).id}
+            date={(post as LocalPost).data.date}
+            description={(post as LocalPost).data.description}
+            tags={(post as LocalPost).data.tags}
+            categories={(post as LocalPost).data.categories}
+            readingTime={(post as LocalPost).body ? readingTime((post as LocalPost).body!) : undefined}
+          />
+        )
+      )
     )
   }
 

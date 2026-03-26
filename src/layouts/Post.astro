@@ -1,10 +1,15 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
 import { site } from '@config/site';
 import Base from './Base.astro';
 import Giscus from '@components/Giscus.astro';
 import ReadingProgress from '@components/ReadingProgress.astro';
+import RelatedPosts from '@components/blog/RelatedPosts.astro';
+import PostMeta from '@components/blog/PostMeta.astro';
 import TOC from '@components/TOC.astro';
+import { relatedPosts } from '@utils/posts';
+import { readingTime as calcReadingTime } from '@utils/reading-time';
 import type { MarkdownHeading } from 'astro';
 
 interface Props {
@@ -13,16 +18,13 @@ interface Props {
 }
 
 const { post, headings = [] } = Astro.props;
-const { title, description, date, tags = [], math = false } = post.data;
+const { title, description, date, tags = [], categories = [], math = false } = post.data;
 
-const formattedDate = new Date(date).toLocaleDateString('en-US', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-});
+const rt = post.body ? calcReadingTime(post.body) : 1;
 
-// Estimate reading time (200 wpm average)
-const readingTime = post.body ? Math.max(1, Math.ceil(post.body.split(/\s+/).length / 200)) : 1;
+// Related posts (if post has tags)
+const allPosts = await getCollection('posts');
+const related = post.data.relatedPosts ? relatedPosts(post, allPosts) : [];
 ---
 
 <Base title={title} description={description} math={math}>
@@ -50,40 +52,16 @@ const readingTime = post.body ? Math.max(1, Math.ceil(post.body.split(/\s+/).len
             {title}
           </h1>
 
-          <div
-            class="flex flex-wrap items-center gap-3 text-sm"
-            style="color: var(--global-text-color-light);"
-          >
-            <time datetime={date instanceof Date ? date.toISOString() : String(date)}>
-              {formattedDate}
-            </time>
-            <span>·</span>
-            <span>{readingTime} min read</span>
-            {
-              tags.length > 0 && (
-                <>
-                  <span>·</span>
-                  <div class="flex flex-wrap gap-1">
-                    {tags.map((tag) => (
-                      <a
-                        href={`${site.base}/blog/tag/${tag}/`}
-                        class="badge-abbr text-xs"
-                        style="background-color: var(--global-theme-color); color: var(--global-hover-text-color);"
-                      >
-                        {tag}
-                      </a>
-                    ))}
-                  </div>
-                </>
-              )
-            }
-          </div>
+          <PostMeta date={date} tags={tags} categories={categories} readingTime={rt} />
         </header>
 
         <!-- Body -->
-        <div class="prose max-w-none">
+        <div class="prose max-w-none" id="post-content">
           <slot />
         </div>
+
+        <!-- Related posts -->
+        {related.length > 0 && <RelatedPosts posts={related} />}
 
         <!-- Comments -->
         {site.giscus.enabled && <Giscus />}
@@ -91,3 +69,69 @@ const readingTime = post.body ? Math.max(1, Math.ceil(post.body.split(/\s+/).len
     </div>
   </div>
 </Base>
+
+<!-- Code copy button (text-label approach, no innerHTML) -->
+<script>
+  function addCopyButtons() {
+    const blocks = document.querySelectorAll('#post-content pre');
+    blocks.forEach((pre) => {
+      if (pre.querySelector('.copy-btn')) return;
+      const btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.setAttribute('aria-label', 'Copy code');
+      btn.textContent = 'copy';
+      btn.addEventListener('click', async () => {
+        const code = pre.querySelector('code');
+        if (!code) return;
+        await navigator.clipboard.writeText(code.innerText);
+        btn.textContent = 'copied!';
+        setTimeout(() => {
+          btn.textContent = 'copy';
+        }, 2000);
+      });
+      (pre as HTMLElement).style.position = 'relative';
+      pre.appendChild(btn);
+    });
+  }
+  addCopyButtons();
+  document.addEventListener('astro:after-swap', addCopyButtons);
+</script>
+
+<!-- Medium zoom for post images -->
+<script>
+  import mediumZoom from 'medium-zoom';
+  function initZoom() {
+    mediumZoom('#post-content img:not(.no-zoom)', {
+      background: 'rgba(0,0,0,0.7)',
+      margin: 24,
+    });
+  }
+  initZoom();
+  document.addEventListener('astro:after-swap', initZoom);
+</script>
+
+<style>
+  .copy-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-size: 0.7rem;
+    font-family: var(--font-mono, monospace);
+    background-color: var(--global-card-bg-color, #f5f5f5);
+    color: var(--global-text-color-light, #888);
+    line-height: 1.5;
+  }
+  pre:hover .copy-btn {
+    opacity: 1;
+  }
+  .copy-btn:hover {
+    background-color: var(--global-theme-color);
+    color: var(--global-hover-text-color, #fff);
+  }
+</style>

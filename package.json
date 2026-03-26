@@ -58,6 +58,7 @@
     "astro": "6.0.8",
     "astro-icon": "^1.1.4",
     "js-yaml": "^4.1.0",
+    "medium-zoom": "^1.1.0",
     "ninja-keys": "^1.2.1",
     "node-addon-api": "^8.6.0",
     "react": "^19.1.0",

@@ -1,0 +1,83 @@
+---
+title: Images, Figures, and Medium Zoom
+date: 2025-03-01
+description: How as-folio handles images in blog posts — responsive layout, captions, and click-to-zoom with medium-zoom.
+tags: [formatting, media]
+categories: [demo]
+math: false
+toc: true
+relatedPosts: true
+---
+
+Images in as-folio posts are processed by Astro and get click-to-zoom behaviour via [medium-zoom](https://github.com/francoischalifour/medium-zoom) — click any image below to see it open full-screen with a smooth overlay animation.
+
+## Standard Markdown images
+
+Use standard Markdown syntax for inline images. They are responsive by default and will zoom on click:
+
+```md
+![Alt text describing the image](/assets/img/profile.jpg)
+```
+
+Add a title to turn it into a captioned figure:
+
+```md
+![Albert Einstein at his desk](/assets/img/einstein.jpg "Einstein, 1921")
+```
+
+## Disabling zoom on an image
+
+Add the `no-zoom` class to opt out of medium-zoom on a specific image:
+
+```html
+<img src="/assets/img/icon.png" alt="Small icon" class="no-zoom" width="32" />
+```
+
+## Image sizing and alignment
+
+Use inline HTML for precise control over sizing and alignment:
+
+```html
+<!-- Centered, half-width -->
+<figure style="text-align: center;">
+  <img
+    src="/assets/img/profile.jpg"
+    alt="Profile photo"
+    style="width: 50%; border-radius: 8px;"
+  />
+  <figcaption>Figure 1 — A portrait photograph.</figcaption>
+</figure>
+```
+
+## Side-by-side images
+
+Use a flex wrapper to place images side by side on wider screens:
+
+```html
+<div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+  <figure style="flex: 1; min-width: 200px;">
+    <img src="/assets/img/a.jpg" alt="Image A" />
+    <figcaption>Left panel</figcaption>
+  </figure>
+  <figure style="flex: 1; min-width: 200px;">
+    <img src="/assets/img/b.jpg" alt="Image B" />
+    <figcaption>Right panel</figcaption>
+  </figure>
+</div>
+```
+
+## GIF and video alternatives
+
+For animated content, use a `<video>` element with the `autoplay`, `loop`, and `muted` attributes — it behaves like a GIF but is far smaller:
+
+```html
+<video autoplay loop muted playsinline width="600">
+  <source src="/assets/video/demo.mp4" type="video/mp4" />
+</video>
+```
+
+## Tips
+
+- Keep source images ≤ 2 MB; Astro's `<Image>` component will generate WebP versions at multiple resolutions automatically.
+- Always write descriptive `alt` text — it improves accessibility and helps search engines index your content.
+- The medium-zoom overlay respects dark mode: the background is `rgba(0,0,0,0.7)` which renders well in both themes.

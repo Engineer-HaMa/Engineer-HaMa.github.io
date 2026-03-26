@@ -5,6 +5,8 @@ import Base from '@layouts/Base.astro';
 import SocialLinks from '@components/SocialLinks.astro';
 import ProfilePhoto from '@components/about/ProfilePhoto.astro';
 import AboutContent from '../data/about.mdx';
+import { parseBibtex, getAuthors, getVenue, getTitle, getYear, getBoolField } from '@utils/bibtex';
+import bibRaw from '../data/papers.bib?raw';
 
 // Announcements
 const allAnnouncements = site.announcements.enabled
@@ -27,6 +29,11 @@ const allPosts = site.latestPosts.enabled
 
 const formatDate = (d: Date) =>
   d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+
+// Selected publications
+const selectedPapers = site.selectedPapers.enabled
+  ? parseBibtex(bibRaw).filter((e) => getBoolField(e, 'selected'))
+  : [];
 
 // Pre-render announcement content in frontmatter (async in JSX map is not supported)
 const renderedAnnouncements = await Promise.all(
@@ -140,6 +147,83 @@ const renderedAnnouncements = await Promise.all(
               </tbody>
             </table>
           </div>
+        </section>
+      )
+    }
+    <!-- Selected publications -->
+    {
+      site.selectedPapers.enabled && selectedPapers.length > 0 && (
+        <section class="mb-10">
+          <h2
+            class="text-xl font-bold mb-3"
+            style="color: var(--global-text-color); border-bottom: 1px solid var(--global-divider-color); padding-bottom: 0.5rem;"
+          >
+            Selected Publications
+          </h2>
+          <ol class="list-none p-0 m-0">
+            {selectedPapers.map((entry) => {
+              const title = getTitle(entry);
+              const authors = getAuthors(entry);
+              const venue = getVenue(entry);
+              const year = getYear(entry);
+              const abbr = entry.fields.abbr;
+              const url = entry.fields.html ?? (entry.fields.doi ? `https://doi.org/${entry.fields.doi}` : '');
+              const award = entry.fields.award;
+              return (
+                <li class="mb-4 text-sm" style="line-height: 1.6;">
+                  {abbr && (
+                    <span
+                      class="badge-abbr mr-2"
+                      style="background-color: var(--global-theme-color); color: var(--global-hover-text-color); font-size: 0.65rem;"
+                    >
+                      {abbr}
+                    </span>
+                  )}
+                  {url ? (
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style="color: var(--global-text-color); font-weight: 600; text-decoration: none;"
+                      class="hover-theme-color"
+                    >
+                      {title}
+                    </a>
+                  ) : (
+                    <strong style="color: var(--global-text-color);">{title}</strong>
+                  )}
+                  <br />
+                  <span style="color: var(--global-text-color-light);">{authors}</span>
+                  {(venue || year) && (
+                    <>
+                      {' · '}
+                      <em style="color: var(--global-text-color-light);">
+                        {venue}
+                        {venue && year ? ', ' : ''}
+                        {year || ''}
+                      </em>
+                    </>
+                  )}
+                  {award && (
+                    <span
+                      class="badge-abbr ml-2"
+                      style="background-color: #f59e0b; color: #fff; font-size: 0.6rem;"
+                    >
+                      {entry.fields.award_name ?? '🏆'}
+                    </span>
+                  )}
+                </li>
+              );
+            })}
+          </ol>
+          <p class="text-sm mt-2">
+            <a
+              href={`${site.base}/publications/`}
+              style="color: var(--global-theme-color); text-decoration: none;"
+            >
+              Full publication list &rarr;
+            </a>
+          </p>
         </section>
       )
     }

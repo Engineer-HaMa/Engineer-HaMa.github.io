@@ -1,49 +1,17 @@
 ---
-// ThemeToggle — cycles light → dark → system preference
-// Matches al-folio's three-state toggle behaviour (system/dark/light)
+// ThemeToggle — simple light ↔ dark toggle.
+// Uses data-attributes so both desktop and mobile instances work correctly.
+// Initial state is set by the FOUC inline script in Base.astro (respects OS preference).
 ---
 
 <button
-  id="light-toggle"
+  data-light-toggle
   title="Toggle theme"
   aria-label="Toggle theme"
   style="padding: 0; border: 0; background-color: inherit; color: var(--global-text-color); width: 2rem; height: 2rem; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;"
 >
-  <!-- system: half sun / moon icon -->
-  <span id="light-toggle-system" style="display: inline-block;">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      width="18"
-      height="18"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="1.8"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      aria-hidden="true"
-    >
-      <!-- Left half: moon -->
-      <path
-        d="M21 12.79A9 9 0 1 1 11.21 3"
-        clip-path="inset(0 50% 0 0)"
-        fill="currentColor"
-        stroke="none"></path>
-      <!-- Right half: sun -->
-      <circle cx="12" cy="12" r="5" clip-path="inset(0 0 0 50%)"></circle>
-      <line x1="12" y1="1" x2="12" y2="3" clip-path="inset(0 0 0 50%)"></line>
-      <line x1="12" y1="21" x2="12" y2="23" clip-path="inset(0 0 0 50%)"></line>
-      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" clip-path="inset(0 0 0 50%)"></line>
-      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" clip-path="inset(0 0 0 50%)"></line>
-      <line x1="1" y1="12" x2="3" y2="12" clip-path="inset(0 0 0 50%)"></line>
-      <line x1="21" y1="12" x2="23" y2="12" clip-path="inset(0 0 0 50%)"></line>
-      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" clip-path="inset(0 0 0 50%)"></line>
-      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" clip-path="inset(0 0 0 50%)"></line>
-    </svg>
-  </span>
-
-  <!-- dark mode active: moon icon -->
-  <span id="light-toggle-dark" style="display: none;">
+  <!-- Moon icon: shown in light mode (click to go dark) -->
+  <span data-light-toggle-icon="moon">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
@@ -60,8 +28,8 @@
     </svg>
   </span>
 
-  <!-- light mode active: sun icon -->
-  <span id="light-toggle-light" style="display: none;">
+  <!-- Sun icon: shown in dark mode (click to go light) -->
+  <span data-light-toggle-icon="sun" style="display: none;">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
@@ -88,51 +56,50 @@
 </button>
 
 <script>
-  const btn = document.getElementById('light-toggle')!;
-  const html = document.documentElement;
-  const systemIcon = document.getElementById('light-toggle-system')!;
-  const darkIcon = document.getElementById('light-toggle-dark')!;
-  const lightIcon = document.getElementById('light-toggle-light')!;
-
-  function applyTheme(setting: string) {
-    let theme: string;
-    if (setting === 'dark') {
-      theme = 'dark';
-    } else if (setting === 'light') {
-      theme = 'light';
-    } else {
-      // system
-      theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
-    html.setAttribute('data-theme', theme);
-    html.setAttribute('data-theme-setting', setting);
-
-    systemIcon.style.display = setting === 'system' ? 'inline-block' : 'none';
-    darkIcon.style.display = setting === 'dark' ? 'inline-block' : 'none';
-    lightIcon.style.display = setting === 'light' ? 'inline-block' : 'none';
+  function updateIcons(theme: string) {
+    // Update icons on ALL toggle instances (desktop + mobile are both in the DOM)
+    document.querySelectorAll<HTMLElement>('[data-light-toggle-icon]').forEach((el) => {
+      const show =
+        (theme === 'dark' && el.getAttribute('data-light-toggle-icon') === 'sun') ||
+        (theme === 'light' && el.getAttribute('data-light-toggle-icon') === 'moon');
+      el.style.display = show ? 'inline-block' : 'none';
+    });
   }
 
-  // Cycle: light → dark → system
-  function cycleTheme() {
-    const current = localStorage.getItem('theme') || 'system';
-    const next = current === 'light' ? 'dark' : current === 'dark' ? 'system' : 'light';
-    if (next === 'system') {
-      localStorage.removeItem('theme');
-    } else {
-      localStorage.setItem('theme', next);
-    }
-    applyTheme(next);
+  function applyTheme(theme: string) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    updateIcons(theme);
   }
 
-  btn.addEventListener('click', cycleTheme);
+  function toggle() {
+    // Read the APPLIED theme from the DOM — guarantees every click is visible
+    const current = document.documentElement.getAttribute('data-theme') ?? 'light';
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+  }
 
-  // Sync icon with current setting on load
-  const currentSetting = html.getAttribute('data-theme-setting') || 'system';
-  applyTheme(currentSetting);
+  function wire() {
+    document.querySelectorAll('[data-light-toggle]').forEach((btn) => {
+      btn.removeEventListener('click', toggle);
+      btn.addEventListener('click', toggle);
+    });
+  }
 
-  // React to OS preference changes when in system mode
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    const setting = localStorage.getItem('theme') || 'system';
-    if (setting === 'system') applyTheme('system');
+  // Wire buttons and sync icons with the theme already applied by the FOUC script
+  wire();
+  updateIcons(document.documentElement.getAttribute('data-theme') ?? 'light');
+
+  // Re-wire after Astro View Transitions (soft navigation)
+  document.addEventListener('astro:after-swap', () => {
+    wire();
+    updateIcons(document.documentElement.getAttribute('data-theme') ?? 'light');
+  });
+
+  // Follow OS preference changes only when the user has no explicit stored preference
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (!localStorage.getItem('theme')) {
+      document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+      updateIcons(e.matches ? 'dark' : 'light');
+    }
   });
 </script>

@@ -10,6 +10,8 @@ interface Props {
   tags?: string[];
   categories?: string[];
   readingTime?: number;
+  /** External URL — overrides slug-based href and opens in a new tab */
+  externalUrl?: string;
   /** Show full excerpt or compact card */
   compact?: boolean;
 }
@@ -22,10 +24,12 @@ const {
   tags = [],
   categories = [],
   readingTime,
+  externalUrl,
   compact = false,
 } = Astro.props;
 
-const href = `${site.base}/blog/${slug}/`;
+const href = externalUrl ?? `${site.base}/blog/${slug}/`;
+const isExternal = Boolean(externalUrl);
 ---
 
 <article class={`post-card ${compact ? 'compact' : ''} mb-6`}>
@@ -37,8 +41,10 @@ const href = `${site.base}/blog/${slug}/`;
         href={href}
         style="color: var(--global-text-color); text-decoration: none;"
         class="post-title-link"
+        {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
       >
         {title}
+        {isExternal && <span style="font-size: 0.7em; opacity: 0.6; margin-left: 0.25em;">↗</span>}
       </a>
     </h2>
 

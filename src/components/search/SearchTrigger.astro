@@ -1,0 +1,113 @@
+---
+import { site } from '@config/site';
+
+// Default navigation actions shown before search query is typed
+const navActions = [
+  { id: 'nav-about', title: 'About', section: 'Navigation', href: `${site.base}/` },
+  { id: 'nav-blog', title: 'Blog', section: 'Navigation', href: `${site.base}/blog/` },
+  {
+    id: 'nav-publications',
+    title: 'Publications',
+    section: 'Navigation',
+    href: `${site.base}/publications/`,
+  },
+  { id: 'nav-projects', title: 'Projects', section: 'Navigation', href: `${site.base}/projects/` },
+  { id: 'nav-cv', title: 'CV', section: 'Navigation', href: `${site.base}/cv/` },
+  { id: 'nav-teaching', title: 'Teaching', section: 'Navigation', href: `${site.base}/teaching/` },
+  { id: 'nav-people', title: 'People', section: 'Navigation', href: `${site.base}/people/` },
+];
+
+const pagefindBase = site.base || '';
+---
+
+<!-- ninja-keys web component -->
+<ninja-keys id="ninja-search" placeholder="Search or jump to…" hideBreadcrumbs>
+</ninja-keys>
+
+<script define:vars={{ navActions, pagefindBase }}>
+  import('ninja-keys').then(() => {
+    /** @type {import('ninja-keys').NinjaKeys} */
+    const nk = document.querySelector('#ninja-search');
+    if (!nk) return;
+
+    // Build default nav action objects with click handlers
+    const defaultData = navActions.map((item) => ({
+      id: item.id,
+      title: item.title,
+      section: item.section,
+      handler: () => {
+        window.location.href = item.href;
+      },
+    }));
+
+    nk.data = defaultData;
+
+    // Open on search button click (both desktop + mobile #search-toggle buttons)
+    document.querySelectorAll('#search-toggle').forEach((btn) => {
+      btn.addEventListener('click', () => nk.open());
+    });
+
+    // Pagefind integration — loaded lazily on first search
+    let pagefind = null;
+
+    async function loadPagefind() {
+      if (pagefind) return pagefind;
+      try {
+        pagefind = await import(`${pagefindBase}/pagefind/pagefind.js`);
+        await pagefind.init();
+      } catch {
+        // Pagefind not available (dev mode or first build)
+        pagefind = null;
+      }
+      return pagefind;
+    }
+
+    nk.addEventListener('change', async (/** @type {CustomEvent} */ e) => {
+      const query = (e.detail?.search ?? '').trim();
+
+      if (!query) {
+        nk.data = defaultData;
+        return;
+      }
+
+      const pf = await loadPagefind();
+      if (!pf) {
+        nk.data = defaultData;
+        return;
+      }
+
+      const response = await pf.search(query);
+      const results = await Promise.all(response.results.slice(0, 8).map((r) => r.data()));
+
+      const searchData = results.map((item) => ({
+        id: item.url,
+        title: item.meta?.title || item.url,
+        section: 'Search Results',
+        description: item.excerpt?.replace(/<[^>]*>/g, '') ?? '',
+        handler: () => {
+          window.location.href = item.url;
+        },
+      }));
+
+      nk.data = searchData.length > 0 ? searchData : defaultData;
+    });
+  });
+</script>
+
+<style is:global>
+  ninja-keys {
+    --ninja-accent-color: var(--global-theme-color);
+    --ninja-text-color: var(--global-text-color);
+    --ninja-secondary-text-color: var(--global-text-color-light);
+    --ninja-secondary-background-color: var(--global-bg-color);
+    --ninja-selected-background: var(--global-hover-color);
+    --ninja-icon-color: var(--global-text-color-light);
+    --ninja-icon-size: 1rem;
+    --ninja-separate-border: 1px solid var(--global-divider-color);
+    --ninja-modal-background: var(--global-card-bg-color, var(--global-bg-color));
+    --ninja-z-index: 9999;
+    --ninja-modal-border-radius: 8px;
+    --ninja-modal-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    --ninja-overflow-background: rgba(0, 0, 0, 0.5);
+  }
+</style>

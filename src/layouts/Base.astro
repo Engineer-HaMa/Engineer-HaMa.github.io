@@ -2,6 +2,7 @@
 import { site } from '@config/site';
 import Footer from '@components/Footer.astro';
 import Navbar from '@components/Navbar.astro';
+import SearchTrigger from '@components/search/SearchTrigger.astro';
 import '@styles/global.css';
 
 interface Props {
@@ -39,7 +40,8 @@ const ogImage = image ? new URL(image, site.url).toString() : undefined;
     <title>{pageTitle}</title>
 
     <!-- Favicon -->
-    <link rel="icon" href={`${site.base}/favicon.ico`} />
+    <link rel="icon" href={`${site.base}/favicon.svg`} type="image/svg+xml" />
+    <link rel="alternate icon" href={`${site.base}/favicon.ico`} />
 
     <!-- Google Fonts: Roboto + Roboto Condensed + Source Code Pro -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -149,7 +151,10 @@ const ogImage = image ? new URL(image, site.url).toString() : undefined;
 
     <Navbar />
 
-    <main id="main-content" class="flex-1">
+    <!-- ⌘K Search (ninja-keys + Pagefind) -->
+    {site.features.search && <SearchTrigger />}
+
+    <main id="main-content" class="flex-1" data-pagefind-body>
       <slot />
     </main>
 
