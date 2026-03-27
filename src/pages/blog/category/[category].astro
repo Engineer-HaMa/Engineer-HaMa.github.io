@@ -14,7 +14,7 @@ export async function getStaticPaths() {
     params: { category },
     props: {
       posts: allPosts
-        .filter((p) => !p.data.hidden && p.data.categories.includes(category))
+        .filter((p) => !p.data.hidden && !p.data.draft && p.data.categories.includes(category))
         .sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
     },
   }));

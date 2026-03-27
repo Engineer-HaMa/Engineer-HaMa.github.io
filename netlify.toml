@@ -11,6 +11,16 @@
   to = "/404/index.html"
   status = 404
 
+# Security headers for all routes
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
 # Cache hashed assets for 1 year
 [[headers]]
   for = "/_astro/*"

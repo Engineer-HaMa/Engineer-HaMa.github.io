@@ -5,7 +5,7 @@ import { getCollection } from 'astro:content';
 
 export async function GET(context: APIContext) {
   const posts = (await getCollection('posts'))
-    .filter((p) => !p.data.hidden)
+    .filter((p) => !p.data.hidden && !p.data.draft)
     .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
   return rss({

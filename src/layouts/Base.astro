@@ -12,6 +12,8 @@ interface Props {
   /** OG preview image (absolute URL or path) */
   image?: string;
   noindex?: boolean;
+  /** Override the robots meta tag content string (e.g. 'noindex, nofollow'). */
+  robots?: string;
   /** Whether this is the homepage — injects Person JSON-LD when true */
   isHome?: boolean;
 }
@@ -21,6 +23,7 @@ const {
   description = site.description,
   image = site.og.image || undefined,
   noindex = false,
+  robots,
   isHome = false,
 } = Astro.props;
 
@@ -49,7 +52,7 @@ const personJsonLd = isHome ? JSON.stringify({
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {(robots || noindex) && <meta name="robots" content={robots ?? 'noindex, nofollow'} />}
 
     <link rel="canonical" href={canonicalURL} />
     <title>{pageTitle}</title>
@@ -62,7 +65,7 @@ const personJsonLd = isHome ? JSON.stringify({
 
     <!-- KaTeX CSS is bundled via global.css (@import 'katex/dist/katex.min.css') -->
 
-    <!-- Open Graph -->
+    <!-- Open Graph + Twitter Card -->
     {
       site.og.enabled && (
         <>
@@ -71,6 +74,11 @@ const personJsonLd = isHome ? JSON.stringify({
           <meta property="og:url" content={canonicalURL} />
           <meta property="og:type" content="website" />
           {ogImage && <meta property="og:image" content={ogImage} />}
+          <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+          <meta name="twitter:title" content={pageTitle} />
+          <meta name="twitter:description" content={description} />
+          {ogImage && <meta name="twitter:image" content={ogImage} />}
+          {site.socials.x_username && <meta name="twitter:site" content={`@${site.socials.x_username}`} />}
         </>
       )
     }

@@ -15,7 +15,8 @@ interface Props {
 }
 
 const { post, headings = [] } = Astro.props;
-const { title, description, date, tags = [], categories = [], math = false } = post.data;
+const { title, description, date, tags = [], categories = [], robots, draft = false } = post.data;
+const effectiveRobots = draft ? 'noindex, nofollow' : robots;
 
 // Access distill-specific fields via type cast (added to schema in content.config.ts)
 const postData = post.data as typeof post.data & {
@@ -31,7 +32,7 @@ const authors = postData.distillAuthors ?? [];
 const rt = post.body ? calcReadingTime(post.body) : 1;
 ---
 
-<Base title={title} description={description} math={math}>
+<Base title={title} description={description} robots={effectiveRobots}>
   {site.features.progressBar && <ReadingProgress />}
 
   <div class="distill-page-container py-8">
