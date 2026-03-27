@@ -54,6 +54,9 @@ const timezone = site.teaching.timezone;
           <button
             class="btn-calendar-toggle"
             id="calendar-toggle-btn"
+            aria-expanded="false"
+            aria-controls="calendar-container"
+            aria-label="Show calendar"
           >
             Show Calendar
           </button>
@@ -154,6 +157,8 @@ const timezone = site.teaching.timezone;
       const isHidden = container!.style.display === 'none';
       container!.style.display = isHidden ? 'block' : 'none';
       btn.textContent = isHidden ? 'Hide Calendar' : 'Show Calendar';
+      btn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+      btn.setAttribute('aria-label', isHidden ? 'Hide calendar' : 'Show calendar');
       if (isHidden && iframe!.src === '') {
         iframe!.src = buildCalendarUrl();
       }

@@ -13,6 +13,8 @@ interface Props {
   noindex?: boolean;
   /** Load KaTeX CSS for math rendering */
   math?: boolean;
+  /** Whether this is the homepage — injects Person JSON-LD when true */
+  isHome?: boolean;
 }
 
 const {
@@ -21,11 +23,26 @@ const {
   image = site.og.image || undefined,
   noindex = false,
   math = false,
+  isHome = false,
 } = Astro.props;
 
 const pageTitle = title === site.author.name ? title : `${title} | ${site.author.name}`;
 const canonicalURL = new URL(Astro.url.pathname, site.url);
 const ogImage = image ? new URL(image, site.url).toString() : undefined;
+
+// Person JSON-LD for homepage — helps search engines associate content with the author
+const personJsonLd = isHome ? JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.author.name,
+  url: site.url,
+  email: site.author.email || undefined,
+  sameAs: [
+    site.socials.orcid_id ? `https://orcid.org/${site.socials.orcid_id}` : null,
+    site.socials.scholar_userid ? `https://scholar.google.com/citations?user=${site.socials.scholar_userid}` : null,
+    site.socials.github_username ? `https://github.com/${site.socials.github_username}` : null,
+  ].filter(Boolean),
+}) : null;
 ---
 
 <!doctype html>
@@ -124,6 +141,12 @@ const ogImage = image ? new URL(image, site.url).toString() : undefined;
       )
     }
 
+    <!-- Person JSON-LD (homepage only) -->
+    {personJsonLd && <script type="application/ld+json" set:html={personJsonLd} />}
+
+    <!-- Named slot for page-specific head content (e.g. JSON-LD from Post.astro) -->
+    <slot name="head" />
+
     <!--
       Dark mode: must run BEFORE any CSS to prevent FOUC.
       Reads stored preference, falls back to system preference, then site default.
@@ -147,7 +170,7 @@ const ogImage = image ? new URL(image, site.url).toString() : undefined;
 
   <body
     class="min-h-screen flex flex-col"
-    style="padding-top: 57px;"
+    style="padding-top: var(--navbar-height);"
     data-footer-position={site.footer.position}
   >
     <!-- Skip to main content (accessibility) -->

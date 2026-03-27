@@ -113,6 +113,12 @@ html[data-theme='dark'] {
   --global-danger-block-title: #ffe0e0;
 }
 
+/* ─── Layout constants ───────────────────────────────────────────────────── */
+
+:root {
+  --navbar-height: 57px;
+}
+
 /* ─── Utility classes ────────────────────────────────────────────────────── */
 
 .only-light {

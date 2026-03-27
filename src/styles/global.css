@@ -1103,3 +1103,67 @@ body[data-footer-position='sticky'] {
 body[data-footer-position='sticky'] #back-to-top {
   bottom: 70px;
 }
+
+/* ─── Focus styles (keyboard navigation) ────────────────────────────────── */
+
+:focus-visible {
+  outline: 2px solid var(--global-theme-color);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ─── Print styles ───────────────────────────────────────────────────────── */
+
+@media print {
+  /* Hide navigation and interactive elements */
+  nav,
+  #back-to-top,
+  .newsletter-section,
+  .search-trigger,
+  footer,
+  .reading-progress,
+  .copy-btn,
+  button:not(.btncv) {
+    display: none !important;
+  }
+
+  /* Reset body padding for paper */
+  body {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  /* Ensure full-width content */
+  .page-container,
+  article {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+  /* Hide TOC sidebar on print */
+  aside {
+    display: none !important;
+  }
+
+  /* Sensible link rendering: show URL after link text */
+  a[href^="http"]::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.8em;
+    color: #666;
+  }
+
+  /* Don't show URLs for nav links or buttons */
+  nav a::after,
+  .btn::after {
+    content: none !important;
+  }
+
+  /* Page breaks */
+  h1, h2, h3 {
+    page-break-after: avoid;
+  }
+
+  pre, blockquote, figure {
+    page-break-inside: avoid;
+  }
+}

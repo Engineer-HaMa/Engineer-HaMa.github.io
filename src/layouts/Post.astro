@@ -11,6 +11,7 @@ import TOC from '@components/TOC.astro';
 import { relatedPosts } from '@utils/posts';
 import { readingTime as calcReadingTime } from '@utils/reading-time';
 import type { MarkdownHeading } from 'astro';
+import Newsletter from '@components/Newsletter.astro';
 
 interface Props {
   post: CollectionEntry<'posts'>;
@@ -30,9 +31,29 @@ const rt = post.body ? calcReadingTime(post.body) : 1;
 // Related posts (if post has tags)
 const allPosts = await getCollection('posts');
 const related = post.data.relatedPosts ? relatedPosts(post, allPosts) : [];
+
+// JSON-LD BlogPosting schema
+const canonicalURL = new URL(`${site.base}/blog/${post.id}/`, site.url).toString();
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  ...(description ? { description } : {}),
+  datePublished: date.toISOString(),
+  url: canonicalURL,
+  author: {
+    '@type': 'Person',
+    name: site.author.name,
+    url: site.url,
+  },
+  ...(post.data.image ? { image: new URL(post.data.image, site.url).toString() } : {}),
+};
 ---
 
 <Base title={title} description={description} math={math}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </Fragment>
   {site.features.progressBar && <ReadingProgress />}
 
   <div class="page-container py-8">
@@ -61,6 +82,9 @@ const related = post.data.relatedPosts ? relatedPosts(post, allPosts) : [];
         <div class="prose max-w-none" id="post-content">
           <slot />
         </div>
+
+        <!-- Newsletter CTA (shown after post body when feature is enabled) -->
+        {site.features.newsletter && <Newsletter />}
 
         <!-- Related posts -->
         {related.length > 0 && <RelatedPosts posts={related} />}

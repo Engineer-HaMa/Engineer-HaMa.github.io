@@ -2,7 +2,7 @@ import { useState, useMemo, useRef, useEffect } from 'react';
 import type { BibEntry } from '../../utils/bibtex';
 import { getTitle, getAuthors, getVenue, getYear, getBoolField } from '../../utils/bibtex';
 
-const PERSONA_LAST_NAME = 'Einstein';
+const PERSONA_LAST_NAME = 'einstein';
 
 interface Props {
   entries: BibEntry[];
@@ -107,7 +107,7 @@ function PublicationEntry({
           {authorList.length > 0 && (
             <div className="author">
               {visibleAuthors.map((author, i) => {
-                const isMe = author.includes(PERSONA_LAST_NAME);
+                const isMe = author.toLowerCase().includes(PERSONA_LAST_NAME);
                 const isLast = i === visibleAuthors.length - 1 && hiddenCount === 0;
                 return (
                   <span key={i}>
