@@ -1,31 +1,34 @@
 ---
+import type { NavItem } from '@config/site';
 import { site } from '@config/site';
 import { getCollection } from 'astro:content';
 
 const base = site.base || '';
 
-// ── Navigation items ──────────────────────────────────────────────────────────
-const navItems = [
-  { id: 'nav-about', title: 'About', section: 'Navigation', href: `${base}/` },
-  { id: 'nav-blog', title: 'Blog', section: 'Navigation', href: `${base}/blog/` },
-  {
-    id: 'nav-publications',
-    title: 'Publications',
-    section: 'Navigation',
-    href: `${base}/publications/`,
-  },
-  { id: 'nav-projects', title: 'Projects', section: 'Navigation', href: `${base}/projects/` },
-  { id: 'nav-cv', title: 'CV', section: 'Navigation', href: `${base}/cv/` },
-  { id: 'nav-teaching', title: 'Teaching', section: 'Navigation', href: `${base}/teaching/` },
-  { id: 'nav-people', title: 'People', section: 'Navigation', href: `${base}/people/` },
-  { id: 'nav-books', title: 'Books', section: 'Navigation', href: `${base}/books/` },
-  {
-    id: 'nav-repositories',
-    title: 'Repositories',
-    section: 'Navigation',
-    href: `${base}/repositories/`,
-  },
-];
+// ── Navigation items — derived from site.navbar.items (single source of truth) ─
+function flattenNav(items: NavItem[]) {
+  return items.flatMap((item) => {
+    if ('href' in item) {
+      return [
+        {
+          id: `nav-${item.label}`,
+          title: item.label.charAt(0).toUpperCase() + item.label.slice(1),
+          section: 'Navigation',
+          href: `${base}${item.href}`,
+        },
+      ];
+    }
+    // dropdown: include each child leaf
+    return item.children.map((child) => ({
+      id: `nav-${child.label}`,
+      title: child.label.charAt(0).toUpperCase() + child.label.slice(1),
+      section: 'Navigation',
+      href: `${base}${child.href}`,
+    }));
+  });
+}
+
+const navItems = flattenNav(site.navbar.items);
 
 // ── Content items (indexed at build time for dev-mode title search) ───────────
 type SearchItem = { id: string; title: string; section: string; href: string; keywords: string };

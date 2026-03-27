@@ -6,6 +6,20 @@
  * All configuration is fully typed — your editor will catch mistakes.
  */
 
+// ─── Navigation types (exported for use in Navbar.astro / SearchTrigger) ────
+
+/** A simple navigation link. */
+export type NavLeaf = { label: string; href: string };
+
+/**
+ * A dropdown group. `label` is the trigger text; `children` are the menu items.
+ * Maximum supported depth is 2 levels (group → item). Do not nest further.
+ */
+export type NavDropdown = { label: string; children: NavLeaf[] };
+
+/** A top-level nav entry — either a plain link or a dropdown group. */
+export type NavItem = NavLeaf | NavDropdown;
+
 export const site = {
   // ─── Identity ──────────────────────────────────────────────────────────────
 
@@ -96,6 +110,29 @@ export const site = {
     fixed: true,
     /** Show social icons in navbar (about page only). */
     socialIcons: false,
+    /**
+     * Top-level navigation items.
+     * Use `{ label, href }` for a plain link.
+     * Use `{ label, children: [...] }` for a dropdown group (max 2 levels).
+     *
+     * `href` values are relative to the site root (base is prepended automatically).
+     */
+    items: [
+      { label: 'about', href: '/' },
+      { label: 'blog', href: '/blog/' },
+      { label: 'publications', href: '/publications/' },
+      { label: 'projects', href: '/projects/' },
+      { label: 'repositories', href: '/repositories/' },
+      { label: 'cv', href: '/cv/' },
+      {
+        label: 'more',
+        children: [
+          { label: 'teaching', href: '/teaching/' },
+          { label: 'people', href: '/people/' },
+          { label: 'books', href: '/books/' },
+        ],
+      },
+    ] as NavItem[],
   },
 
   // ─── Footer ────────────────────────────────────────────────────────────────
