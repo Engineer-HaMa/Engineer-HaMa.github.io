@@ -9,7 +9,7 @@ import { fetchExternalPosts } from '@utils/external-posts';
 import { readingTime } from '@utils/reading-time';
 
 const localPosts = (await getCollection('posts'))
-  .filter((p) => !p.data.hidden)
+  .filter((p) => !p.data.hidden && !p.data.draft)
   .sort((a, b) => {
     if (a.data.pinned !== b.data.pinned) return a.data.pinned ? -1 : 1;
     return b.data.date.getTime() - a.data.date.getTime();
@@ -68,6 +68,15 @@ const displayCategories = site.blog.displayCategories;
 
 // Grid column count for featured cards
 const featuredCols = pinnedPosts.length >= 3 ? '3' : '2';
+
+// Group pagePosts by year for the list section
+const postsByYear = new Map<number, (typeof pagePosts)>();
+for (const post of pagePosts) {
+  const year = post.data.date.getFullYear();
+  if (!postsByYear.has(year)) postsByYear.set(year, []);
+  postsByYear.get(year)!.push(post);
+}
+const postYears = [...postsByYear.keys()].sort((a, b) => b - a);
 ---
 
 <Page title="Blog" description={site.blog.description}>
@@ -147,17 +156,22 @@ const featuredCols = pinnedPosts.length >= 3 ? '3' : '2';
     </>
   )}
 
-  <!-- Post list -->
+  <!-- Post list grouped by year -->
   {pagePosts.length === 0 ? (
     <p style="color: var(--global-text-color-light); padding-top: 2rem;">No posts yet. Check back soon!</p>
   ) : (
-    <ul class="post-list">
-      {pagePosts.map((post) => (
-        <li>
-          <PostCard post={post} />
-        </li>
-      ))}
-    </ul>
+    postYears.map((year) => (
+      <>
+        <h2 class="year">{year}</h2>
+        <ul class="post-list">
+          {postsByYear.get(year)!.map((post) => (
+            <li>
+              <PostCard post={post} />
+            </li>
+          ))}
+        </ul>
+      </>
+    ))
   )}
 
   <Pagination

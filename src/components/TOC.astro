@@ -52,6 +52,9 @@ if (tocHeadings.length === 0) return;
     });
   }
 
+  const navbarHeight =
+    parseInt(getComputedStyle(document.documentElement).getPropertyValue('--navbar-height')) || 57;
+
   const observer = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
@@ -61,7 +64,7 @@ if (tocHeadings.length === 0) return;
         }
       }
     },
-    { rootMargin: '-57px 0px -80% 0px', threshold: 0 }
+    { rootMargin: `-${navbarHeight}px 0px -80% 0px`, threshold: 0 }
   );
 
   headingIds.forEach((id) => {

@@ -178,19 +178,27 @@ function isActive(href: string): boolean {
       collapse?.classList.add('hidden');
       toggler.setAttribute('aria-expanded', 'false');
       toggler.classList.add('collapsed');
+      document.body.style.overflow = '';
     } else {
       collapse?.classList.remove('hidden');
       toggler.setAttribute('aria-expanded', 'true');
       toggler.classList.remove('collapsed');
+      document.body.style.overflow = 'hidden';
     }
   });
 
-  // Close on navigation
+  // Close on navigation — also restore scroll
   document.querySelectorAll('#navbar-collapse a').forEach((link) => {
     link.addEventListener('click', () => {
       collapse?.classList.add('hidden');
       toggler?.setAttribute('aria-expanded', 'false');
       toggler?.classList.add('collapsed');
+      document.body.style.overflow = '';
     });
+  });
+
+  // Restore scroll on Astro view transitions (menu may be open during navigation)
+  document.addEventListener('astro:before-swap', () => {
+    document.body.style.overflow = '';
   });
 </script>

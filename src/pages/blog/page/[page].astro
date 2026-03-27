@@ -7,7 +7,7 @@ import Pagination from '@components/Pagination.astro';
 
 export async function getStaticPaths() {
   const allPosts = (await getCollection('posts'))
-    .filter((p) => !p.data.hidden)
+    .filter((p) => !p.data.hidden && !p.data.draft)
     .sort((a, b) => {
       if (a.data.pinned !== b.data.pinned) return a.data.pinned ? -1 : 1;
       return b.data.date.getTime() - a.data.date.getTime();
@@ -31,6 +31,15 @@ export async function getStaticPaths() {
 
 const { posts, currentPage, totalPages } = Astro.props;
 const base = site.base;
+
+// Group posts by year
+const postsByYear = new Map<number, (typeof posts)>();
+for (const post of posts) {
+  const year = post.data.date.getFullYear();
+  if (!postsByYear.has(year)) postsByYear.set(year, []);
+  postsByYear.get(year)!.push(post);
+}
+const postYears = [...postsByYear.keys()].sort((a, b) => b - a);
 ---
 
 <Page title={`Blog — Page ${currentPage}`} description={site.blog.description}>
@@ -39,13 +48,18 @@ const base = site.base;
     <h2>Page {currentPage} of {totalPages}</h2>
   </div>
 
-  <ul class="post-list">
-    {posts.map((post) => (
-      <li>
-        <PostCard post={post} />
-      </li>
-    ))}
-  </ul>
+  {postYears.map((year) => (
+    <>
+      <h2 class="year">{year}</h2>
+      <ul class="post-list">
+        {postsByYear.get(year)!.map((post) => (
+          <li>
+            <PostCard post={post} />
+          </li>
+        ))}
+      </ul>
+    </>
+  ))}
 
   <Pagination
     currentPage={currentPage}

@@ -20,11 +20,15 @@ interface Props {
 
 const { post, headings = [] } = Astro.props;
 const {
-  title, description, date, tags = [], categories = [], math = false,
+  title, description, date, lastmod, tags = [], categories = [], math = false,
   mermaid = false, chart_js = false, echarts = false, vega = false, plotly = false,
   pseudocode = false, typograms = false, tikzjax = false, map = false,
   img_comparison = false, code_diff = false, gallery = false, disqus = false,
 } = post.data;
+
+const lastmodFormatted = lastmod
+  ? lastmod.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+  : null;
 
 const rt = post.body ? calcReadingTime(post.body) : 1;
 
@@ -40,6 +44,7 @@ const jsonLd = {
   headline: title,
   ...(description ? { description } : {}),
   datePublished: date.toISOString(),
+  ...(lastmod ? { dateModified: lastmod.toISOString() } : {}),
   url: canonicalURL,
   author: {
     '@type': 'Person',
@@ -76,6 +81,11 @@ const jsonLd = {
           </h1>
 
           <PostMeta date={date} tags={tags} categories={categories} readingTime={rt} />
+          {lastmodFormatted && (
+            <p class="post-lastmod" style="font-size: 0.8rem; color: var(--global-text-color-light); margin-top: 0.25rem;">
+              Updated <time datetime={lastmod!.toISOString()}>{lastmodFormatted}</time>
+            </p>
+          )}
         </header>
 
         <!-- Body -->

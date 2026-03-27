@@ -21,6 +21,10 @@ const posts = defineCollection({
     pinned: z.boolean().optional().default(false),
     /** Hide from blog listing (but accessible via direct URL). */
     hidden: z.boolean().optional().default(false),
+    /** Draft post — hidden from all listings and the search index until published. */
+    draft: z.boolean().optional().default(false),
+    /** Last modified date — displayed in the post header and used in JSON-LD dateModified. */
+    lastmod: z.coerce.date().optional(),
     /** Redirect to external URL instead of rendering content. */
     redirect: z.string().url().optional(),
     /** Hero/thumbnail image path. */

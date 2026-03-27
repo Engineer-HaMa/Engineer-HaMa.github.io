@@ -83,6 +83,12 @@ export default defineConfig({
           'thumbtack',
           'external-link-alt',
           'circle-arrow-right',
+          'book-open',
+          'check',
+          'clock',
+          'pause',
+          'eye',
+          'redo',
         ],
         'fa-regular': ['comment', 'star', 'bookmark', 'heart'],
         academicons: [

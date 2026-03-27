@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import { site } from '@config/site';
 import Page from '@layouts/Page.astro';
+import { Icon } from 'astro-icon/components';
 
 const allBooks = await getCollection('books');
 
@@ -28,14 +29,14 @@ function booksForYear(year: number) {
 }
 
 // Status badge config
-const statusConfig: Record<string, { label: string; color: string }> = {
-  reading: { label: 'reading', color: 'var(--global-theme-color)' },
-  finished: { label: 'finished', color: '#4caf50' },
-  queued: { label: 'queued', color: '#9e9e9e' },
-  paused: { label: 'paused', color: '#ff9800' },
-  abandoned: { label: 'abandoned', color: '#f44336' },
-  interested: { label: 'interested', color: '#2196f3' },
-  reread: { label: 'reread', color: '#9c27b0' },
+const statusConfig: Record<string, { label: string; color: string; icon: string }> = {
+  reading: { label: 'reading', color: 'var(--global-theme-color)', icon: 'fa-solid:book-open' },
+  finished: { label: 'finished', color: '#4caf50', icon: 'fa-solid:check' },
+  queued: { label: 'queued', color: '#9e9e9e', icon: 'fa-solid:clock' },
+  paused: { label: 'paused', color: '#ff9800', icon: 'fa-solid:pause' },
+  abandoned: { label: 'abandoned', color: '#f44336', icon: 'fa-solid:times' },
+  interested: { label: 'interested', color: '#2196f3', icon: 'fa-solid:eye' },
+  reread: { label: 'reread', color: '#9c27b0', icon: 'fa-solid:redo' },
 };
 
 function coverUrl(book: (typeof allBooks)[number]): string {
@@ -101,7 +102,7 @@ function renderStars(stars: number | undefined): string {
                       class="status-badge"
                       style={`background-color: ${badge.color}`}
                     >
-                      {badge.label}
+                      <Icon name={badge.icon} style="font-size: 0.65em; margin-right: 0.2em;" aria-hidden="true" />{badge.label}
                     </span>
                   )}
 
