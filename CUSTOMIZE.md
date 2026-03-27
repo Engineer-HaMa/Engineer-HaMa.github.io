@@ -20,7 +20,7 @@ This guide walks through every aspect of personalizing your as-folio site.
 12. [Repositories page](#12-repositories-page)
 13. [Announcements](#13-announcements)
 14. [Dark mode](#14-dark-mode)
-15. [Comments (Giscus)](#15-comments-giscus)
+15. [Comments (Giscus / Disqus)](#15-comments-giscus--disqus)
 16. [Analytics](#16-analytics)
 17. [Newsletter](#17-newsletter)
 18. [Cookie consent](#18-cookie-consent)
@@ -41,7 +41,7 @@ export const site = {
   title: 'Your Name',
   description: 'Brief description of your site',
   url: 'https://your-username.github.io',
-  base: '',   // see §20 for project pages
+  base: '', // see §20 for project pages
   lang: 'en',
 
   author: {
@@ -124,13 +124,15 @@ Create `.md` or `.mdx` files in `src/content/posts/`:
 ---
 title: "Post Title"
 date: 2024-06-01
+lastmod: 2024-09-01  # optional: last modified date — shown in header and JSON-LD
 description: "Shown in listings and meta tags"
 tags: [physics, math]
 categories: [science]
-math: true          # enable KaTeX rendering
-toc: true           # sidebar table of contents (default: true)
-pinned: false       # pin to top of blog listing
-hidden: false       # hide from listing (accessible via URL)
+math: true           # enable KaTeX rendering
+toc: true            # sidebar table of contents (default: true)
+pinned: false        # pin to top of blog listing
+hidden: false        # hide from listing (accessible via URL)
+draft: false         # exclude from listings and search index until published
 image: /assets/img/post-thumb.jpg
 ---
 
@@ -143,6 +145,19 @@ $$
 \int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}
 $$
 ```
+
+### Blog listing options
+
+Control reading-speed estimate and the empty-state message:
+
+```typescript
+blog: {
+  wordsPerMinute: 200,              // used to calculate estimated reading time
+  emptyMessage: 'No posts yet. Check back soon!',
+},
+```
+
+Posts in the listing are grouped by year automatically.
 
 ### MDX components available in posts
 
@@ -159,20 +174,20 @@ import Tabs from '@components/Tabs.astro';
 
 Enable in frontmatter:
 
-| Flag | What it loads |
-|---|---|
-| `mermaid: true` | Mermaid diagrams |
-| `chart_js: true` | Chart.js |
-| `echarts: true` | Apache ECharts |
-| `vega: true` | Vega/Vega-Lite |
-| `plotly: true` | Plotly.js |
-| `pseudocode: true` | pseudocode.js |
-| `typograms: true` | Typograms |
-| `tikzjax: true` | TikzJax |
-| `map: true` | Leaflet maps |
+| Flag                   | What it loads           |
+| ---------------------- | ----------------------- |
+| `mermaid: true`        | Mermaid diagrams        |
+| `chart_js: true`       | Chart.js                |
+| `echarts: true`        | Apache ECharts          |
+| `vega: true`           | Vega/Vega-Lite          |
+| `plotly: true`         | Plotly.js               |
+| `pseudocode: true`     | pseudocode.js           |
+| `typograms: true`      | Typograms               |
+| `tikzjax: true`        | TikzJax                 |
+| `map: true`            | Leaflet maps            |
 | `img_comparison: true` | Image comparison slider |
-| `code_diff: true` | Diff2Html |
-| `gallery: true` | PhotoSwipe gallery |
+| `code_diff: true`      | Diff2Html               |
+| `gallery: true`        | PhotoSwipe gallery      |
 
 ---
 
@@ -206,6 +221,35 @@ Edit `src/data/papers.bib`. Standard BibTeX format with extra fields:
 
 The publication page groups entries by year, newest first. BibTeX is parsed at build time — no runtime dependency.
 
+### Author highlighting and asset paths
+
+The publication list bolds **your name** in author lists. Configure this in `site.ts`:
+
+```typescript
+publications: {
+  /** Last name used to bold your name in author lists.
+   *  Defaults to the last word of site.author.name — usually correct without setting. */
+  authorLastName: undefined,   // e.g. 'Einstein' — omit to auto-derive
+
+  /** Directory prefix for thumbnail images (value of the `preview` BibTeX field). */
+  previewDir: '/assets/img/publication_preview/',
+
+  /** Directory prefix for local PDF files (value of the `pdf` BibTeX field). */
+  pdfDir: '/assets/pdf/',
+
+  /** UI labels — override to translate or rename buttons. */
+  labels: {
+    abstract: 'Abs',
+    bibtex: 'Bib',
+    supp: 'Supp',
+    searchPlaceholder: 'Search publications…',
+    noResults: 'No publications match your search.',
+  },
+},
+```
+
+`authorLastName` auto-derives from `site.author.name`, so most users never need to set it explicitly.
+
 ---
 
 ## 7. Projects
@@ -214,24 +258,33 @@ Create `.md` files in `src/content/projects/`:
 
 ```yaml
 ---
-title: "Project Name"
-description: "What this project does"
+title: 'Project Name'
+description: 'What this project does'
 img: /assets/img/projects/my-project.jpg
-img_alt: "Screenshot of the project"
-github: username/repo                  # links to GitHub
-github_stars: username/repo            # shows live star count
-url: https://project-website.com       # external URL
-importance: 1                          # sort order (lower = first)
-category: open source                  # groups cards under this heading
-redirect: https://external-url.com     # redirect instead of showing project page
-related_publications: [key1, key2]     # cite from papers.bib
+img_alt: 'Screenshot of the project'
+github: username/repo # links to GitHub
+github_stars: username/repo # shows live star count
+url: https://project-website.com # external URL
+importance: 1 # sort order (lower = first)
+category: open source # groups cards under this heading
+redirect: https://external-url.com # redirect instead of showing project page
+related_publications: [key1, key2] # cite from papers.bib
 giscus_comments: false
 ---
-
 Project description content (Markdown).
 ```
 
 Add images to `public/assets/img/projects/`.
+
+Set the subtitle shown below the page heading in `site.ts`:
+
+```typescript
+pages: {
+  projects: {
+    description: 'A growing collection of your cool projects.',
+  },
+},
+```
 
 ---
 
@@ -252,13 +305,13 @@ cv:
       - institution: MIT
         area: Physics
         studyType: PhD
-        startDate: "2010-09-01"
-        endDate: "2015-06-01"
+        startDate: '2010-09-01'
+        endDate: '2015-06-01'
     experience:
       - company: Your University
         position: Professor
-        startDate: "2015-09-01"
-        endDate: "present"
+        startDate: '2015-09-01'
+        endDate: 'present'
         highlights:
           - Teaching and research
 ```
@@ -285,22 +338,21 @@ Create `.md` files in `src/content/books/`:
 
 ```yaml
 ---
-title: "Book Title"
+title: 'Book Title'
 author: Author Name
-isbn: "9780000000000"       # for Open Library cover lookup
-olid: "OL00000000M"         # Open Library ID (alternative to ISBN)
-cover: /assets/img/book_covers/mybook.jpg  # or use ISBN/OLID
-status: finished            # reading | finished | queued | paused | abandoned | interested | reread
-stars: 5                    # 1–5
+isbn: '9780000000000' # for Open Library cover lookup
+olid: 'OL00000000M' # Open Library ID (alternative to ISBN)
+cover: /assets/img/book_covers/mybook.jpg # or use ISBN/OLID
+status: finished # reading | finished | queued | paused | abandoned | interested | reread
+stars: 5 # 1–5
 started: 2024-01-01
 finished: 2024-03-15
-released: 1984              # original publication year
+released: 1984 # original publication year
 categories: science fiction
 buy_link: https://bookshop.org/...
-goodreads_review: "123456789"
-importance: 1               # sort order within the same year
+goodreads_review: '123456789'
+importance: 1 # sort order within the same year
 ---
-
 Optional personal notes about the book.
 ```
 
@@ -314,17 +366,26 @@ Create `.md` files in `src/content/teaching/`:
 
 ```yaml
 ---
-title: "Introduction to Quantum Mechanics"
-code: "PHYS 401"
-description: "Undergraduate course covering wave functions and operators"
-term: "Spring 2024"
-institution: "Your University"
+title: 'Introduction to Quantum Mechanics'
+code: 'PHYS 401'
+description: 'Undergraduate course covering wave functions and operators'
+term: 'Spring 2024'
+institution: 'Your University'
 url: https://course-website.example.com
 importance: 1
-category: current          # 'current' or 'past'
+category: current # 'current' or 'past'
 ---
-
 Course description content (optional).
+```
+
+Set the subtitle shown below the page heading in `site.ts`:
+
+```typescript
+pages: {
+  teaching: {
+    description: 'Course materials, schedules, and resources for classes taught.',
+  },
+},
 ```
 
 ---
@@ -335,16 +396,16 @@ Create `.md` files in `src/content/people/`:
 
 ```yaml
 ---
-name: "Lab Member Name"
-role: "PhD Student"
+name: 'Lab Member Name'
+role: 'PhD Student'
 photo: /assets/img/people/member.jpg
-description: "Research interests: quantum computing, information theory"
+description: 'Research interests: quantum computing, information theory'
 website: https://member-site.com
 github: github-username
 scholar: SCHOLAR_ID
 orcid: 0000-0000-0000-0000
 importance: 1
-group: current             # 'current' or 'alumni'
+group: current # 'current' or 'alumni'
 ---
 ```
 
@@ -373,10 +434,14 @@ repositories: {
   githubUsers: true,
   githubRepos: true,
   trophies: true,
-  themeLight: 'default',
-  themeDark: 'dark',
+  themeLight: 'default',      // github-readme-stats theme for light mode
+  themeDark: 'dark',          // github-readme-stats theme for dark mode
+  trophyThemeLight: 'flat',   // github-profile-trophy theme for light mode
+  trophyThemeDark: 'gitdimmed', // github-profile-trophy theme for dark mode
 },
 ```
+
+Browse available themes at [github-readme-stats themes](https://github.com/anuraghazra/github-readme-stats/blob/master/themes/README.md) and [github-profile-trophy themes](https://github.com/ryo-ma/github-profile-trophy#themes).
 
 ---
 
@@ -389,7 +454,6 @@ Create `.md` files in `src/content/announcements/`:
 date: 2024-06-01
 pinned: false
 ---
-
 Announcement text here. HTML and Markdown are supported.
 [Link text](https://example.com) works too.
 ```
@@ -414,7 +478,9 @@ Users can always toggle with the sun/moon button in the navbar.
 
 ---
 
-## 15. Comments (Giscus)
+## 15. Comments (Giscus / Disqus)
+
+### Giscus (GitHub Discussions — recommended)
 
 1. Go to [giscus.app](https://giscus.app) and follow the setup instructions
 2. Copy the values into `site.ts`:
@@ -437,6 +503,18 @@ giscus: {
 ```
 
 Giscus appears on all blog posts. Enable per-project with `giscus_comments: true` in project frontmatter.
+
+### Disqus
+
+Set your Disqus shortname in `site.ts` (leave empty to disable):
+
+```typescript
+comments: {
+  disqusShortname: 'your-disqus-shortname',
+},
+```
+
+Find your shortname in your Disqus admin dashboard → Settings → General → Shortname. Disqus and Giscus can coexist — both will appear on posts if both are configured.
 
 ---
 
@@ -555,14 +633,14 @@ All theming is done through CSS custom properties defined in `src/styles/_colors
 
 ```css
 :root {
-  --global-theme-color: #B509AC;   /* accent color (default: purple) */
-  --global-bg-color: #FFFFFF;
+  --global-theme-color: #b509ac; /* accent color (default: purple) */
+  --global-bg-color: #ffffff;
   --global-text-color: #000000;
   /* ... see _colors.css for full list */
 }
 
 [data-theme='dark'] {
-  --global-theme-color: #B509AC;
+  --global-theme-color: #b509ac;
   --global-bg-color: #1a1a1a;
   --global-text-color: #e0e0e0;
 }
@@ -585,10 +663,10 @@ footer: {
 },
 ```
 
-| Value | Behaviour |
-|---|---|
-| `'sticky'` | Footer is always visible at the bottom of the viewport (default, matches al-folio) |
+| Value      | Behaviour                                                                                 |
+| ---------- | ----------------------------------------------------------------------------------------- |
+| `'sticky'` | Footer is always visible at the bottom of the viewport (default, matches al-folio)        |
 | `'normal'` | Footer sits at the natural bottom of the page content — only visible after scrolling down |
-| `'hidden'` | Footer is not rendered at all |
+| `'hidden'` | Footer is not rendered at all                                                             |
 
 When `'sticky'`, the body automatically gains `padding-bottom` to prevent page content from being obscured by the footer. The back-to-top button is also repositioned to sit above it.

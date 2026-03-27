@@ -1,11 +1,12 @@
 ---
-import { getCollection, render } from 'astro:content';
+import ProfilePhoto from '@components/about/ProfilePhoto.astro';
+import SocialLinks from '@components/SocialLinks.astro';
 import { site } from '@config/site';
 import Base from '@layouts/Base.astro';
-import SocialLinks from '@components/SocialLinks.astro';
-import ProfilePhoto from '@components/about/ProfilePhoto.astro';
+import { getAuthors, getBoolField, getTitle, getVenue, getYear, parseBibtex } from '@utils/bibtex';
+import { getCollection, render } from 'astro:content';
+
 import AboutContent from '../data/about.mdx';
-import { parseBibtex, getAuthors, getVenue, getTitle, getYear, getBoolField } from '@utils/bibtex';
 import bibRaw from '../data/papers.bib?raw';
 
 // Announcements
@@ -37,7 +38,7 @@ const selectedPapers = site.selectedPapers.enabled
 
 // Pre-render announcement content
 const renderedAnnouncements = await Promise.all(
-  allAnnouncements.map(async (item) => ({ item, rendered: await render(item) }))
+  allAnnouncements.map(async (item) => ({ item, rendered: await render(item) })),
 );
 ---
 
@@ -52,7 +53,11 @@ const renderedAnnouncements = await Promise.all(
       </h1>
       {
         site.author.subtitle && (
-          <p class="desc" style="color: var(--global-text-color-light);" set:html={site.author.subtitle} />
+          <p
+            class="desc"
+            style="color: var(--global-text-color-light);"
+            set:html={site.author.subtitle}
+          />
         )
       }
     </header>
@@ -84,16 +89,16 @@ const renderedAnnouncements = await Promise.all(
         site.announcements.enabled && allAnnouncements.length > 0 && (
           <section class="mt-8">
             <h2 style="color: var(--global-text-color); border-bottom: 1px solid var(--global-divider-color); padding-bottom: 0.3rem;">
-              <a href={`${site.base}/news/`} style="color: inherit; text-decoration: none;">news</a>
+              <a href={`${site.base}/news/`} style="color: inherit; text-decoration: none;">
+                news
+              </a>
             </h2>
             <div class={site.announcements.scrollable ? 'scrollable-list' : ''}>
               <table style="width: 100%; border-collapse: collapse;">
                 <tbody>
                   {renderedAnnouncements.map(({ item, rendered: { Content } }) => (
                     <tr style="border-bottom: 1px solid var(--global-divider-color);">
-                      <td
-                        style="padding: 0.5rem 1rem 0.5rem 0; white-space: nowrap; vertical-align: top; color: var(--global-text-color-light); font-size: 0.8rem;"
-                      >
+                      <td style="padding: 0.5rem 1rem 0.5rem 0; white-space: nowrap; vertical-align: top; color: var(--global-text-color-light); font-size: 0.8rem;">
                         {formatDate(item.data.date)}
                       </td>
                       <td style="padding: 0.5rem 0; font-size: 0.9rem; color: var(--global-text-color);">
@@ -113,16 +118,16 @@ const renderedAnnouncements = await Promise.all(
         site.latestPosts.enabled && allPosts.length > 0 && (
           <section class="mt-8">
             <h2 style="color: var(--global-text-color); border-bottom: 1px solid var(--global-divider-color); padding-bottom: 0.3rem;">
-              <a href={`${site.base}/blog/`} style="color: inherit; text-decoration: none;">latest posts</a>
+              <a href={`${site.base}/blog/`} style="color: inherit; text-decoration: none;">
+                latest posts
+              </a>
             </h2>
             <div class={site.latestPosts.scrollable ? 'scrollable-list' : ''}>
               <table style="width: 100%; border-collapse: collapse;">
                 <tbody>
                   {allPosts.map((post) => (
                     <tr style="border-bottom: 1px solid var(--global-divider-color);">
-                      <td
-                        style="padding: 0.5rem 1rem 0.5rem 0; white-space: nowrap; vertical-align: top; color: var(--global-text-color-light); font-size: 0.8rem;"
-                      >
+                      <td style="padding: 0.5rem 1rem 0.5rem 0; white-space: nowrap; vertical-align: top; color: var(--global-text-color-light); font-size: 0.8rem;">
                         {formatDate(post.data.date)}
                       </td>
                       <td style="padding: 0.5rem 0; font-size: 0.9rem;">
@@ -147,26 +152,24 @@ const renderedAnnouncements = await Promise.all(
         site.selectedPapers.enabled && selectedPapers.length > 0 && (
           <section class="mt-8">
             <h2 style="color: var(--global-text-color); border-bottom: 1px solid var(--global-divider-color); padding-bottom: 0.3rem;">
-              <a href={`${site.base}/publications/`} style="color: inherit; text-decoration: none;">selected publications</a>
+              <a href={`${site.base}/publications/`} style="color: inherit; text-decoration: none;">
+                selected publications
+              </a>
             </h2>
-            <ol class="list-none p-0 m-0">
+            <ol class="m-0 list-none p-0">
               {selectedPapers.map((entry) => {
                 const title = getTitle(entry);
                 const authors = getAuthors(entry);
                 const venue = getVenue(entry);
                 const year = getYear(entry);
                 const abbr = entry.fields.abbr;
-                const url = entry.fields.html ?? (entry.fields.doi ? `https://doi.org/${entry.fields.doi}` : '');
+                const url =
+                  entry.fields.html ??
+                  (entry.fields.doi ? `https://doi.org/${entry.fields.doi}` : '');
                 const award = entry.fields.award;
                 return (
                   <li class="mb-4 text-sm" style="line-height: 1.6;">
-                    {abbr && (
-                      <span
-                        class="badge-abbr mr-2"
-                      >
-                        {abbr}
-                      </span>
-                    )}
+                    {abbr && <span class="badge-abbr mr-2">{abbr}</span>}
                     {url ? (
                       <a
                         href={url}
@@ -192,10 +195,7 @@ const renderedAnnouncements = await Promise.all(
                       </>
                     )}
                     {award && (
-                      <span
-                        class="badge-abbr ml-2"
-                        style="background-color: #f59e0b;"
-                      >
+                      <span class="badge-abbr ml-2" style="background-color: #f59e0b;">
                         {entry.fields.award_name ?? '🏆'}
                       </span>
                     )}
@@ -203,7 +203,7 @@ const renderedAnnouncements = await Promise.all(
                 );
               })}
             </ol>
-            <p class="text-sm mt-2">
+            <p class="mt-2 text-sm">
               <a
                 href={`${site.base}/publications/`}
                 style="color: var(--global-theme-color); text-decoration: none;"

@@ -1,9 +1,10 @@
 ---
-import { site } from '@config/site';
+import '@styles/global.css';
+
 import Footer from '@components/Footer.astro';
 import Navbar from '@components/Navbar.astro';
 import SearchTrigger from '@components/search/SearchTrigger.astro';
-import '@styles/global.css';
+import { site } from '@config/site';
 
 interface Props {
   title?: string;
@@ -11,8 +12,6 @@ interface Props {
   /** OG preview image (absolute URL or path) */
   image?: string;
   noindex?: boolean;
-  /** Load KaTeX CSS for math rendering */
-  math?: boolean;
   /** Whether this is the homepage — injects Person JSON-LD when true */
   isHome?: boolean;
 }
@@ -22,7 +21,6 @@ const {
   description = site.description,
   image = site.og.image || undefined,
   noindex = false,
-  math = false,
   isHome = false,
 } = Astro.props;
 

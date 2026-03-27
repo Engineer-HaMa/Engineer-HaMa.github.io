@@ -1,9 +1,10 @@
 ---
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+
 import { site } from '@config/site';
 import Page from '@layouts/Page.astro';
 import yaml from 'js-yaml';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 
 const reposYaml = readFileSync(resolve('src/data/repositories.yml'), 'utf-8');
 const reposData = yaml.load(reposYaml) as {
@@ -26,91 +27,107 @@ const maxLines = reposData.repo_description_lines_max ?? 2;
       </p>
     </header>
     <article>
-      {site.repositories.githubUsers && users.length > 0 && (
-        <>
-          <h2 class="section-heading">GitHub users</h2>
-          <div class="repo-grid">
-            {users.map((username) => (
-              <div class="repo-card">
-                <a href={`https://github.com/${username}`} target="_blank" rel="noopener noreferrer">
-                  <img
-                    class="only-light"
-                    alt={username}
-                    src={`https://github-readme-stats.vercel.app/api/?username=${username}&theme=${site.repositories.themeLight}&show_icons=true`}
-                    loading="lazy"
-                  />
-                  <img
-                    class="only-dark"
-                    alt={username}
-                    src={`https://github-readme-stats.vercel.app/api/?username=${username}&theme=${site.repositories.themeDark}&show_icons=true`}
-                    loading="lazy"
-                  />
-                </a>
-              </div>
-            ))}
-          </div>
-
-          {site.repositories.trophies && (
-            <>
-              <div class="divider"></div>
+      {
+        site.repositories.githubUsers && users.length > 0 && (
+          <>
+            <h2 class="section-heading">GitHub users</h2>
+            <div class="repo-grid">
               {users.map((username) => (
-                <>
-                  {users.length > 1 && <h4 class="trophy-user">{username}</h4>}
-                  <div class="repo-grid">
-                    <div class="repo-card repo-card--wide">
-                      <a href={`https://github.com/${username}`} target="_blank" rel="noopener noreferrer">
-                        <img
-                          class="only-light"
-                          alt={`${username} trophies`}
-                          src={`https://github-profile-trophy.vercel.app/?username=${username}&theme=flat`}
-                          loading="lazy"
-                        />
-                        <img
-                          class="only-dark"
-                          alt={`${username} trophies`}
-                          src={`https://github-profile-trophy.vercel.app/?username=${username}&theme=gitdimmed`}
-                          loading="lazy"
-                        />
-                      </a>
-                    </div>
-                  </div>
-                </>
-              ))}
-            </>
-          )}
-        </>
-      )}
-
-      {site.repositories.githubRepos && repos.length > 0 && (
-        <>
-          <div class="divider"></div>
-          <h2 class="section-heading">GitHub repositories</h2>
-          <div class="repo-grid">
-            {repos.map((repo) => {
-              const [owner, repoName] = repo.split('/');
-              const showOwner = !users.includes(owner);
-              return (
                 <div class="repo-card">
-                  <a href={`https://github.com/${repo}`} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={`https://github.com/${username}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <img
                       class="only-light"
-                      alt={repo}
-                      src={`https://github-readme-stats.vercel.app/api/pin/?username=${owner}&repo=${repoName}&theme=${site.repositories.themeLight}&show_owner=${showOwner}&description_lines_count=${maxLines}`}
+                      alt={username}
+                      src={`https://github-readme-stats.vercel.app/api/?username=${username}&theme=${site.repositories.themeLight}&show_icons=true`}
                       loading="lazy"
                     />
                     <img
                       class="only-dark"
-                      alt={repo}
-                      src={`https://github-readme-stats.vercel.app/api/pin/?username=${owner}&repo=${repoName}&theme=${site.repositories.themeDark}&show_owner=${showOwner}&description_lines_count=${maxLines}`}
+                      alt={username}
+                      src={`https://github-readme-stats.vercel.app/api/?username=${username}&theme=${site.repositories.themeDark}&show_icons=true`}
                       loading="lazy"
                     />
                   </a>
                 </div>
-              );
-            })}
-          </div>
-        </>
-      )}
+              ))}
+            </div>
+
+            {site.repositories.trophies && (
+              <>
+                <div class="divider" />
+                {users.map((username) => (
+                  <>
+                    {users.length > 1 && <h4 class="trophy-user">{username}</h4>}
+                    <div class="repo-grid">
+                      <div class="repo-card repo-card--wide">
+                        <a
+                          href={`https://github.com/${username}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <img
+                            class="only-light"
+                            alt={`${username} trophies`}
+                            src={`https://github-profile-trophy.vercel.app/?username=${username}&theme=${site.repositories.trophyThemeLight}`}
+                            loading="lazy"
+                          />
+                          <img
+                            class="only-dark"
+                            alt={`${username} trophies`}
+                            src={`https://github-profile-trophy.vercel.app/?username=${username}&theme=${site.repositories.trophyThemeDark}`}
+                            loading="lazy"
+                          />
+                        </a>
+                      </div>
+                    </div>
+                  </>
+                ))}
+              </>
+            )}
+          </>
+        )
+      }
+
+      {
+        site.repositories.githubRepos && repos.length > 0 && (
+          <>
+            <div class="divider" />
+            <h2 class="section-heading">GitHub repositories</h2>
+            <div class="repo-grid">
+              {repos.map((repo) => {
+                const [owner, repoName] = repo.split('/');
+                const showOwner = !users.includes(owner);
+                return (
+                  <div class="repo-card">
+                    <a
+                      href={`https://github.com/${repo}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img
+                        class="only-light"
+                        alt={repo}
+                        src={`https://github-readme-stats.vercel.app/api/pin/?username=${owner}&repo=${repoName}&theme=${site.repositories.themeLight}&show_owner=${showOwner}&description_lines_count=${maxLines}`}
+                        loading="lazy"
+                      />
+                      <img
+                        class="only-dark"
+                        alt={repo}
+                        src={`https://github-readme-stats.vercel.app/api/pin/?username=${owner}&repo=${repoName}&theme=${site.repositories.themeDark}&show_owner=${showOwner}&description_lines_count=${maxLines}`}
+                        loading="lazy"
+                      />
+                    </a>
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        )
+      }
     </article>
   </div>
 </Page>

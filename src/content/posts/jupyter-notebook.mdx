@@ -1,7 +1,7 @@
 ---
-title: "A Demo Jupyter Notebook"
+title: 'A Demo Jupyter Notebook'
 date: 2015-07-15
-description: "This post demonstrates how to include Jupyter notebooks in blog posts."
+description: 'This post demonstrates how to include Jupyter notebooks in blog posts.'
 tags: [jupyter, python, demo]
 categories: [formatting]
 toc: true
@@ -22,7 +22,9 @@ The simplest notebook cell — imported directly from the [al-folio demo noteboo
   cells={[
     {
       cell_type: 'markdown',
-      source: ['<h3>Getting started</h3><p>A quick tour of Python basics inside a notebook cell.</p>'],
+      source: [
+        '<h3>Getting started</h3><p>A quick tour of Python basics inside a notebook cell.</p>',
+      ],
     },
     {
       cell_type: 'code',
@@ -97,11 +99,7 @@ The simplest notebook cell — imported directly from the [al-folio demo noteboo
       outputs: [
         {
           output_type: 'stream',
-          text: [
-            'Mean:     5.00\n',
-            'Variance: 4.00\n',
-            'Std dev:  2.00\n',
-          ],
+          text: ['Mean:     5.00\n', 'Variance: 4.00\n', 'Std dev:  2.00\n'],
         },
       ],
     },
@@ -123,7 +121,9 @@ To embed your own notebook:
 ```astro
 ---
 import JupyterNotebook from '../../components/JupyterNotebook.astro';
-const cells = [/* your notebook cells */];
+const cells = [
+  /* your notebook cells */
+];
 ---
 
 <JupyterNotebook cells={cells} language="python" />
@@ -131,10 +131,10 @@ const cells = [/* your notebook cells */];
 
 The component supports:
 
-| Cell type | Rendering |
-|-----------|-----------|
-| `code` | Monospace code block with `In [N]:` prompt |
-| `markdown` | Rendered as HTML (supports basic HTML in `source`) |
-| `raw` | Plain preformatted text |
-| `execute_result` / `display_data` outputs | Shown with `Out [N]:` prompt |
-| `stream` outputs | Shown inline below the code cell |
+| Cell type                                 | Rendering                                          |
+| ----------------------------------------- | -------------------------------------------------- |
+| `code`                                    | Monospace code block with `In [N]:` prompt         |
+| `markdown`                                | Rendered as HTML (supports basic HTML in `source`) |
+| `raw`                                     | Plain preformatted text                            |
+| `execute_result` / `display_data` outputs | Shown with `Out [N]:` prompt                       |
+| `stream` outputs                          | Shown inline below the code cell                   |

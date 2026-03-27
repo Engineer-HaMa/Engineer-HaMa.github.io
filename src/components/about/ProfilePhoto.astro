@@ -15,9 +15,7 @@ const {
   circular = false,
 } = Astro.props;
 
-const imgClass = circular
-  ? 'img-fluid z-depth-1 rounded-circle'
-  : 'img-fluid z-depth-1 rounded';
+const imgClass = circular ? 'img-fluid z-depth-1 rounded-circle' : 'img-fluid z-depth-1 rounded';
 ---
 
 <div class={`profile float-${align}`}>
@@ -28,9 +26,5 @@ const imgClass = circular
     class={imgClass}
     onerror="this.src='/assets/img/prof_pic.jpg'"
   />
-  {
-    site.author.moreInfo && (
-      <div class="more-info" set:html={site.author.moreInfo} />
-    )
-  }
+  {site.author.moreInfo && <div class="more-info" set:html={site.author.moreInfo} />}
 </div>

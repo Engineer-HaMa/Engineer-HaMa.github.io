@@ -1,8 +1,9 @@
 ---
+import BibSearch from '@components/publications/BibSearch.tsx';
 import { site } from '@config/site';
 import Page from '@layouts/Page.astro';
-import { parseBibtex, getTitle, getAuthors, getYear, getVenue } from '@utils/bibtex';
-import BibSearch from '@components/publications/BibSearch.tsx';
+import { getAuthors, getTitle, getVenue, parseBibtex } from '@utils/bibtex';
+
 import bibRaw from '../../data/papers.bib?raw';
 
 const entries = parseBibtex(bibRaw).sort((a, b) => {
@@ -15,32 +16,42 @@ const showAltmetric = site.publications.badges.altmetric;
 const showDimensions = site.publications.badges.dimensions;
 const maxAuthorLimit = site.publications.maxAuthorLimit;
 const showThumbnails = site.publications.thumbnails;
+const authorLastName = site.publications.authorLastName ?? site.author.name.split(' ').pop() ?? '';
+const { previewDir, pdfDir, labels } = site.publications;
 ---
 
 <Page title="Publications" description={`Publications by ${site.author.name}`}>
   <!-- Highwire Press citation meta tags — required for Google Scholar indexing -->
   <Fragment slot="head">
-    {entries.map((entry) => {
-      const authors = getAuthors(entry).split(', ');
-      return (
-        <>
-          <meta name="citation_title" content={getTitle(entry)} />
-          {authors.map((author) => (
-            <meta name="citation_author" content={author} />
-          ))}
-          {entry.fields.year && <meta name="citation_publication_date" content={entry.fields.year} />}
-          {getVenue(entry) && <meta name="citation_journal_title" content={getVenue(entry)} />}
-          {entry.fields.volume && <meta name="citation_volume" content={entry.fields.volume} />}
-          {entry.fields.pdf && (
-            <meta
-              name="citation_pdf_url"
-              content={entry.fields.pdf.startsWith('http') ? entry.fields.pdf : new URL(`/assets/pdf/${entry.fields.pdf}`, site.url).toString()}
-            />
-          )}
-          {entry.fields.doi && <meta name="citation_doi" content={entry.fields.doi} />}
-        </>
-      );
-    })}
+    {
+      entries.map((entry) => {
+        const authors = getAuthors(entry).split(', ');
+        return (
+          <>
+            <meta name="citation_title" content={getTitle(entry)} />
+            {authors.map((author) => (
+              <meta name="citation_author" content={author} />
+            ))}
+            {entry.fields.year && (
+              <meta name="citation_publication_date" content={entry.fields.year} />
+            )}
+            {getVenue(entry) && <meta name="citation_journal_title" content={getVenue(entry)} />}
+            {entry.fields.volume && <meta name="citation_volume" content={entry.fields.volume} />}
+            {entry.fields.pdf && (
+              <meta
+                name="citation_pdf_url"
+                content={
+                  entry.fields.pdf.startsWith('http')
+                    ? entry.fields.pdf
+                    : new URL(`${pdfDir}${entry.fields.pdf}`, site.url).toString()
+                }
+              />
+            )}
+            {entry.fields.doi && <meta name="citation_doi" content={entry.fields.doi} />}
+          </>
+        );
+      })
+    }
   </Fragment>
   <div class="post">
     <header class="post-header">
@@ -53,15 +64,15 @@ const showThumbnails = site.publications.thumbnails;
         entries={entries}
         maxAuthorLimit={maxAuthorLimit}
         showThumbnails={showThumbnails}
+        authorLastName={authorLastName}
+        previewDir={previewDir}
+        pdfDir={pdfDir}
+        labels={labels}
       />
     </article>
   </div>
 </Page>
 
-{showAltmetric && (
-  <script is:inline src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
-)}
+{showAltmetric && <script is:inline src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js" />}
 
-{showDimensions && (
-  <script is:inline async src="https://badge.dimensions.ai/badge.js"></script>
-)}
+{showDimensions && <script is:inline async src="https://badge.dimensions.ai/badge.js" />}

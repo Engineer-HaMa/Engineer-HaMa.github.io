@@ -3,6 +3,7 @@
 Place the Distillpub JavaScript assets here for the Distill blog post layout.
 
 Required files:
+
 - `template.v2.js` — from https://distill.pub/template.v2.js
 - `transforms.v2.js` — from https://distill.pub/transforms.v2.js
 

@@ -111,12 +111,8 @@ const { src, alt, caption, width = 800 } = Astro.props;
 ---
 
 <figure class="my-6">
-  <img src={src} alt={alt} width={width} class="rounded-lg mx-auto" />
-  {caption && (
-    <figcaption class="text-center text-sm mt-2 text-gray-500">
-      {caption}
-    </figcaption>
-  )}
+  <img src={src} alt={alt} width={width} class="mx-auto rounded-lg" />
+  {caption && <figcaption class="mt-2 text-center text-sm text-gray-500">{caption}</figcaption>}
 </figure>
 ```
 

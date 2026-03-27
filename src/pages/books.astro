@@ -1,7 +1,7 @@
 ---
-import { getCollection } from 'astro:content';
 import { site } from '@config/site';
 import Page from '@layouts/Page.astro';
+import { getCollection } from 'astro:content';
 import { Icon } from 'astro-icon/components';
 
 const allBooks = await getCollection('books');
@@ -18,7 +18,7 @@ const booksWithoutYear = allBooks.filter((b) => displayYear(b) === null);
 
 // Collect unique years, most recent first
 const years = [...new Set(booksWithYear.map((b) => displayYear(b) as number))].sort(
-  (a, b) => b - a
+  (a, b) => b - a,
 );
 
 // Group books by year, sorted by importance within each group
@@ -62,73 +62,18 @@ function renderStars(stars: number | undefined): string {
 
     <article>
       <blockquote class="sagan-quote">
-        <p>
-          "A book is proof that humans are capable of working magic."
-        </p>
+        <p>"A book is proof that humans are capable of working magic."</p>
         <footer>— Carl Sagan</footer>
       </blockquote>
 
       <h2 class="books-heading">Books that I am reading, have read, or will read</h2>
 
-      {years.map((year) => (
-        <section class="year-section">
-          <h3 class="year-label">{year}</h3>
-          <div class="books-grid">
-            {booksForYear(year).map((book) => {
-              const src = coverUrl(book);
-              const status = book.data.status;
-              const badge = status ? statusConfig[status] : undefined;
-              const stars = renderStars(book.data.stars);
-              return (
-                <div class="book-card" title={`${book.data.title} — ${book.data.author}`}>
-                  <div class="cover-wrapper">
-                    {src ? (
-                      <img
-                        src={src}
-                        alt={`Cover of ${book.data.title}`}
-                        loading="lazy"
-                        class="cover-img"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-                      />
-                    ) : null}
-                    <div class="cover-placeholder" style={src ? 'display:none' : ''}>
-                      <span class="placeholder-title">{book.data.title}</span>
-                      <span class="placeholder-author">{book.data.author}</span>
-                    </div>
-                  </div>
-
-                  {badge && (
-                    <span
-                      class="status-badge"
-                      style={`background-color: ${badge.color}`}
-                    >
-                      <Icon name={badge.icon} style="font-size: 0.65em; margin-right: 0.2em;" aria-hidden="true" />{badge.label}
-                    </span>
-                  )}
-
-                  <div class="book-info">
-                    <span class="book-title">{book.data.title}</span>
-                    <span class="book-author">{book.data.author}</span>
-                    {stars && (
-                      <span class="book-stars" aria-label={`${book.data.stars} out of 5 stars`}>
-                        {stars}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-      ))}
-
-      {booksWithoutYear.length > 0 && (
-        <section class="year-section">
-          <h3 class="year-label">to read</h3>
-          <div class="books-grid">
-            {booksWithoutYear
-              .sort((a, b) => (a.data.importance ?? 999) - (b.data.importance ?? 999))
-              .map((book) => {
+      {
+        years.map((year) => (
+          <section class="year-section">
+            <h3 class="year-label">{year}</h3>
+            <div class="books-grid">
+              {booksForYear(year).map((book) => {
                 const src = coverUrl(book);
                 const status = book.data.status;
                 const badge = status ? statusConfig[status] : undefined;
@@ -152,10 +97,12 @@ function renderStars(stars: number | undefined): string {
                     </div>
 
                     {badge && (
-                      <span
-                        class="status-badge"
-                        style={`background-color: ${badge.color}`}
-                      >
+                      <span class="status-badge" style={`background-color: ${badge.color}`}>
+                        <Icon
+                          name={badge.icon}
+                          style="font-size: 0.65em; margin-right: 0.2em;"
+                          aria-hidden="true"
+                        />
                         {badge.label}
                       </span>
                     )}
@@ -172,13 +119,70 @@ function renderStars(stars: number | undefined): string {
                   </div>
                 );
               })}
-          </div>
-        </section>
-      )}
+            </div>
+          </section>
+        ))
+      }
 
-      {allBooks.length === 0 && (
-        <p style="color: var(--global-text-color-light);">No books yet.</p>
-      )}
+      {
+        booksWithoutYear.length > 0 && (
+          <section class="year-section">
+            <h3 class="year-label">to read</h3>
+            <div class="books-grid">
+              {booksWithoutYear
+                .sort((a, b) => (a.data.importance ?? 999) - (b.data.importance ?? 999))
+                .map((book) => {
+                  const src = coverUrl(book);
+                  const status = book.data.status;
+                  const badge = status ? statusConfig[status] : undefined;
+                  const stars = renderStars(book.data.stars);
+                  return (
+                    <div class="book-card" title={`${book.data.title} — ${book.data.author}`}>
+                      <div class="cover-wrapper">
+                        {src ? (
+                          <img
+                            src={src}
+                            alt={`Cover of ${book.data.title}`}
+                            loading="lazy"
+                            class="cover-img"
+                            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+                          />
+                        ) : null}
+                        <div class="cover-placeholder" style={src ? 'display:none' : ''}>
+                          <span class="placeholder-title">{book.data.title}</span>
+                          <span class="placeholder-author">{book.data.author}</span>
+                        </div>
+                      </div>
+
+                      {badge && (
+                        <span class="status-badge" style={`background-color: ${badge.color}`}>
+                          <Icon
+                            name={badge.icon}
+                            style="font-size: 0.65em; margin-right: 0.2em;"
+                            aria-hidden="true"
+                          />
+                          {badge.label}
+                        </span>
+                      )}
+
+                      <div class="book-info">
+                        <span class="book-title">{book.data.title}</span>
+                        <span class="book-author">{book.data.author}</span>
+                        {stars && (
+                          <span class="book-stars" aria-label={`${book.data.stars} out of 5 stars`}>
+                            {stars}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
+          </section>
+        )
+      }
+
+      {allBooks.length === 0 && <p style="color: var(--global-text-color-light);">No books yet.</p>}
     </article>
   </div>
 </Page>

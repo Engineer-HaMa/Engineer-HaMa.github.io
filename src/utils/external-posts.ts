@@ -23,7 +23,12 @@ export interface ExternalPost {
  * Parse an RSS/Atom feed XML string and return an array of posts.
  * Handles both RSS 2.0 and Atom formats.
  */
-function parseRssFeed(xml: string, sourceName: string, tags: string[], categories: string[]): ExternalPost[] {
+function parseRssFeed(
+  xml: string,
+  sourceName: string,
+  tags: string[],
+  categories: string[],
+): ExternalPost[] {
   const posts: ExternalPost[] = [];
 
   // Atom feed items (<entry>)
@@ -38,7 +43,9 @@ function parseRssFeed(xml: string, sourceName: string, tags: string[], categorie
   for (const m of xml.matchAll(itemPattern)) {
     const block = m[1];
 
-    const titleMatch = block.match(new RegExp(`<${titleTag}[^>]*>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/${titleTag}>`));
+    const titleMatch = block.match(
+      new RegExp(`<${titleTag}[^>]*>(?:<!\\[CDATA\\[)?([\\s\\S]*?)(?:\\]\\]>)?</${titleTag}>`),
+    );
     const title = titleMatch ? titleMatch[1].trim() : '';
     if (!title) continue;
 
@@ -48,21 +55,34 @@ function parseRssFeed(xml: string, sourceName: string, tags: string[], categorie
     if (linkHrefMatch) {
       url = linkHrefMatch[1];
     } else {
-      const linkTextMatch = block.match(new RegExp(`<${linkTag}>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/${linkTag}>`));
+      const linkTextMatch = block.match(
+        new RegExp(`<${linkTag}>(?:<!\\[CDATA\\[)?([\\s\\S]*?)(?:\\]\\]>)?</${linkTag}>`),
+      );
       url = linkTextMatch ? linkTextMatch[1].trim() : '';
     }
     if (!url) continue;
 
-    const dateMatch = block.match(new RegExp(`<${dateTag}[^>]*>([^<]+)<\/${dateTag}>`));
+    const dateMatch = block.match(new RegExp(`<${dateTag}[^>]*>([^<]+)</${dateTag}>`));
     const dateStr = dateMatch ? dateMatch[1].trim() : '';
     const publishedDate = dateStr ? new Date(dateStr) : new Date();
 
-    const descMatch = block.match(new RegExp(`<${descTag}[^>]*>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/${descTag}>`));
+    const descMatch = block.match(
+      new RegExp(`<${descTag}[^>]*>(?:<!\\[CDATA\\[)?([\\s\\S]*?)(?:\\]\\]>)?</${descTag}>`),
+    );
     // Strip any HTML tags from description
     const rawDesc = descMatch ? descMatch[1].trim() : '';
     const description = rawDesc ? rawDesc.replace(/<[^>]+>/g, '').slice(0, 200) : undefined;
 
-    posts.push({ title, url, publishedDate, description, source: sourceName, tags, categories, external: true });
+    posts.push({
+      title,
+      url,
+      publishedDate,
+      description,
+      source: sourceName,
+      tags,
+      categories,
+      external: true,
+    });
   }
 
   return posts;

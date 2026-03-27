@@ -1,12 +1,13 @@
 ---
-import yaml from 'js-yaml';
-import { Icon } from 'astro-icon/components';
+import CVEntry from '@components/cv/CVEntry.astro';
+import CVSection from '@components/cv/CVSection.astro';
 import { site } from '@config/site';
 import Page from '@layouts/Page.astro';
-import CVSection from '@components/cv/CVSection.astro';
-import CVEntry from '@components/cv/CVEntry.astro';
-import type { RenderCV, JSONResume, RenderCVEntry } from '@utils/cv';
-import { formatDateRange, formatCVDate } from '@utils/cv';
+import type { JSONResume, RenderCV, RenderCVEntry } from '@utils/cv';
+import { formatCVDate,formatDateRange } from '@utils/cv';
+import { Icon } from 'astro-icon/components';
+import yaml from 'js-yaml';
+
 import cvRaw from '../data/cv.yml?raw';
 import resumeData from '../data/resume.json';
 

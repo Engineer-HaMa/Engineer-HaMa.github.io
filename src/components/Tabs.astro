@@ -25,37 +25,41 @@ const { tabs, id = 'tabs-' + Math.random().toString(36).slice(2, 7) } = Astro.pr
 <div class="as-tabs" data-tabs-id={id}>
   <!-- Tab buttons -->
   <ul class="as-tabs-nav" role="tablist">
-    {tabs.map((label, i) => (
-      <li role="presentation">
-        <button
-          class="as-tab-btn"
-          role="tab"
-          data-tab={i}
-          data-tabs-group={id}
-          aria-selected={i === 0 ? 'true' : 'false'}
-          aria-controls={`${id}-panel-${i}`}
-          id={`${id}-tab-${i}`}
-        >
-          {label}
-        </button>
-      </li>
-    ))}
+    {
+      tabs.map((label, i) => (
+        <li role="presentation">
+          <button
+            class="as-tab-btn"
+            role="tab"
+            data-tab={i}
+            data-tabs-group={id}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            aria-controls={`${id}-panel-${i}`}
+            id={`${id}-tab-${i}`}
+          >
+            {label}
+          </button>
+        </li>
+      ))
+    }
   </ul>
 
   <!-- Tab panels -->
-  {tabs.map((_, i) => (
-    <div
-      class="as-tab-panel"
-      role="tabpanel"
-      id={`${id}-panel-${i}`}
-      aria-labelledby={`${id}-tab-${i}`}
-      data-tab={i}
-      data-tabs-group={id}
-      hidden={i !== 0}
-    >
-      <slot name={`tab-${i}`} />
-    </div>
-  ))}
+  {
+    tabs.map((_, i) => (
+      <div
+        class="as-tab-panel"
+        role="tabpanel"
+        id={`${id}-panel-${i}`}
+        aria-labelledby={`${id}-tab-${i}`}
+        data-tab={i}
+        data-tabs-group={id}
+        hidden={i !== 0}
+      >
+        <slot name={`tab-${i}`} />
+      </div>
+    ))
+  }
 </div>
 
 <script>

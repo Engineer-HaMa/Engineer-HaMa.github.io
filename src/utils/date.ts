@@ -7,7 +7,7 @@
  */
 export function formatDate(
   date: Date | string | number,
-  opts: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' }
+  opts: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' },
 ): string {
   const d = date instanceof Date ? date : new Date(date);
   return d.toLocaleDateString('en-US', opts);

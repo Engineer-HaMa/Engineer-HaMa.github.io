@@ -27,7 +27,7 @@ const sharedRules = {
 
 export default tseslint.config(
   {
-    ignores: ['node_modules/**', 'dist/**', '.astro/**', 'scripts/**'],
+    ignores: ['node_modules/**', 'dist/**', '.astro/**', 'scripts/**', 'public/assets/js/**'],
   },
 
   eslint.configs.recommended,
@@ -102,5 +102,13 @@ export default tseslint.config(
       globals: { Astro: 'readonly' },
     },
     rules: sharedRules,
+  },
+
+  // Files that Prettier's Astro plugin cannot parse (inline scripts with object literals,
+  // HTML entities in JSX attributes) — disable the prettier/prettier rule for them only.
+  // This override must come AFTER the Astro files block to take precedence.
+  {
+    files: ['src/layouts/Base.astro', 'src/layouts/Post.astro', 'src/pages/cv.astro'],
+    rules: { 'prettier/prettier': 'off' },
   },
 );

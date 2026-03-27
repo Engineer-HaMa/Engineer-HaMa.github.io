@@ -1,12 +1,13 @@
 ---
-import type { CollectionEntry } from 'astro:content';
-import type { MarkdownHeading } from 'astro';
-import Base from './Base.astro';
 import PostMeta from '@components/blog/PostMeta.astro';
-import TOC from '@components/TOC.astro';
 import ReadingProgress from '@components/ReadingProgress.astro';
+import TOC from '@components/TOC.astro';
 import { site } from '@config/site';
 import { readingTime as calcReadingTime } from '@utils/reading-time';
+import type { MarkdownHeading } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+
+import Base from './Base.astro';
 
 interface Props {
   post: CollectionEntry<'posts'>;
@@ -34,45 +35,52 @@ const rt = post.body ? calcReadingTime(post.body) : 1;
   {site.features.progressBar && <ReadingProgress />}
 
   <div class="distill-page-container py-8">
-    <div class="flex gap-8 max-w-5xl mx-auto px-4">
+    <div class="mx-auto flex max-w-5xl gap-8 px-4">
       <!-- TOC sidebar (desktop only) -->
       {
         headings.length > 0 && (
-          <aside class="hidden lg:block w-52 flex-shrink-0">
+          <aside class="hidden w-52 flex-shrink-0 lg:block">
             <TOC headings={headings} />
           </aside>
         )
       }
 
       <!-- Main distill article -->
-      <article class="distill-article flex-1 min-w-0">
+      <article class="distill-article min-w-0 flex-1">
         <!-- Distill-style header -->
-        <header class="distill-header mb-8 pb-6 border-b" style="border-color: var(--global-divider-color);">
+        <header
+          class="distill-header mb-8 border-b pb-6"
+          style="border-color: var(--global-divider-color);"
+        >
           <h1 class="distill-title">
             {title}
           </h1>
 
-          {description && (
-            <p class="distill-description">{description}</p>
-          )}
+          {description && <p class="distill-description">{description}</p>}
 
           <!-- Authors block -->
-          {authors.length > 0 && (
-            <div class="distill-authors">
-              {authors.map((author) => (
-                <div class="distill-author-block">
-                  <span class="distill-author-name">
-                    {author.url
-                      ? <a href={author.url} target="_blank" rel="noopener noreferrer">{author.name}</a>
-                      : author.name}
-                  </span>
-                  {author.affiliations?.name && (
-                    <span class="distill-affiliation">{author.affiliations.name}</span>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
+          {
+            authors.length > 0 && (
+              <div class="distill-authors">
+                {authors.map((author) => (
+                  <div class="distill-author-block">
+                    <span class="distill-author-name">
+                      {author.url ? (
+                        <a href={author.url} target="_blank" rel="noopener noreferrer">
+                          {author.name}
+                        </a>
+                      ) : (
+                        author.name
+                      )}
+                    </span>
+                    {author.affiliations?.name && (
+                      <span class="distill-affiliation">{author.affiliations.name}</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )
+          }
 
           <PostMeta date={date} tags={tags} categories={categories} readingTime={rt} />
         </header>

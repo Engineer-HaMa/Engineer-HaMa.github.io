@@ -17,7 +17,7 @@ Keep the default settings. Fork to your personal account.
 In your fork:
 
 1. Go to **Settings** → **Pages**
-2. Under *Source*, select **GitHub Actions**
+2. Under _Source_, select **GitHub Actions**
 3. Save
 
 ---
@@ -30,7 +30,7 @@ Edit `src/config/site.ts` directly on GitHub (click the file → pencil icon):
 export const site = {
   title: 'Your Name',
   url: 'https://YOUR-USERNAME.github.io',
-  base: '',  // keep '' for user pages; set '/as-folio' for project pages
+  base: '', // keep '' for user pages; set '/as-folio' for project pages
 
   author: {
     name: 'Your Name',

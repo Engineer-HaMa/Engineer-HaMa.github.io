@@ -8,4 +8,4 @@ importance: 2
 category: past
 ---
 
-Prerequisites: classical mechanics, special relativity, multivariable calculus. Textbook: Misner, Thorne & Wheeler, *Gravitation*.
+Prerequisites: classical mechanics, special relativity, multivariable calculus. Textbook: Misner, Thorne & Wheeler, _Gravitation_.

@@ -73,6 +73,33 @@ Any new feature must have:
 - Documentation in `CUSTOMIZE.md`
 - Build verified to exit 0
 
+### No hardcoded persona strings
+
+**Never embed persona names, demo values, or user-visible strings directly in components.**
+All such values must originate in `src/config/site.ts` and be passed down as props.
+
+Examples of what NOT to do:
+
+```typescript
+// ❌ Wrong — hardcoded persona
+const PERSONA_LAST_NAME = 'einstein';
+
+// ❌ Wrong — hardcoded UI label
+<button>Abs</button>
+```
+
+Examples of what to do instead:
+
+```typescript
+// ✅ Correct — derived from config
+const authorLastName = site.publications.authorLastName ?? site.author.name.split(' ').pop() ?? '';
+
+// ✅ Correct — label from config
+<button>{labels.abstract ?? 'Abs'}</button>
+```
+
+This applies to publication author highlighting, search placeholders, empty-state messages, page descriptions, and any other user-visible text.
+
 ### Schema changes
 
 When adding BibTeX fields, frontmatter fields, or collection fields:
@@ -111,9 +138,7 @@ When adding BibTeX fields, frontmatter fields, or collection fields:
 const { chart_js = false } = post.data;
 ---
 
-{chart_js && (
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js" defer></script>
-)}
+{chart_js && <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js" defer />}
 ```
 
 ### Analytics injection (in Base.astro)
@@ -123,9 +148,7 @@ const { chart_js = false } = post.data;
 const { pirsch } = site.analytics;
 ---
 
-{pirsch && (
-  <script defer src="https://api.pirsch.io/pa.js" data-code={pirsch}></script>
-)}
+{pirsch && <script defer src="https://api.pirsch.io/pa.js" data-code={pirsch} />}
 ```
 
 ---
@@ -140,17 +163,17 @@ const { pirsch } = site.analytics;
 
 ## Files you will frequently modify
 
-| File | Purpose |
-| --- | --- |
-| `src/config/site.ts` | Add feature flags, config options |
-| `src/content.config.ts` | Add collection fields |
-| `src/layouts/Post.astro` | Add per-post CDN widgets |
+| File                     | Purpose                                 |
+| ------------------------ | --------------------------------------- |
+| `src/config/site.ts`     | Add feature flags, config options       |
+| `src/content.config.ts`  | Add collection fields                   |
+| `src/layouts/Post.astro` | Add per-post CDN widgets                |
 | `src/layouts/Base.astro` | Add global scripts (analytics, consent) |
-| `src/components/*.astro` | New UI components |
-| `src/pages/*.astro` | New or modified pages |
-| `src/content/**/*.md` | Demo content |
-| `src/data/papers.bib` | BibTeX demo entries |
-| `CUSTOMIZE.md` | Document new features |
+| `src/components/*.astro` | New UI components                       |
+| `src/pages/*.astro`      | New or modified pages                   |
+| `src/content/**/*.md`    | Demo content                            |
+| `src/data/papers.bib`    | BibTeX demo entries                     |
+| `CUSTOMIZE.md`           | Document new features                   |
 
 ---
 

@@ -1,5 +1,6 @@
 ---
 import { site } from '@config/site';
+
 import ThemeToggle from './ThemeToggle.astro';
 
 const navItems = [
@@ -23,24 +24,24 @@ function isActive(href: string): boolean {
 ---
 
 <nav
-  class="navbar fixed top-0 left-0 right-0 z-40"
+  class="navbar fixed top-0 right-0 left-0 z-40"
   style="background-color: var(--global-bg-color); border-bottom: 1px solid var(--global-divider-color); opacity: 0.95; height: 57px;"
 >
   <div
-    class="page-container h-full flex items-center justify-between"
+    class="page-container flex h-full items-center justify-between"
     style="max-width: 930px; margin: 0 auto; padding: 0 1rem;"
   >
     <!-- Brand -->
     <a
       href={`${site.base}/`}
-      class="font-bold text-lg"
+      class="text-lg font-bold"
       style="color: var(--global-text-color); text-decoration: none;"
     >
       {site.author.name}
     </a>
 
     <!-- Desktop nav -->
-    <div class="hidden md:flex items-center gap-1">
+    <div class="hidden items-center gap-1 md:flex">
       {
         navItems.map((item) => (
           <a
@@ -81,7 +82,7 @@ function isActive(href: string): boolean {
     </div>
 
     <!-- Mobile menu button -->
-    <div class="flex md:hidden items-center gap-2">
+    <div class="flex items-center gap-2 md:hidden">
       <button
         id="search-toggle"
         aria-label="Search"
@@ -111,9 +112,18 @@ function isActive(href: string): boolean {
         aria-expanded="false"
         style="padding: 0.25rem; border: 0; background: inherit; cursor: pointer;"
       >
-        <span class="icon-bar top-bar" style="display: block; width: 22px; height: 2px; background-color: var(--global-text-color); border-radius: 1px; margin-bottom: 4px;"></span>
-        <span class="icon-bar middle-bar" style="display: block; width: 22px; height: 2px; background-color: var(--global-text-color); border-radius: 1px; margin-bottom: 4px;"></span>
-        <span class="icon-bar bottom-bar" style="display: block; width: 22px; height: 2px; background-color: var(--global-text-color); border-radius: 1px;"></span>
+        <span
+          class="icon-bar top-bar"
+          style="display: block; width: 22px; height: 2px; background-color: var(--global-text-color); border-radius: 1px; margin-bottom: 4px;"
+        ></span>
+        <span
+          class="icon-bar middle-bar"
+          style="display: block; width: 22px; height: 2px; background-color: var(--global-text-color); border-radius: 1px; margin-bottom: 4px;"
+        ></span>
+        <span
+          class="icon-bar bottom-bar"
+          style="display: block; width: 22px; height: 2px; background-color: var(--global-text-color); border-radius: 1px;"
+        ></span>
       </button>
     </div>
   </div>
@@ -121,7 +131,7 @@ function isActive(href: string): boolean {
   <!-- Mobile nav dropdown -->
   <div
     id="navbar-collapse"
-    class="md:hidden hidden"
+    class="hidden md:hidden"
     style="background-color: var(--global-bg-color); border-top: 1px solid var(--global-divider-color); padding: 0.5rem 0;"
   >
     {

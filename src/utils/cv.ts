@@ -155,7 +155,7 @@ export function formatCVDate(d: string | number | undefined): string {
 /** Format a date range like "Jan 2020 – Present". */
 export function formatDateRange(
   start: string | number | undefined,
-  end: string | number | undefined
+  end: string | number | undefined,
 ): string {
   const s = formatCVDate(start);
   const e = end === 'present' || !end ? 'Present' : formatCVDate(end);

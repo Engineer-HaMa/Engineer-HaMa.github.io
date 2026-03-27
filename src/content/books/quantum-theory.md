@@ -9,4 +9,5 @@ finished: 2024-03-01
 released: 1930
 categories: physics quantum
 ---
+
 Dirac's legendary formulation of quantum mechanics, establishing the mathematical framework of the field.

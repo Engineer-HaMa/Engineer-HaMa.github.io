@@ -13,8 +13,7 @@ export const site = {
   title: 'Albert Einstein',
 
   /** Site description. Used in meta tags. */
-  description:
-    'A simple, clean, and responsive Astro template for academics. Powered by as-folio.',
+  description: 'A simple, clean, and responsive Astro template for academics. Powered by as-folio.',
 
   /** Full URL of your deployed site (no trailing slash). */
   url: 'https://example.github.io',
@@ -160,6 +159,10 @@ export const site = {
       categories?: string[];
       tags?: string[];
     }>,
+    /** Average reading speed (words per minute) used for reading-time estimates. */
+    wordsPerMinute: 200 as number,
+    /** Message shown on the blog listing page when no posts exist. */
+    emptyMessage: 'No posts yet. Check back soon!',
   },
 
   // ─── About page sections ──────────────────────────────────────────────────
@@ -299,6 +302,24 @@ export const site = {
     maxAuthorLimit: 3 as number | undefined,
     /** Enable thumbnail images for publications (if `preview` set in BibTeX). */
     thumbnails: true,
+    /**
+     * Last name used to italicise your name in publication author lists.
+     * Defaults to the last word of `site.author.name` when not set.
+     * Override explicitly if your publications use a different name form.
+     */
+    authorLastName: undefined as string | undefined,
+    /** Path prefix (relative to public/) for publication preview images. */
+    previewDir: '/assets/img/publication_preview/',
+    /** Path prefix (relative to public/) for publication PDFs and supplements. */
+    pdfDir: '/assets/pdf/',
+    /** UI labels — override for non-English sites. */
+    labels: {
+      abstract: 'Abs',
+      bibtex: 'Bib',
+      supp: 'Supp',
+      searchPlaceholder: 'Search publications\u2026',
+      noResults: 'No publications match your search.',
+    },
   },
 
   // ─── Repositories ────────────────────────────────────────────────────────
@@ -314,6 +335,34 @@ export const site = {
     themeLight: 'default' as string,
     /** Theme for dark mode. */
     themeDark: 'dark' as string,
+    /** Trophy card theme for light mode (from github-profile-trophy themes). */
+    trophyThemeLight: 'flat' as string,
+    /** Trophy card theme for dark mode. */
+    trophyThemeDark: 'gitdimmed' as string,
+  },
+
+  // ─── Comments ─────────────────────────────────────────────────────────────
+
+  comments: {
+    /**
+     * Disqus shortname — the subdomain part of YOUR-SHORTNAME.disqus.com.
+     * Required when a post sets `disqus: true` in frontmatter.
+     * Leave empty string if not using Disqus.
+     */
+    disqusShortname: '' as string,
+  },
+
+  // ─── Page copy ────────────────────────────────────────────────────────────
+
+  pages: {
+    projects: {
+      /** Description shown below the "projects" heading on the projects page. */
+      description: 'A growing collection of your cool projects.',
+    },
+    teaching: {
+      /** Description shown below the "teaching" heading on the teaching page. */
+      description: 'Course materials, schedules, and resources for classes taught.',
+    },
   },
 
   // ─── Theme defaults ───────────────────────────────────────────────────────

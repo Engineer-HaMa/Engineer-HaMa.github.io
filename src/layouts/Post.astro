@@ -1,17 +1,18 @@
 ---
-import type { CollectionEntry } from 'astro:content';
-import { getCollection } from 'astro:content';
-import { site } from '@config/site';
-import Base from './Base.astro';
-import Giscus from '@components/Giscus.astro';
-import ReadingProgress from '@components/ReadingProgress.astro';
-import RelatedPosts from '@components/blog/RelatedPosts.astro';
 import PostMeta from '@components/blog/PostMeta.astro';
+import RelatedPosts from '@components/blog/RelatedPosts.astro';
+import Giscus from '@components/Giscus.astro';
+import Newsletter from '@components/Newsletter.astro';
+import ReadingProgress from '@components/ReadingProgress.astro';
 import TOC from '@components/TOC.astro';
+import { site } from '@config/site';
 import { relatedPosts } from '@utils/posts';
 import { readingTime as calcReadingTime } from '@utils/reading-time';
 import type { MarkdownHeading } from 'astro';
-import Newsletter from '@components/Newsletter.astro';
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+
+import Base from './Base.astro';
 
 interface Props {
   post: CollectionEntry<'posts'>;
@@ -30,7 +31,7 @@ const lastmodFormatted = lastmod
   ? lastmod.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
   : null;
 
-const rt = post.body ? calcReadingTime(post.body) : 1;
+const rt = post.body ? calcReadingTime(post.body, site.blog.wordsPerMinute) : 1;
 
 // Related posts (if post has tags)
 const allPosts = await getCollection('posts');
@@ -240,14 +241,14 @@ const jsonLd = {
 {disqus && (
   <>
     <div id="disqus_thread" class="mt-8 pt-6" style="border-top: 1px solid var(--global-divider-color);"></div>
-    <script is:inline define:vars={{ disqusUrl: Astro.url.href, disqusId: post.id }}>
+    <script is:inline define:vars={{ disqusUrl: Astro.url.href, disqusId: post.id, disqusShortname: site.comments.disqusShortname }}>
       var disqus_config = function () {
         this.page.url = disqusUrl;
         this.page.identifier = disqusId;
       };
       (function() {
         var d = document, s = d.createElement('script');
-        s.src = 'https://YOUR-DISQUS-SHORTNAME.disqus.com/embed.js';
+        s.src = `https://${disqusShortname}.disqus.com/embed.js`;
         s.setAttribute('data-timestamp', +new Date());
         (d.head || d.body).appendChild(s);
       })();

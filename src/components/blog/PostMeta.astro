@@ -20,17 +20,19 @@ const isoDate = d.toISOString();
 ---
 
 <div
-  class="post-meta flex flex-wrap items-center gap-2 text-xs mt-1"
+  class="post-meta mt-1 flex flex-wrap items-center gap-2 text-xs"
   style="color: var(--global-text-color-light);"
 >
   <time datetime={isoDate}>{formattedDate}</time>
 
-  {readingTime && (
-    <>
-      <span aria-hidden="true">·</span>
-      <span>{readingTime} min read</span>
-    </>
-  )}
+  {
+    readingTime && (
+      <>
+        <span aria-hidden="true">·</span>
+        <span>{readingTime} min read</span>
+      </>
+    )
+  }
 
   {
     categories.length > 0 && (

@@ -73,7 +73,7 @@ new MutationObserver(() => {
   const theme = document.documentElement.getAttribute('data-theme');
   giscusFrame.contentWindow.postMessage(
     { giscus: { setConfig: { theme: theme === 'dark' ? 'dark' : 'light' } } },
-    'https://giscus.app'
+    'https://giscus.app',
   );
 }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 ```

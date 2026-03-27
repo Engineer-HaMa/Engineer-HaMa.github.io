@@ -5,7 +5,10 @@ const g = site.giscus;
 if (!g.enabled) return;
 ---
 
-<section class="giscus-comments mt-12 pt-8" style="border-top: 1px solid var(--global-divider-color);">
+<section
+  class="giscus-comments mt-12 pt-8"
+  style="border-top: 1px solid var(--global-divider-color);"
+>
   <div class="giscus"></div>
 </section>
 
@@ -23,18 +26,14 @@ if (!g.enabled) return;
   data-theme={g.lightTheme}
   data-lang={g.lang}
   crossorigin="anonymous"
-  async
-></script>
+  async></script>
 
 <script is:inline define:vars={{ darkTheme: g.darkTheme, lightTheme: g.lightTheme }}>
   // Sync giscus theme with page theme
   function sendGiscusTheme(theme) {
     const iframe = document.querySelector('iframe.giscus-frame');
     if (!iframe) return;
-    iframe.contentWindow.postMessage(
-      { giscus: { setConfig: { theme } } },
-      'https://giscus.app'
-    );
+    iframe.contentWindow.postMessage({ giscus: { setConfig: { theme } } }, 'https://giscus.app');
   }
 
   // Watch for theme changes on <html>

@@ -42,6 +42,7 @@ yarn format         # Prettier
 - Collections: `posts`, `projects`, `people`, `teaching`, `announcements`, `books`
 - Use `z.coerce.string()` for ISBN/OLID fields (YAML parses bare numbers as JS numbers)
 - Use `render(entry)` not `entry.render()` (Astro 6 API)
+- Posts support `draft: boolean` (excluded from listings and search index) and `lastmod: date` (shown in header, used in JSON-LD `dateModified`)
 
 ### CSS
 
@@ -58,7 +59,7 @@ yarn format         # Prettier
 
 ### BibTeX
 
-- `src/utils/bib.ts` — uses `citation-js` at build time, produces typed `BibEntry[]`
+- `src/utils/bibtex.ts` — uses `citation-js` at build time, produces typed `BibEntry[]`
 - `src/data/papers.bib` — Einstein demo papers
 - Never fetch BibTeX at runtime; always parse at build time in `getStaticPaths` or page frontmatter
 
@@ -110,14 +111,16 @@ yarn format         # Prettier
 
 ## Common pitfalls
 
-| Issue | Fix |
-| ----- | --- |
-| `render()` error | Use `const { Content } = await render(entry)` (Astro 6 API) |
-| YAML number parsed as string | Use `z.coerce.string()` in schema |
-| Dark mode flash | Ensure `<script is:inline>` with `localStorage` check is in `<head>` before CSS |
-| Nested `<a>` elements | Use `data-href` + JS click handler for clickable cards; inner links stay real `<a>` |
-| `as const` type error | Use `as 'literal'` type assertion for string union fields in site config |
-| ISBN coercion | Always `z.coerce.string()` for isbn/olid fields |
+| Issue                        | Fix                                                                                                              |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `render()` error             | Use `const { Content } = await render(entry)` (Astro 6 API)                                                      |
+| YAML number parsed as string | Use `z.coerce.string()` in schema                                                                                |
+| Dark mode flash              | Ensure `<script is:inline>` with `localStorage` check is in `<head>` before CSS                                  |
+| Nested `<a>` elements        | Use `data-href` + JS click handler for clickable cards; inner links stay real `<a>`                              |
+| `as const` type error        | Use `as 'literal'` type assertion for string union fields in site config                                         |
+| ISBN coercion                | Always `z.coerce.string()` for isbn/olid fields                                                                  |
+| Icon not found at build      | Add new icon names to the `icon.include['fa-solid']` array in `astro.config.mjs`                                 |
+| Hardcoded persona string     | Never embed persona names (e.g. `'einstein'`) in components — pass all user-visible text as props from `site.ts` |
 
 ---
 

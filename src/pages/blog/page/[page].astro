@@ -1,9 +1,9 @@
 ---
-import { getCollection } from 'astro:content';
-import { site } from '@config/site';
-import Page from '@layouts/Page.astro';
 import PostCard from '@components/blog/PostCard.astro';
 import Pagination from '@components/Pagination.astro';
+import { site } from '@config/site';
+import Page from '@layouts/Page.astro';
+import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
   const allPosts = (await getCollection('posts'))
@@ -33,7 +33,7 @@ const { posts, currentPage, totalPages } = Astro.props;
 const base = site.base;
 
 // Group posts by year
-const postsByYear = new Map<number, (typeof posts)>();
+const postsByYear = new Map<number, typeof posts>();
 for (const post of posts) {
   const year = post.data.date.getFullYear();
   if (!postsByYear.has(year)) postsByYear.set(year, []);
@@ -48,18 +48,20 @@ const postYears = [...postsByYear.keys()].sort((a, b) => b - a);
     <h2>Page {currentPage} of {totalPages}</h2>
   </div>
 
-  {postYears.map((year) => (
-    <>
-      <h2 class="year">{year}</h2>
-      <ul class="post-list">
-        {postsByYear.get(year)!.map((post) => (
-          <li>
-            <PostCard post={post} />
-          </li>
-        ))}
-      </ul>
-    </>
-  ))}
+  {
+    postYears.map((year) => (
+      <>
+        <h2 class="year">{year}</h2>
+        <ul class="post-list">
+          {postsByYear.get(year)!.map((post) => (
+            <li>
+              <PostCard post={post} />
+            </li>
+          ))}
+        </ul>
+      </>
+    ))
+  }
 
   <Pagination
     currentPage={currentPage}

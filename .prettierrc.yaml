@@ -8,9 +8,9 @@ tabWidth: 2
 bracketSpacing: true
 endOfLine: lf
 overrides:
-  - files: "*.{js,jsx,ts,tsx}"
+  - files: '*.{js,jsx,ts,tsx}'
     options:
       parser: typescript
-  - files: "*.astro"
+  - files: '*.astro'
     options:
       parser: astro

@@ -1,13 +1,28 @@
-import { useState, useMemo, useRef, useEffect } from 'react';
-import type { BibEntry } from '../../utils/bibtex';
-import { getTitle, getAuthors, getVenue, getYear, getBoolField } from '../../utils/bibtex';
+import { useMemo, useState } from 'react';
 
-const PERSONA_LAST_NAME = 'einstein';
+import type { BibEntry } from '../../utils/bibtex';
+import { getAuthors, getBoolField, getTitle, getVenue, getYear } from '../../utils/bibtex';
+
+interface Labels {
+  abstract?: string;
+  bibtex?: string;
+  supp?: string;
+  searchPlaceholder?: string;
+  noResults?: string;
+}
 
 interface Props {
   entries: BibEntry[];
   maxAuthorLimit?: number;
   showThumbnails?: boolean;
+  /** Last name to italicise in author lists (case-insensitive). */
+  authorLastName?: string;
+  /** Path prefix for publication preview images (relative to public/). */
+  previewDir?: string;
+  /** Path prefix for publication PDFs and supplements (relative to public/). */
+  pdfDir?: string;
+  /** UI labels — override for non-English sites. */
+  labels?: Labels;
 }
 
 function entryUrl(entry: BibEntry): string {
@@ -18,9 +33,26 @@ function entryUrl(entry: BibEntry): string {
 
 function buildBibtex(entry: BibEntry): string {
   const fields = Object.entries(entry.fields)
-    .filter(([k]) => !['abbr', 'abstract', 'selected', 'preview', 'bibtex_show',
-      'award', 'award_name', 'html', 'code', 'blog', 'website', 'altmetric',
-      'dimensions', 'google_scholar_id', 'inspirehep_id'].includes(k))
+    .filter(
+      ([k]) =>
+        ![
+          'abbr',
+          'abstract',
+          'selected',
+          'preview',
+          'bibtex_show',
+          'award',
+          'award_name',
+          'html',
+          'code',
+          'blog',
+          'website',
+          'altmetric',
+          'dimensions',
+          'google_scholar_id',
+          'inspirehep_id',
+        ].includes(k),
+    )
     .map(([k, v]) => `  ${k} = {${v}}`)
     .join(',\n');
   return `@${entry.type}{${entry.key},\n${fields}\n}`;
@@ -30,10 +62,18 @@ function PublicationEntry({
   entry,
   maxAuthorLimit = 3,
   showThumbnails = true,
+  authorLastName = '',
+  previewDir = '/assets/img/publication_preview/',
+  pdfDir = '/assets/pdf/',
+  labels = {},
 }: {
   entry: BibEntry;
   maxAuthorLimit?: number;
   showThumbnails?: boolean;
+  authorLastName?: string;
+  previewDir?: string;
+  pdfDir?: string;
+  labels?: Labels;
 }) {
   const [abstractOpen, setAbstractOpen] = useState(false);
   const [bibtexOpen, setBibtexOpen] = useState(false);
@@ -68,21 +108,24 @@ function PublicationEntry({
 
   const contentColClass = showThumbnails && (abbr || preview) ? 'col-sm-8' : 'col-sm-10';
 
+  // Resolve asset paths — use full URL if provided, otherwise prefix with configured dir
+  const previewSrc = preview.includes('://') ? preview : `${previewDir}${preview}`;
+  const pdfHref = pdfPath.startsWith('http') ? pdfPath : `${pdfDir}${pdfPath}`;
+  const suppHref = supp.startsWith('http') ? supp : `${pdfDir}${supp}`;
+  const slidesHref = slides.startsWith('http') ? slides : `${pdfDir}${slides}`;
+  const posterHref = poster.startsWith('http') ? poster : `${pdfDir}${poster}`;
+
   return (
     <li>
       <div className="row">
         {/* Left column: abbr badge + thumbnail */}
         {showThumbnails && (abbr || preview) && (
           <div className="col col-sm-2 abbr">
-            {abbr && (
-              <abbr className="badge rounded w-100">
-                {abbr}
-              </abbr>
-            )}
+            {abbr && <abbr className="badge w-100 rounded">{abbr}</abbr>}
             {preview && (
               <img
                 className="preview z-depth-1 rounded"
-                src={preview.includes('://') ? preview : `/assets/img/publication_preview/${preview}`}
+                src={previewSrc}
                 alt={preview}
                 loading="lazy"
               />
@@ -107,7 +150,9 @@ function PublicationEntry({
           {authorList.length > 0 && (
             <div className="author">
               {visibleAuthors.map((author, i) => {
-                const isMe = author.toLowerCase().includes(PERSONA_LAST_NAME);
+                const isMe =
+                  authorLastName !== '' &&
+                  author.toLowerCase().includes(authorLastName.toLowerCase());
                 const isLast = i === visibleAuthors.length - 1 && hiddenCount === 0;
                 return (
                   <span key={i}>
@@ -117,7 +162,9 @@ function PublicationEntry({
                 );
               })}
               {hiddenCount > 0 && (
-                <span>, and {hiddenCount} more author{hiddenCount > 1 ? 's' : ''}</span>
+                <span>
+                  , and {hiddenCount} more author{hiddenCount > 1 ? 's' : ''}
+                </span>
               )}
             </div>
           )}
@@ -148,17 +195,38 @@ function PublicationEntry({
                 onClick={() => setAbstractOpen(!abstractOpen)}
                 style={{ cursor: 'pointer', background: 'none' }}
               >
-                Abs
+                {labels.abstract ?? 'Abs'}
               </button>
             )}
             {doi && (
-              <a href={`https://doi.org/${doi}`} target="_blank" rel="noopener noreferrer" className="btn btn-sm z-depth-0">DOI</a>
+              <a
+                href={`https://doi.org/${doi}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-sm z-depth-0"
+              >
+                DOI
+              </a>
             )}
             {arxiv && (
-              <a href={`https://arxiv.org/abs/${arxiv}`} target="_blank" rel="noopener noreferrer" className="btn btn-sm z-depth-0">arXiv</a>
+              <a
+                href={`https://arxiv.org/abs/${arxiv}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-sm z-depth-0"
+              >
+                arXiv
+              </a>
             )}
             {hal && (
-              <a href={`https://hal.science/${hal}`} target="_blank" rel="noopener noreferrer" className="btn btn-sm z-depth-0">HAL</a>
+              <a
+                href={`https://hal.science/${hal}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-sm z-depth-0"
+              >
+                HAL
+              </a>
             )}
             {bibtex_show && (
               <button
@@ -166,12 +234,12 @@ function PublicationEntry({
                 onClick={() => setBibtexOpen(!bibtexOpen)}
                 style={{ cursor: 'pointer', background: 'none' }}
               >
-                Bib
+                {labels.bibtex ?? 'Bib'}
               </button>
             )}
             {pdfPath && (
               <a
-                href={pdfPath.startsWith('http') ? pdfPath : `/assets/pdf/${pdfPath}`}
+                href={pdfHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-sm z-depth-0"
@@ -181,17 +249,17 @@ function PublicationEntry({
             )}
             {supp && (
               <a
-                href={supp.startsWith('http') ? supp : `/assets/pdf/${supp}`}
+                href={suppHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-sm z-depth-0"
               >
-                Supp
+                {labels.supp ?? 'Supp'}
               </a>
             )}
             {slides && (
               <a
-                href={slides.startsWith('http') ? slides : `/assets/pdf/${slides}`}
+                href={slidesHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-sm z-depth-0"
@@ -201,7 +269,7 @@ function PublicationEntry({
             )}
             {poster && (
               <a
-                href={poster.startsWith('http') ? poster : `/assets/pdf/${poster}`}
+                href={posterHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-sm z-depth-0"
@@ -210,36 +278,64 @@ function PublicationEntry({
               </a>
             )}
             {video && (
-              <a href={video} target="_blank" rel="noopener noreferrer" className="btn btn-sm z-depth-0">Video</a>
+              <a
+                href={video}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-sm z-depth-0"
+              >
+                Video
+              </a>
             )}
             {codeUrl && (
-              <a href={codeUrl} target="_blank" rel="noopener noreferrer" className="btn btn-sm z-depth-0">Code</a>
+              <a
+                href={codeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-sm z-depth-0"
+              >
+                Code
+              </a>
             )}
             {blog && (
-              <a href={blog} target="_blank" rel="noopener noreferrer" className="btn btn-sm z-depth-0">Blog</a>
+              <a
+                href={blog}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-sm z-depth-0"
+              >
+                Blog
+              </a>
             )}
             {website && (
-              <a href={website} target="_blank" rel="noopener noreferrer" className="btn btn-sm z-depth-0">Website</a>
+              <a
+                href={website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-sm z-depth-0"
+              >
+                Website
+              </a>
             )}
           </div>
 
           {/* Award hidden block */}
           {hasAward && (
-            <div className={`award hidden${awardOpen ? ' open' : ''}`}>
+            <div className={`award hidden${awardOpen ? 'open' : ''}`}>
               <p>{hasAward}</p>
             </div>
           )}
 
           {/* Abstract hidden block */}
           {abstract && (
-            <div className={`abstract hidden${abstractOpen ? ' open' : ''}`}>
+            <div className={`abstract hidden${abstractOpen ? 'open' : ''}`}>
               <p>{abstract}</p>
             </div>
           )}
 
           {/* BibTeX hidden block */}
           {bibtex_show && (
-            <div className={`bibtex hidden${bibtexOpen ? ' open' : ''}`}>
+            <div className={`bibtex hidden${bibtexOpen ? 'open' : ''}`}>
               <pre>{buildBibtex(entry)}</pre>
             </div>
           )}
@@ -249,7 +345,15 @@ function PublicationEntry({
   );
 }
 
-export function BibSearch({ entries, maxAuthorLimit = 3, showThumbnails = true }: Props) {
+export function BibSearch({
+  entries,
+  maxAuthorLimit = 3,
+  showThumbnails = true,
+  authorLastName = '',
+  previewDir = '/assets/img/publication_preview/',
+  pdfDir = '/assets/pdf/',
+  labels = {},
+}: Props) {
   const [query, setQuery] = useState('');
 
   const filtered = useMemo(() => {
@@ -257,12 +361,7 @@ export function BibSearch({ entries, maxAuthorLimit = 3, showThumbnails = true }
     if (!q) return entries;
     const words = q.split(/\s+/).filter(Boolean);
     return entries.filter((entry) => {
-      const haystack = [
-        getTitle(entry),
-        getAuthors(entry),
-        getVenue(entry),
-        String(getYear(entry)),
-      ]
+      const haystack = [getTitle(entry), getAuthors(entry), getVenue(entry), String(getYear(entry))]
         .join(' ')
         .toLowerCase();
       return words.every((word) => haystack.includes(word));
@@ -279,10 +378,7 @@ export function BibSearch({ entries, maxAuthorLimit = 3, showThumbnails = true }
     return map;
   }, [filtered]);
 
-  const years = useMemo(
-    () => [...byYear.keys()].sort((a, b) => b - a),
-    [byYear],
-  );
+  const years = useMemo(() => [...byYear.keys()].sort((a, b) => b - a), [byYear]);
 
   return (
     <div className="publications">
@@ -292,7 +388,7 @@ export function BibSearch({ entries, maxAuthorLimit = 3, showThumbnails = true }
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search publications…"
+          placeholder={labels.searchPlaceholder ?? 'Search publications\u2026'}
           style={{
             width: '100%',
             padding: '0.5rem 0.75rem',
@@ -305,14 +401,22 @@ export function BibSearch({ entries, maxAuthorLimit = 3, showThumbnails = true }
           }}
           aria-label="Search publications"
         />
-        <p style={{ marginTop: '0.375rem', fontSize: '0.8125rem', color: 'var(--global-text-color-light)' }}>
+        <p
+          style={{
+            marginTop: '0.375rem',
+            fontSize: '0.8125rem',
+            color: 'var(--global-text-color-light)',
+          }}
+        >
           Showing {filtered.length} of {entries.length} publication{entries.length !== 1 ? 's' : ''}
         </p>
       </div>
 
       {/* Publications grouped by year */}
       {filtered.length === 0 ? (
-        <p style={{ color: 'var(--global-text-color-light)' }}>No publications match your search.</p>
+        <p style={{ color: 'var(--global-text-color-light)' }}>
+          {labels.noResults ?? 'No publications match your search.'}
+        </p>
       ) : (
         years.map((year) => (
           <div key={year}>
@@ -324,6 +428,10 @@ export function BibSearch({ entries, maxAuthorLimit = 3, showThumbnails = true }
                   entry={entry}
                   maxAuthorLimit={maxAuthorLimit}
                   showThumbnails={showThumbnails}
+                  authorLastName={authorLastName}
+                  previewDir={previewDir}
+                  pdfDir={pdfDir}
+                  labels={labels}
                 />
               ))}
             </ol>

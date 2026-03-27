@@ -120,7 +120,12 @@
     {
       "name": "Theoretical Physics",
       "level": "Master",
-      "keywords": ["General Relativity", "Special Relativity", "Quantum Mechanics", "Statistical Mechanics"]
+      "keywords": [
+        "General Relativity",
+        "Special Relativity",
+        "Quantum Mechanics",
+        "Statistical Mechanics"
+      ]
     },
     {
       "name": "Mathematics",

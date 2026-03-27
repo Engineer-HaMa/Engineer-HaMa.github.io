@@ -6,11 +6,7 @@ if (!site.features.newsletter || !site.newsletter.endpoint) return;
 
 <section class="newsletter-section">
   <div class="page-container">
-    <form
-      action={site.newsletter.endpoint}
-      method="POST"
-      class="newsletter-form"
-    >
+    <form action={site.newsletter.endpoint} method="POST" class="newsletter-form">
       <h3 class="newsletter-title">Subscribe to updates</h3>
       <p class="newsletter-desc">Get notified about new posts and announcements.</p>
       <div class="newsletter-fields">

@@ -1,12 +1,12 @@
 ---
-import { getCollection } from 'astro:content';
-import { site } from '@config/site';
-import Page from '@layouts/Page.astro';
 import PostCard from '@components/blog/PostCard.astro';
 import Pagination from '@components/Pagination.astro';
-import { Icon } from 'astro-icon/components';
+import { site } from '@config/site';
+import Page from '@layouts/Page.astro';
 import { fetchExternalPosts } from '@utils/external-posts';
 import { readingTime } from '@utils/reading-time';
+import { getCollection } from 'astro:content';
+import { Icon } from 'astro-icon/components';
 
 const localPosts = (await getCollection('posts'))
   .filter((p) => !p.data.hidden && !p.data.draft)
@@ -70,7 +70,7 @@ const displayCategories = site.blog.displayCategories;
 const featuredCols = pinnedPosts.length >= 3 ? '3' : '2';
 
 // Group pagePosts by year for the list section
-const postsByYear = new Map<number, (typeof pagePosts)>();
+const postsByYear = new Map<number, typeof pagePosts>();
 for (const post of pagePosts) {
   const year = post.data.date.getFullYear();
   if (!postsByYear.has(year)) postsByYear.set(year, []);
@@ -87,92 +87,99 @@ const postYears = [...postsByYear.keys()].sort((a, b) => b - a);
   </div>
 
   <!-- Tag / category list -->
-  {(displayTags.length > 0 || displayCategories.length > 0) && (
-    <div class="tag-category-list">
-      <ul class="p-0 m-0">
-        {displayTags.map((tag, i) => (
-          <>
-            <li>
-              <Icon name="fa-solid:hashtag" />{' '}
-              <a href={`${site.base}/blog/tag/${tag}/`}>{tag}</a>
-            </li>
-            {i < displayTags.length - 1 && <p>&bull;</p>}
-          </>
-        ))}
-        {displayTags.length > 0 && displayCategories.length > 0 && <p>&bull;</p>}
-        {displayCategories.map((cat, i) => (
-          <>
-            <li>
-              <Icon name="fa-solid:tag" />{' '}
-              <a href={`${site.base}/blog/category/${cat}/`}>{cat}</a>
-            </li>
-            {i < displayCategories.length - 1 && <p>&bull;</p>}
-          </>
-        ))}
-      </ul>
-    </div>
-  )}
+  {
+    (displayTags.length > 0 || displayCategories.length > 0) && (
+      <div class="tag-category-list">
+        <ul class="m-0 p-0">
+          {displayTags.map((tag, i) => (
+            <>
+              <li>
+                <Icon name="fa-solid:hashtag" /> <a href={`${site.base}/blog/tag/${tag}/`}>{tag}</a>
+              </li>
+              {i < displayTags.length - 1 && <p>&bull;</p>}
+            </>
+          ))}
+          {displayTags.length > 0 && displayCategories.length > 0 && <p>&bull;</p>}
+          {displayCategories.map((cat, i) => (
+            <>
+              <li>
+                <Icon name="fa-solid:tag" />{' '}
+                <a href={`${site.base}/blog/category/${cat}/`}>{cat}</a>
+              </li>
+              {i < displayCategories.length - 1 && <p>&bull;</p>}
+            </>
+          ))}
+        </ul>
+      </div>
+    )
+  }
 
   <!-- Featured / Pinned posts card grid -->
-  {pinnedPosts.length > 0 && (
-    <>
-      <br />
-      <div class="container featured-posts">
-        <div class={`row row-cols-${featuredCols}`}>
-          {pinnedPosts.map((post) => {
-            const mins = post.body ? readingTime(post.body) : 1;
-            const year = post.data.date.getFullYear();
-            return (
-              <div class="col mb-4">
-                <a href={`${site.base}/blog/${post.id}/`}>
-                  <div class="card hoverable">
-                    <div class="row g-0">
-                      <div class="col-md-12">
-                        <div class="card-body">
-                          <div class="float-right">
-                            <Icon name="fa-solid:thumbtack" style="font-size:0.75rem;" />
+  {
+    pinnedPosts.length > 0 && (
+      <>
+        <br />
+        <div class="featured-posts container">
+          <div class={`row row-cols-${featuredCols}`}>
+            {pinnedPosts.map((post) => {
+              const mins = post.body ? readingTime(post.body, site.blog.wordsPerMinute) : 1;
+              const year = post.data.date.getFullYear();
+              return (
+                <div class="col mb-4">
+                  <a href={`${site.base}/blog/${post.id}/`}>
+                    <div class="card hoverable">
+                      <div class="row g-0">
+                        <div class="col-md-12">
+                          <div class="card-body">
+                            <div class="float-right">
+                              <Icon name="fa-solid:thumbtack" style="font-size:0.75rem;" />
+                            </div>
+                            <h3 class="card-title text-lowercase">{post.data.title}</h3>
+                            {post.data.description && (
+                              <p class="card-text">{post.data.description}</p>
+                            )}
+                            <p class="post-meta">
+                              {mins} min read &nbsp;&middot;&nbsp;
+                              <a href={`${site.base}/blog/`}>
+                                <Icon name="fa-solid:calendar" style="font-size:0.75rem;" /> {year}
+                              </a>
+                            </p>
                           </div>
-                          <h3 class="card-title text-lowercase">{post.data.title}</h3>
-                          {post.data.description && (
-                            <p class="card-text">{post.data.description}</p>
-                          )}
-                          <p class="post-meta">
-                            {mins} min read &nbsp;&middot;&nbsp;
-                            <a href={`${site.base}/blog/`}>
-                              <Icon name="fa-solid:calendar" style="font-size:0.75rem;" /> {year}
-                            </a>
-                          </p>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </a>
-              </div>
-            );
-          })}
+                  </a>
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
-      <hr style="margin-bottom: 2rem;" />
-    </>
-  )}
+        <hr style="margin-bottom: 2rem;" />
+      </>
+    )
+  }
 
   <!-- Post list grouped by year -->
-  {pagePosts.length === 0 ? (
-    <p style="color: var(--global-text-color-light); padding-top: 2rem;">No posts yet. Check back soon!</p>
-  ) : (
-    postYears.map((year) => (
-      <>
-        <h2 class="year">{year}</h2>
-        <ul class="post-list">
-          {postsByYear.get(year)!.map((post) => (
-            <li>
-              <PostCard post={post} />
-            </li>
-          ))}
-        </ul>
-      </>
-    ))
-  )}
+  {
+    pagePosts.length === 0 ? (
+      <p style="color: var(--global-text-color-light); padding-top: 2rem;">
+        {site.blog.emptyMessage}
+      </p>
+    ) : (
+      postYears.map((year) => (
+        <>
+          <h2 class="year">{year}</h2>
+          <ul class="post-list">
+            {postsByYear.get(year)!.map((post) => (
+              <li>
+                <PostCard post={post} />
+              </li>
+            ))}
+          </ul>
+        </>
+      ))
+    )
+  }
 
   <Pagination
     currentPage={1}

@@ -1,6 +1,7 @@
 ---
-import type { CollectionEntry } from 'astro:content';
 import { site } from '@config/site';
+import type { CollectionEntry } from 'astro:content';
+
 import PostMeta from './PostMeta.astro';
 
 interface Props {
@@ -11,9 +12,12 @@ const { posts } = Astro.props;
 if (posts.length === 0) return;
 ---
 
-<section class="related-posts mt-12 pt-8" style="border-top: 1px solid var(--global-divider-color);">
+<section
+  class="related-posts mt-12 pt-8"
+  style="border-top: 1px solid var(--global-divider-color);"
+>
   <h3
-    class="text-lg font-bold mb-4"
+    class="mb-4 text-lg font-bold"
     style="color: var(--global-text-color); font-family: var(--font-condensed);"
   >
     Related Posts
@@ -28,7 +32,7 @@ if (posts.length === 0) return;
           style="border: 1px solid var(--global-divider-color); text-decoration: none;"
         >
           <h4
-            class="text-sm font-semibold mb-1 related-title"
+            class="related-title mb-1 text-sm font-semibold"
             style="color: var(--global-text-color); line-height: 1.4;"
           >
             {post.data.title}

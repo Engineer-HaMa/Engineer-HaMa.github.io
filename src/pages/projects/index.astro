@@ -1,11 +1,11 @@
 ---
-import { getCollection } from 'astro:content';
+import ProjectCard from '@components/projects/ProjectCard.astro';
 import { site } from '@config/site';
 import Page from '@layouts/Page.astro';
-import ProjectCard from '@components/projects/ProjectCard.astro';
+import { getCollection } from 'astro:content';
 
 const projects = (await getCollection('projects')).sort(
-  (a, b) => (a.data.importance ?? 999) - (b.data.importance ?? 999)
+  (a, b) => (a.data.importance ?? 999) - (b.data.importance ?? 999),
 );
 
 // Collect unique categories preserving first-appearance order
@@ -22,32 +22,38 @@ const hasCategories = categories.length > 0;
   <div class="post">
     <header class="post-header">
       <h1 class="post-title">projects</h1>
-      <p class="post-description">A growing collection of your cool projects.</p>
+      <p class="post-description">{site.pages.projects.description}</p>
     </header>
 
     <article>
       <div class="projects">
-        {projects.length === 0 ? (
-          <p style="color: var(--global-text-color-light);">No projects yet.</p>
-        ) : hasCategories ? (
-          categories.map((cat) => {
-            const catProjects = projects.filter((p) => p.data.category === cat);
-            return (
-              <>
-                <a id={cat} href={`#${cat}`}>
-                  <h2 class="category">{cat}</h2>
-                </a>
-                <div class="projects-grid">
-                  {catProjects.map((project) => <ProjectCard project={project} />)}
-                </div>
-              </>
-            );
-          })
-        ) : (
-          <div class="projects-grid">
-            {projects.map((project) => <ProjectCard project={project} />)}
-          </div>
-        )}
+        {
+          projects.length === 0 ? (
+            <p style="color: var(--global-text-color-light);">No projects yet.</p>
+          ) : hasCategories ? (
+            categories.map((cat) => {
+              const catProjects = projects.filter((p) => p.data.category === cat);
+              return (
+                <>
+                  <a id={cat} href={`#${cat}`}>
+                    <h2 class="category">{cat}</h2>
+                  </a>
+                  <div class="projects-grid">
+                    {catProjects.map((project) => (
+                      <ProjectCard project={project} />
+                    ))}
+                  </div>
+                </>
+              );
+            })
+          ) : (
+            <div class="projects-grid">
+              {projects.map((project) => (
+                <ProjectCard project={project} />
+              ))}
+            </div>
+          )
+        }
       </div>
     </article>
   </div>
@@ -100,7 +106,7 @@ const hasCategories = categories.length > 0;
         } catch {
           // Silently ignore — stars are decorative
         }
-      })
+      }),
     );
   }
 

@@ -55,7 +55,7 @@ const {
 const imgSrc = path ?? src ?? '';
 ---
 
-<figure {...(slotName ? { slot: slotName } : {})}>
+<figure {...slotName ? { slot: slotName } : {}}>
   <img
     src={imgSrc}
     class={className}
@@ -64,7 +64,7 @@ const imgSrc = path ?? src ?? '';
     loading={loading}
     width={width}
     height={height}
-    {...(zoomable ? { 'data-zoomable': true } : {})}
+    {...zoomable ? { 'data-zoomable': true } : {}}
     onerror="this.style.opacity='0.3';this.style.border='2px dashed #ccc'"
   />
   {caption && <figcaption class="caption">{caption}</figcaption>}

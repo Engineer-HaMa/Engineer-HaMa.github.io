@@ -35,7 +35,7 @@ function pageUrl(n: number): string {
 }
 ---
 
-<nav aria-label="Pagination" class="flex items-center justify-center gap-1 mt-8 flex-wrap">
+<nav aria-label="Pagination" class="mt-8 flex flex-wrap items-center justify-center gap-1">
   <!-- Previous -->
   {
     prevUrl ? (
@@ -72,7 +72,7 @@ function pageUrl(n: number): string {
         >
           {p}
         </a>
-      )
+      ),
     )
   }
 

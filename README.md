@@ -11,8 +11,8 @@
 
 ## Features
 
-- **Publications** — BibTeX bibliography with author highlighting, abstract toggles, and Altmetric/Dimensions/Google Scholar badges
-- **Blog** — MDX posts with math (KaTeX), syntax highlighting, reading progress bar, table of contents, image zoom, and related posts
+- **Publications** — BibTeX bibliography with configurable author highlighting, abstract toggles, and Altmetric/Dimensions/Google Scholar badges
+- **Blog** — MDX posts with math (KaTeX), syntax highlighting, reading progress bar, table of contents, image zoom, related posts, year-grouped listings, and draft post support
 - **Projects** — Card grid with category groupings, live GitHub star counts, and project detail pages with inline citations
 - **CV** — Supports both RenderCV YAML and JSONResume JSON formats, with PDF download
 - **Books** — Reading shelf with Open Library cover art, star ratings, and reading status
@@ -37,11 +37,11 @@
 
 The template ships with demo content for three personas:
 
-| Persona | Purpose |
-|---|---|
+| Persona         | Purpose                                              |
+| --------------- | ---------------------------------------------------- |
 | Albert Einstein | Academic profile: publications, CV, blog, math posts |
-| Linus Torvalds | OSS profile: repositories page, GitHub stats |
-| Dadang NH | Template creator and maintainer |
+| Linus Torvalds  | OSS profile: repositories page, GitHub stats         |
+| Dadang NH       | Template creator and maintainer                      |
 
 ---
 
@@ -91,7 +91,7 @@ export const site = {
   title: 'Your Name',
   description: 'Your site description',
   url: 'https://your-username.github.io',
-  base: '',  // '' for user pages, '/repo-name' for project pages
+  base: '', // '' for user pages, '/repo-name' for project pages
 
   author: {
     name: 'Your Name',
@@ -145,15 +145,16 @@ Create `src/content/posts/my-post.md`:
 
 ```yaml
 ---
-title: "My First Post"
+title: 'My First Post'
 date: 2024-01-01
-description: "Optional description for meta tags"
+lastmod: 2024-06-15 # optional: last modified date
+description: 'Optional description for meta tags'
 tags: [math, physics]
 categories: [science]
-math: true          # enable KaTeX
-toc: true           # table of contents sidebar
+math: true # enable KaTeX
+toc: true # table of contents sidebar
+draft: false # set true to exclude from listings
 ---
-
 Your post content here. Math works: $E = mc^2$.
 ```
 
@@ -181,15 +182,14 @@ Create `src/content/projects/my-project.md`:
 
 ```yaml
 ---
-title: "My Project"
-description: "What it does"
+title: 'My Project'
+description: 'What it does'
 img: /assets/img/project-thumb.jpg
 github: username/repo
-github_stars: username/repo   # enables live star count
-importance: 1                  # lower = shown first
+github_stars: username/repo # enables live star count
+importance: 1 # lower = shown first
 category: open source
 ---
-
 Project description content here.
 ```
 
@@ -199,15 +199,14 @@ Create `src/content/books/my-book.md`:
 
 ```yaml
 ---
-title: "The Book Title"
+title: 'The Book Title'
 author: Author Name
-isbn: "9780000000000"
-status: finished    # reading | finished | queued | paused | abandoned
+isbn: '9780000000000'
+status: finished # reading | finished | queued | paused | abandoned
 stars: 4
 started: 2024-01-01
 finished: 2024-03-15
 ---
-
 Optional notes about the book.
 ```
 
@@ -218,6 +217,7 @@ Optional notes about the book.
 ### GitHub Pages
 
 Already configured. Push to `main` after:
+
 1. Setting source to GitHub Actions in repo Settings → Pages
 2. Setting `base: ''` (user page) or `base: '/repo-name'` (project page) in `site.ts`
 3. Setting `url: 'https://your-username.github.io'` in `site.ts`
@@ -242,17 +242,17 @@ Already configured in `vercel.json`. Connect your repo in Vercel dashboard.
 
 ## Tech stack
 
-| Layer | Technology |
-|---|---|
-| Framework | [Astro 6](https://astro.build) |
-| CSS | [Tailwind CSS v4](https://tailwindcss.com) |
-| Types | TypeScript (strict) |
-| Math | KaTeX via remark-math + rehype-katex |
-| Search | [Pagefind](https://pagefind.app) + [ninja-keys](https://github.com/ssleptsov/ninja-keys) |
-| BibTeX | [citation-js](https://citation.js.org) |
-| Icons | [Iconify](https://iconify.design) (Font Awesome + Academicons) |
-| Package manager | Yarn 4 (Berry) |
-| Node | 24+ |
+| Layer           | Technology                                                                               |
+| --------------- | ---------------------------------------------------------------------------------------- |
+| Framework       | [Astro 6](https://astro.build)                                                           |
+| CSS             | [Tailwind CSS v4](https://tailwindcss.com)                                               |
+| Types           | TypeScript (strict)                                                                      |
+| Math            | KaTeX via remark-math + rehype-katex                                                     |
+| Search          | [Pagefind](https://pagefind.app) + [ninja-keys](https://github.com/ssleptsov/ninja-keys) |
+| BibTeX          | [citation-js](https://citation.js.org)                                                   |
+| Icons           | [Iconify](https://iconify.design) (Font Awesome + Academicons)                           |
+| Package manager | Yarn 4 (Berry)                                                                           |
+| Node            | 24+                                                                                      |
 
 ---
 

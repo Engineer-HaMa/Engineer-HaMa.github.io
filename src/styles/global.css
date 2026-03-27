@@ -48,7 +48,8 @@
   font-style: normal;
   font-display: fallback;
   font-weight: 400;
-  src: url('@fontsource/roboto-condensed/files/roboto-condensed-latin-400-normal.woff2') format('woff2');
+  src: url('@fontsource/roboto-condensed/files/roboto-condensed-latin-400-normal.woff2')
+    format('woff2');
 }
 /* Roboto Condensed 700 */
 @font-face {
@@ -56,7 +57,8 @@
   font-style: normal;
   font-display: fallback;
   font-weight: 700;
-  src: url('@fontsource/roboto-condensed/files/roboto-condensed-latin-700-normal.woff2') format('woff2');
+  src: url('@fontsource/roboto-condensed/files/roboto-condensed-latin-700-normal.woff2')
+    format('woff2');
 }
 /* Source Code Pro 400 */
 @font-face {
@@ -64,7 +66,8 @@
   font-style: normal;
   font-display: fallback;
   font-weight: 400;
-  src: url('@fontsource/source-code-pro/files/source-code-pro-latin-400-normal.woff2') format('woff2');
+  src: url('@fontsource/source-code-pro/files/source-code-pro-latin-400-normal.woff2')
+    format('woff2');
 }
 /* Source Code Pro 600 */
 @font-face {
@@ -72,7 +75,8 @@
   font-style: normal;
   font-display: fallback;
   font-weight: 600;
-  src: url('@fontsource/source-code-pro/files/source-code-pro-latin-600-normal.woff2') format('woff2');
+  src: url('@fontsource/source-code-pro/files/source-code-pro-latin-600-normal.woff2')
+    format('woff2');
 }
 
 /* Configure dark: variant to use data-theme attribute (matches Base.astro) */
@@ -500,8 +504,14 @@
     padding-left: 0.75rem;
   }
   @media (max-width: 576px) {
-    .row-cols-2 > *, .row-cols-3 > * { width: 100%; }
-    .col-sm-2, .col-sm-10 { width: 100%; }
+    .row-cols-2 > *,
+    .row-cols-3 > * {
+      width: 100%;
+    }
+    .col-sm-2,
+    .col-sm-10 {
+      width: 100%;
+    }
   }
   .no-gutters {
     margin-right: 0;
@@ -511,29 +521,75 @@
     padding-right: 0;
     padding-left: 0;
   }
-  .p-3 { padding: 1rem !important; }
-  .mt-4 { margin-top: 1.5rem !important; }
-  .mb-3 { margin-bottom: 1rem !important; }
-  .mb-0 { margin-bottom: 0 !important; }
-  .ml-1 { margin-left: 0.25rem !important; }
-  .ml-2 { margin-right: 0.5rem !important; }
-  .ml-md-4 { margin-left: 1.5rem !important; }
-  .mr-2 { margin-right: 0.5rem !important; }
-  .p-1 { padding: 0.25rem !important; }
-  .pr-2 { padding-right: 0.5rem !important; }
-  .pl-2 { padding-left: 0.5rem !important; }
-  .font-weight-bold { font-weight: 700 !important; }
-  .font-weight-medium { font-weight: 500 !important; }
-  .font-weight-light { font-weight: 300 !important; }
-  .text-lowercase { text-transform: lowercase !important; }
-  .text-uppercase { text-transform: uppercase !important; }
-  .text-center { text-align: center !important; }
-  .text-right { text-align: right !important; }
-  .d-flex { display: flex !important; }
-  .flex-wrap { flex-wrap: wrap !important; }
-  .align-items-center { align-items: center !important; }
-  .w-100 { width: 100% !important; }
-  .h-100 { height: 100% !important; }
+  .p-3 {
+    padding: 1rem !important;
+  }
+  .mt-4 {
+    margin-top: 1.5rem !important;
+  }
+  .mb-3 {
+    margin-bottom: 1rem !important;
+  }
+  .mb-0 {
+    margin-bottom: 0 !important;
+  }
+  .ml-1 {
+    margin-left: 0.25rem !important;
+  }
+  .ml-2 {
+    margin-right: 0.5rem !important;
+  }
+  .ml-md-4 {
+    margin-left: 1.5rem !important;
+  }
+  .mr-2 {
+    margin-right: 0.5rem !important;
+  }
+  .p-1 {
+    padding: 0.25rem !important;
+  }
+  .pr-2 {
+    padding-right: 0.5rem !important;
+  }
+  .pl-2 {
+    padding-left: 0.5rem !important;
+  }
+  .font-weight-bold {
+    font-weight: 700 !important;
+  }
+  .font-weight-medium {
+    font-weight: 500 !important;
+  }
+  .font-weight-light {
+    font-weight: 300 !important;
+  }
+  .text-lowercase {
+    text-transform: lowercase !important;
+  }
+  .text-uppercase {
+    text-transform: uppercase !important;
+  }
+  .text-center {
+    text-align: center !important;
+  }
+  .text-right {
+    text-align: right !important;
+  }
+  .d-flex {
+    display: flex !important;
+  }
+  .flex-wrap {
+    flex-wrap: wrap !important;
+  }
+  .align-items-center {
+    align-items: center !important;
+  }
+  .w-100 {
+    width: 100% !important;
+  }
+  .h-100 {
+    height: 100% !important;
+  }
   .list-group {
     display: flex;
     flex-direction: column;
@@ -559,17 +615,20 @@
     width: 100%;
     border-collapse: collapse;
   }
-  .table-sm td, .table-sm th {
+  .table-sm td,
+  .table-sm th {
     padding: 0.25rem;
   }
-  .table-borderless td, .table-borderless th {
+  .table-borderless td,
+  .table-borderless th {
     border: 0;
   }
   .table-cv {
     background-color: transparent !important;
     font-size: 0.875rem;
   }
-  .table-cv td, .table-cv th {
+  .table-cv td,
+  .table-cv th {
     padding: 2px 4px;
     vertical-align: top;
   }
@@ -614,7 +673,9 @@
     transition: box-shadow 0.25s ease;
   }
   .card.hoverable:hover {
-    box-shadow: 0 5px 11px rgba(0,0,0,0.18), 0 4px 15px rgba(0,0,0,0.15);
+    box-shadow:
+      0 5px 11px rgba(0, 0, 0, 0.18),
+      0 4px 15px rgba(0, 0, 0, 0.15);
   }
   .card-body {
     padding: 1.25rem;
@@ -640,7 +701,9 @@
     object-fit: cover;
   }
   /* CV card variant */
-  .card.mt-3 { margin-top: 1rem !important; }
+  .card.mt-3 {
+    margin-top: 1rem !important;
+  }
 
   /* Bootstrap xs columns (always-on, used in CV two-column layout) */
   .col-xs-2 {
@@ -656,7 +719,10 @@
     padding-left: 0.75rem;
   }
   @media (max-width: 480px) {
-    .col-xs-2, .col-xs-10 { width: 100%; }
+    .col-xs-2,
+    .col-xs-10 {
+      width: 100%;
+    }
   }
 
   /* Bootstrap .badge base (used for CV date badges) */
@@ -671,7 +737,9 @@
     vertical-align: baseline;
     border-radius: 0.25rem;
   }
-  .align-middle { vertical-align: middle !important; }
+  .align-middle {
+    vertical-align: middle !important;
+  }
 
   /* MDB danger-color-dark — use theme color so CV matches site palette */
   .danger-color-dark {
@@ -915,7 +983,9 @@
     font-size: 0.875rem;
     color: var(--global-text-color);
   }
-  .cv ul.items li { margin-bottom: 0.1rem; }
+  .cv ul.items li {
+    margin-bottom: 0.1rem;
+  }
   .btncv {
     color: var(--global-text-color) !important;
     border: 1px solid var(--global-text-color) !important;
@@ -958,11 +1028,13 @@
     border-radius: 4px;
     padding: 15px;
     background: var(--global-bg-color);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    transition:
+      transform 0.15s ease,
+      box-shadow 0.15s ease;
   }
   .course-item:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
   }
   .course-title {
     font-size: 1rem;
@@ -1001,7 +1073,9 @@
     cursor: pointer;
     text-decoration: none;
     margin-bottom: 1rem;
-    transition: background 0.15s ease, color 0.15s ease;
+    transition:
+      background 0.15s ease,
+      color 0.15s ease;
   }
   .btn-calendar-toggle:hover {
     background: var(--global-theme-color);
@@ -1157,7 +1231,7 @@ body[data-footer-position='sticky'] #back-to-top {
   }
 
   /* Sensible link rendering: show URL after link text */
-  a[href^="http"]::after {
+  a[href^='http']::after {
     content: ' (' attr(href) ')';
     font-size: 0.8em;
     color: #666;
@@ -1170,11 +1244,15 @@ body[data-footer-position='sticky'] #back-to-top {
   }
 
   /* Page breaks */
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     page-break-after: avoid;
   }
 
-  pre, blockquote, figure {
+  pre,
+  blockquote,
+  figure {
     page-break-inside: avoid;
   }
 }

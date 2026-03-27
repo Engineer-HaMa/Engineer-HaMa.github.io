@@ -1,5 +1,5 @@
-import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { defineCollection, z } from 'astro:content';
 
 // ─── Posts ─────────────────────────────────────────────────────────────────
 
@@ -32,11 +32,15 @@ const posts = defineCollection({
     /** Distill layout — renders as a Distill article. */
     distill: z.boolean().optional().default(false),
     /** Authors for Distill-style posts. */
-    distillAuthors: z.array(z.object({
-      name: z.string(),
-      url: z.string().url().optional(),
-      affiliations: z.object({ name: z.string() }).optional(),
-    })).optional(),
+    distillAuthors: z
+      .array(
+        z.object({
+          name: z.string(),
+          url: z.string().url().optional(),
+          affiliations: z.object({ name: z.string() }).optional(),
+        }),
+      )
+      .optional(),
     /** BibTeX bibliography file reference for Distill posts. */
     bibliography: z.string().optional(),
     /** Citation key for this post (used in bibliography). */
@@ -175,7 +179,9 @@ const books = defineCollection({
     /** ISBN for cover lookup (digits only, dashes optional) */
     isbn: z.coerce.string().optional(),
     /** Reading status */
-    status: z.enum(['reading', 'finished', 'queued', 'paused', 'abandoned', 'interested', 'reread']).optional(),
+    status: z
+      .enum(['reading', 'finished', 'queued', 'paused', 'abandoned', 'interested', 'reread'])
+      .optional(),
     /** Star rating 1-5 */
     stars: z.number().min(1).max(5).optional(),
     /** Date started reading */

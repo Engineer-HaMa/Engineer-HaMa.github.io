@@ -9,4 +9,5 @@ finished: 2023-10-15
 released: 1902
 categories: physics thermodynamics
 ---
+
 The foundational text of statistical mechanics, introducing ensemble theory and thermodynamic potentials.
