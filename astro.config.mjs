@@ -134,6 +134,7 @@ export default defineConfig({
           'pause',
           'eye',
           'redo',
+          'share-alt',
         ],
         'fa-regular': ['comment', 'star', 'bookmark', 'heart'],
         academicons: [

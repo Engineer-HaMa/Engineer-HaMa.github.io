@@ -23,6 +23,8 @@ interface Props {
   pdfDir?: string;
   /** UI labels — override for non-English sites. */
   labels?: Labels;
+  /** site.base value used to build links to individual publication detail pages. */
+  detailBase?: string;
 }
 
 function entryUrl(entry: BibEntry): string {
@@ -66,6 +68,7 @@ function PublicationEntry({
   previewDir = '/assets/img/publication_preview/',
   pdfDir = '/assets/pdf/',
   labels = {},
+  detailBase,
 }: {
   entry: BibEntry;
   maxAuthorLimit?: number;
@@ -74,6 +77,7 @@ function PublicationEntry({
   previewDir?: string;
   pdfDir?: string;
   labels?: Labels;
+  detailBase?: string;
 }) {
   const [abstractOpen, setAbstractOpen] = useState(false);
   const [bibtexOpen, setBibtexOpen] = useState(false);
@@ -135,9 +139,11 @@ function PublicationEntry({
 
         {/* Right column: content */}
         <div id={entry.key} className={contentColClass}>
-          {/* Title */}
+          {/* Title — links to internal detail page when available, otherwise to external URL */}
           <div className="title">
-            {url ? (
+            {detailBase !== undefined ? (
+              <a href={`${detailBase}/publications/${entry.key}/`}>{title}</a>
+            ) : url ? (
               <a href={url} target="_blank" rel="noopener noreferrer">
                 {title}
               </a>
@@ -317,6 +323,11 @@ function PublicationEntry({
                 Website
               </a>
             )}
+            {detailBase !== undefined && (
+              <a href={`${detailBase}/publications/${entry.key}/`} className="btn btn-sm z-depth-0">
+                Details
+              </a>
+            )}
           </div>
 
           {/* Award hidden block */}
@@ -353,6 +364,7 @@ export function BibSearch({
   previewDir = '/assets/img/publication_preview/',
   pdfDir = '/assets/pdf/',
   labels = {},
+  detailBase,
 }: Props) {
   const [query, setQuery] = useState('');
 
@@ -432,6 +444,7 @@ export function BibSearch({
                   previewDir={previewDir}
                   pdfDir={pdfDir}
                   labels={labels}
+                  detailBase={detailBase}
                 />
               ))}
             </ol>

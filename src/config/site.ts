@@ -256,6 +256,8 @@ export const site = {
      * Disable if you prefer full page reloads (e.g. for accessibility reasons).
      */
     viewTransitions: true,
+    /** Show social sharing links (X, LinkedIn, Facebook, email) at the bottom of blog posts. */
+    socialShare: true,
   },
 
   // ─── Giscus comments ──────────────────────────────────────────────────────

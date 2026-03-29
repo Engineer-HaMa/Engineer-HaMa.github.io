@@ -1,0 +1,223 @@
+---
+import { site } from '@config/site';
+import Page from '@layouts/Page.astro';
+import { getAuthors, getTitle, getVenue, getYear, parseBibtex } from '@utils/bibtex';
+
+import bibRaw from '../../data/papers.bib?raw';
+
+export async function getStaticPaths() {
+  const entries = parseBibtex(bibRaw);
+  return entries.map((entry) => ({
+    params: { key: entry.key },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+
+const title = getTitle(entry);
+const authors = getAuthors(entry);
+const venue = getVenue(entry);
+const year = getYear(entry);
+const yearStr = year > 0 ? String(year) : undefined;
+const abstract = entry.fields.abstract;
+const doi = entry.fields.doi;
+const url = entry.fields.html ?? (doi ? `https://doi.org/${doi}` : undefined);
+const pdfPath = entry.fields.pdf;
+const supp = entry.fields.supp;
+const code = entry.fields.code;
+const award = entry.fields.award;
+const awardName = entry.fields.award_name;
+const pdfDir = site.publications.pdfDir;
+
+const pdfHref = pdfPath
+  ? pdfPath.startsWith('http')
+    ? pdfPath
+    : `${pdfDir}${pdfPath}`
+  : undefined;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ScholarlyArticle',
+  headline: title,
+  author: authors.split(', ').map((name) => ({ '@type': 'Person', name })),
+  ...(yearStr ? { datePublished: yearStr } : {}),
+  ...(venue ? { isPartOf: { '@type': 'Periodical', name: venue } } : {}),
+  ...(doi ? { identifier: { '@type': 'PropertyValue', propertyID: 'doi', value: doi } } : {}),
+  ...(url ? { url } : {}),
+  ...(abstract ? { abstract } : {}),
+};
+
+const bibtexFields = Object.entries(entry.fields)
+  .map(([k, v]) => `  ${k} = {${v}}`)
+  .join(',\n');
+const bibtexBlock = `@${entry.type}{${entry.key},\n${bibtexFields}\n}`;
+---
+
+<Page title={title} description={abstract ?? `${title} by ${authors}`}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <!-- Highwire Press meta tags for Google Scholar indexing -->
+    <meta name="citation_title" content={title} />
+    {authors.split(', ').map((a) => <meta name="citation_author" content={a} />)}
+    {yearStr && <meta name="citation_publication_date" content={yearStr} />}
+    {venue && <meta name="citation_journal_title" content={venue} />}
+    {doi && <meta name="citation_doi" content={doi} />}
+    {
+      pdfHref && (
+        <meta
+          name="citation_pdf_url"
+          content={pdfHref.startsWith('http') ? pdfHref : new URL(pdfHref, site.url).toString()}
+        />
+      )
+    }
+  </Fragment>
+
+  <div class="post">
+    <header class="post-header">
+      <h1 class="post-title">{title}</h1>
+      <p class="pub-authors">
+        {authors}
+        {
+          (venue || yearStr) && (
+            <em>
+              {' '}
+              &middot; {venue}
+              {venue && yearStr ? ', ' : ''}
+              {yearStr}
+            </em>
+          )
+        }
+      </p>
+      {
+        award && (
+          <p>
+            <span class="award-badge">{awardName ?? '🏆 Best Paper'}</span>
+          </p>
+        )
+      }
+    </header>
+
+    <article>
+      <div class="pub-actions">
+        {
+          url && (
+            <a href={url} target="_blank" rel="noopener noreferrer" class="btn">
+              Paper
+            </a>
+          )
+        }
+        {
+          pdfHref && (
+            <a href={pdfHref} target="_blank" rel="noopener noreferrer" class="btn">
+              PDF
+            </a>
+          )
+        }
+        {
+          supp && (
+            <a
+              href={supp.startsWith('http') ? supp : `${pdfDir}${supp}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn"
+            >
+              Supplement
+            </a>
+          )
+        }
+        {
+          code && (
+            <a href={code} target="_blank" rel="noopener noreferrer" class="btn">
+              Code
+            </a>
+          )
+        }
+        <a href={`${site.base}/publications/`} class="btn">← All publications</a>
+      </div>
+
+      {
+        abstract && (
+          <section class="pub-section">
+            <h2>Abstract</h2>
+            <p>{abstract}</p>
+          </section>
+        )
+      }
+
+      <section class="pub-section">
+        <h2>Citation</h2>
+        <pre class="bibtex-block"><code>{bibtexBlock}</code></pre>
+      </section>
+    </article>
+  </div>
+</Page>
+
+<style>
+  .pub-authors {
+    color: var(--global-text-color-light);
+    margin-bottom: 1rem;
+  }
+
+  .award-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    background: #f59e0b;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .pub-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.3rem 0.75rem;
+    border: 1px solid var(--global-theme-color);
+    border-radius: 4px;
+    color: var(--global-theme-color);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition:
+      background 0.15s,
+      color 0.15s;
+  }
+
+  .btn:hover {
+    background: var(--global-theme-color);
+    color: var(--global-hover-text-color);
+  }
+
+  .pub-section {
+    margin-top: 2rem;
+  }
+
+  .pub-section h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid var(--global-divider-color);
+  }
+
+  .pub-section p {
+    line-height: 1.7;
+  }
+
+  .bibtex-block {
+    background: var(--global-card-bg-color);
+    border: 1px solid var(--global-divider-color);
+    border-radius: 6px;
+    padding: 1rem;
+    overflow-x: auto;
+    font-size: 0.8rem;
+    white-space: pre;
+  }
+</style>

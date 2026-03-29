@@ -1,6 +1,7 @@
 ---
 import PostMeta from '@components/blog/PostMeta.astro';
 import RelatedPosts from '@components/blog/RelatedPosts.astro';
+import SocialShare from '@components/blog/SocialShare.astro';
 import Giscus from '@components/Giscus.astro';
 import Newsletter from '@components/Newsletter.astro';
 import ReadingProgress from '@components/ReadingProgress.astro';
@@ -99,6 +100,13 @@ const jsonLd = {
 
         <!-- Newsletter CTA (shown after post body when feature is enabled) -->
         {site.features.newsletter && <Newsletter />}
+
+        <!-- Social sharing links -->
+        {
+          site.features.socialShare && (
+            <SocialShare title={title} url={canonicalURL} description={description} />
+          )
+        }
 
         <!-- Related posts -->
         {related.length > 0 && <RelatedPosts posts={related} />}
