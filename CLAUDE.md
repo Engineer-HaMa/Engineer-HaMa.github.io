@@ -59,7 +59,7 @@ yarn format         # Prettier
 
 ### BibTeX
 
-- `src/utils/bibtex.ts` — uses `citation-js` at build time, produces typed `BibEntry[]`
+- `src/utils/bibtex.ts` — custom build-time BibTeX parser (no external dependencies), produces typed `BibEntry[]`
 - `src/data/papers.bib` — Einstein demo papers
 - Never fetch BibTeX at runtime; always parse at build time in `getStaticPaths` or page frontmatter
 
