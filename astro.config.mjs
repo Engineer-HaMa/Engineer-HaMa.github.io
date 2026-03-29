@@ -16,6 +16,15 @@ export default defineConfig({
   output: 'static',
   trailingSlash: 'always',
   compressHTML: true,
+  image: {
+    // Allow Astro's <Image> component to optimise images from these remote domains.
+    // Used for book covers (Open Library) and GitHub stats cards.
+    domains: [
+      'covers.openlibrary.org',
+      'github-readme-stats.vercel.app',
+      'github-profile-trophy.vercel.app',
+    ],
+  },
   integrations: [
     react(),
     mdx(),
