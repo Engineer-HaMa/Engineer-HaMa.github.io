@@ -249,7 +249,7 @@ Already configured in `vercel.json`. Connect your repo in Vercel dashboard.
 | Types           | TypeScript (strict)                                                                      |
 | Math            | KaTeX via remark-math + rehype-katex                                                     |
 | Search          | [Pagefind](https://pagefind.app) + [ninja-keys](https://github.com/ssleptsov/ninja-keys) |
-| BibTeX          | [citation-js](https://citation.js.org)                                                   |
+| BibTeX          | Custom build-time parser (zero runtime deps)                                             |
 | Icons           | [Iconify](https://iconify.design) (Font Awesome + Academicons)                           |
 | Package manager | Yarn 4 (Berry)                                                                           |
 | Node            | 24+                                                                                      |
