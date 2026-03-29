@@ -86,6 +86,8 @@ function renderStars(stars: number | undefined): string {
                           src={src}
                           alt={`Cover of ${book.data.title}`}
                           loading="lazy"
+                          width="120"
+                          height="175"
                           class="cover-img"
                           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
                         />

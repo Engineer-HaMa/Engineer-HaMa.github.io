@@ -23,6 +23,9 @@ const imgClass = circular ? 'img-fluid z-depth-1 rounded-circle' : 'img-fluid z-
     src={src}
     alt={alt}
     loading="eager"
+    fetchpriority="high"
+    width="200"
+    height="200"
     class={imgClass}
     onerror="this.src='/assets/img/prof_pic.jpg'"
   />

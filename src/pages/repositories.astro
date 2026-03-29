@@ -1,13 +1,11 @@
 ---
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
-
 import { site } from '@config/site';
 import Page from '@layouts/Page.astro';
 import yaml from 'js-yaml';
 
-const reposYaml = readFileSync(resolve('src/data/repositories.yml'), 'utf-8');
-const reposData = yaml.load(reposYaml) as {
+import reposRaw from '../data/repositories.yml?raw';
+
+const reposData = yaml.load(reposRaw) as {
   github_users?: string[];
   github_repos?: string[];
   repo_description_lines_max?: number;
@@ -44,12 +42,16 @@ const maxLines = reposData.repo_description_lines_max ?? 2;
                       alt={username}
                       src={`https://github-readme-stats.vercel.app/api/?username=${username}&theme=${site.repositories.themeLight}&show_icons=true`}
                       loading="lazy"
+                      width="495"
+                      height="195"
                     />
                     <img
                       class="only-dark"
                       alt={username}
                       src={`https://github-readme-stats.vercel.app/api/?username=${username}&theme=${site.repositories.themeDark}&show_icons=true`}
                       loading="lazy"
+                      width="495"
+                      height="195"
                     />
                   </a>
                 </div>
@@ -74,12 +76,16 @@ const maxLines = reposData.repo_description_lines_max ?? 2;
                             alt={`${username} trophies`}
                             src={`https://github-profile-trophy.vercel.app/?username=${username}&theme=${site.repositories.trophyThemeLight}`}
                             loading="lazy"
+                            width="800"
+                            height="190"
                           />
                           <img
                             class="only-dark"
                             alt={`${username} trophies`}
                             src={`https://github-profile-trophy.vercel.app/?username=${username}&theme=${site.repositories.trophyThemeDark}`}
                             loading="lazy"
+                            width="800"
+                            height="190"
                           />
                         </a>
                       </div>
@@ -113,12 +119,16 @@ const maxLines = reposData.repo_description_lines_max ?? 2;
                         alt={repo}
                         src={`https://github-readme-stats.vercel.app/api/pin/?username=${owner}&repo=${repoName}&theme=${site.repositories.themeLight}&show_owner=${showOwner}&description_lines_count=${maxLines}`}
                         loading="lazy"
+                        width="400"
+                        height="150"
                       />
                       <img
                         class="only-dark"
                         alt={repo}
                         src={`https://github-readme-stats.vercel.app/api/pin/?username=${owner}&repo=${repoName}&theme=${site.repositories.themeDark}&show_owner=${showOwner}&description_lines_count=${maxLines}`}
                         loading="lazy"
+                        width="400"
+                        height="150"
                       />
                     </a>
                   </div>

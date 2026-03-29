@@ -42,7 +42,6 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.8",
     "@astrojs/mdx": "^5.0.2",
     "@astrojs/partytown": "^2.1.5",
     "@astrojs/react": "^5.0.1",
@@ -70,10 +69,10 @@
     "rehype-external-links": "^3.0.0",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",
-    "sharp": "^0.34.2",
-    "typescript": "^5.9.3"
+    "sharp": "^0.34.2"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.8",
     "@eslint/js": "^9",
     "@playwright/test": "^1.50.0",
     "@tailwindcss/vite": "^4.1.6",
@@ -99,6 +98,7 @@
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4.1.6",
+    "typescript": "^5.9.3",
     "typescript-eslint": "^8.33.1",
     "vitest": "^4.0.0"
   }
