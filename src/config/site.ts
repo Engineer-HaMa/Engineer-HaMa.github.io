@@ -251,6 +251,11 @@ export const site = {
      * If false, video links open in a new tab instead.
      */
     videoEmbedding: false,
+    /**
+     * Enable Astro View Transitions for smooth page-to-page animations.
+     * Disable if you prefer full page reloads (e.g. for accessibility reasons).
+     */
+    viewTransitions: true,
   },
 
   // ─── Giscus comments ──────────────────────────────────────────────────────

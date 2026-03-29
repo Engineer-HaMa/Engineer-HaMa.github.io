@@ -5,7 +5,14 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   resolve: {
     alias: {
-      '~': path.resolve(__dirname, 'src'),
+      '@components': path.resolve(__dirname, 'src/components'),
+      '@layouts': path.resolve(__dirname, 'src/layouts'),
+      '@styles': path.resolve(__dirname, 'src/styles'),
+      '@assets': path.resolve(__dirname, 'src/assets'),
+      '@config': path.resolve(__dirname, 'src/config'),
+      '@utils': path.resolve(__dirname, 'src/utils'),
+      '@content': path.resolve(__dirname, 'src/content'),
+      '@data': path.resolve(__dirname, 'src/data'),
     },
   },
   test: {

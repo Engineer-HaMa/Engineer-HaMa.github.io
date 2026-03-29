@@ -16,6 +16,10 @@ export default defineConfig({
   output: 'static',
   trailingSlash: 'always',
   compressHTML: true,
+  prefetch: {
+    prefetchAll: false,
+    defaultStrategy: 'hover',
+  },
   image: {
     // Allow Astro's <Image> component to optimise images from these remote domains.
     // Used for book covers (Open Library) and GitHub stats cards.
@@ -28,7 +32,40 @@ export default defineConfig({
   integrations: [
     react(),
     mdx(),
-    sitemap(),
+    sitemap({
+      filter: (page) => !page.includes('/404'),
+      serialize(item) {
+        // Homepage: highest priority, frequent updates
+        if (
+          /\/$/.test(item.url) &&
+          !item.url.includes('/blog/') &&
+          !item.url.includes('/projects/')
+        ) {
+          item.priority = 1.0;
+          item.changefreq = 'weekly';
+          return item;
+        }
+        // Blog posts
+        if (item.url.includes('/blog/')) {
+          item.changefreq = 'monthly';
+          item.priority = 0.7;
+          return item;
+        }
+        // Publications, projects, CV
+        if (
+          item.url.includes('/publications/') ||
+          item.url.includes('/projects/') ||
+          item.url.includes('/cv/')
+        ) {
+          item.changefreq = 'monthly';
+          item.priority = 0.8;
+          return item;
+        }
+        item.changefreq = 'yearly';
+        item.priority = 0.5;
+        return item;
+      },
+    }),
     partytown({
       config: {
         forward: ['dataLayer.push'],

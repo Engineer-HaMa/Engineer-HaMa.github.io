@@ -5,6 +5,7 @@ import Footer from '@components/Footer.astro';
 import Navbar from '@components/Navbar.astro';
 import SearchTrigger from '@components/search/SearchTrigger.astro';
 import { site } from '@config/site';
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
   title?: string;
@@ -150,15 +151,19 @@ const personJsonLd = isHome ? JSON.stringify({
     <!-- Person JSON-LD (homepage only) -->
     {personJsonLd && <script type="application/ld+json" set:html={personJsonLd} />}
 
+    <!-- View Transitions (smooth page-to-page navigation) -->
+    {site.features.viewTransitions && <ClientRouter />}
+
     <!-- Named slot for page-specific head content (e.g. JSON-LD from Post.astro) -->
     <slot name="head" />
 
     <!--
       Dark mode: must run BEFORE any CSS to prevent FOUC.
       Reads stored preference, falls back to system preference, then site default.
+      Re-applies after each View Transition swap to keep the theme consistent.
     -->
     <script is:inline define:vars={{ defaultTheme: site.theme.default }}>
-      (function () {
+      function applyTheme() {
         const stored = localStorage.getItem('theme');
         let theme;
         if (stored === 'light' || stored === 'dark') {
@@ -170,7 +175,9 @@ const personJsonLd = isHome ? JSON.stringify({
         }
         document.documentElement.setAttribute('data-theme', theme);
         document.documentElement.setAttribute('data-theme-setting', stored || 'system');
-      })();
+      }
+      applyTheme();
+      document.addEventListener('astro:after-swap', applyTheme);
     </script>
   </head>
 
@@ -190,8 +197,8 @@ const personJsonLd = isHome ? JSON.stringify({
 
     <Navbar />
 
-    <!-- ⌘K Search (ninja-keys + Pagefind) -->
-    {site.features.search && <SearchTrigger />}
+    <!-- ⌘K Search (ninja-keys + Pagefind) — persisted across View Transitions -->
+    {site.features.search && <SearchTrigger transition:persist />}
 
     <main id="main-content" class="flex-1" data-pagefind-body>
       <slot />
