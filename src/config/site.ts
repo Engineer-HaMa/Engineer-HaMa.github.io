@@ -266,6 +266,13 @@ export const site = {
   giscus: {
     /** Set to true once you've configured the fields below. */
     enabled: false,
+    /**
+     * When true, Giscus is hidden behind a "Load comments" button — the
+     * giscus.app script is only fetched after the user opts in.
+     * Recommended for GDPR compliance (giscus sets third-party cookies).
+     * Default: true.
+     */
+    lazyLoad: true,
     repo: '' as `${string}/${string}`,
     repoId: '',
     category: 'Comments',

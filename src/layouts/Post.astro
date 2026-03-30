@@ -43,6 +43,12 @@ const related = post.data.relatedPosts ? relatedPosts(post, allPosts) : [];
 
 // JSON-LD BlogPosting schema
 const canonicalURL = new URL(`${site.base}/blog/${post.id}/`, site.url).toString();
+
+// Generated OG image (falls back to static og.image if post has its own cover)
+const ogImagePath = post.data.image
+  ? new URL(post.data.image, site.url).toString()
+  : new URL(`${site.base}/og/blog/${post.id}.png`, site.url).toString();
+
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
@@ -56,11 +62,11 @@ const jsonLd = {
     name: site.author.name,
     url: site.url,
   },
-  ...(post.data.image ? { image: new URL(post.data.image, site.url).toString() } : {}),
+  image: ogImagePath,
 };
 ---
 
-<Base title={title} description={description} robots={effectiveRobots}>
+<Base title={title} description={description} robots={effectiveRobots} image={ogImagePath}>
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     <script
@@ -178,7 +184,10 @@ const jsonLd = {
       zoom = mediumZoom(imgs, { background: 'rgba(0,0,0,0.7)', margin: 24 });
     }
   }
-  document.addEventListener('astro:page-load', initZoom);
+  // Direct call for the initial page load (astro:page-load fires before deferred module scripts)
+  initZoom();
+  // Re-init after each View Transition navigation
+  document.addEventListener('astro:after-swap', initZoom);
 </script>
 
 <!-- ── Per-post CDN widgets ──────────────────────────────────────────────── -->
@@ -199,29 +208,62 @@ const jsonLd = {
 )}
 
 {chart_js && (
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js" defer></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"
+    integrity="sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ"
+    crossorigin="anonymous"
+    defer></script>
 )}
 
 {echarts && (
-  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js" defer></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"
+    integrity="sha384-pPi0zxBAoDu6+JXW/C68UZLvBUUtU+7zonhif43rqj7pxsGyqyqzcian2Rj37Rss"
+    crossorigin="anonymous"
+    defer></script>
 )}
 
 {vega && (
   <>
-    <script src="https://cdn.jsdelivr.net/npm/vega@5" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6" defer></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/vega@5"
+      integrity="sha384-NMXhl2TbCXxcN7o4ROC56Funm78m4AylL8gMg/7Kn4YU+wrm23K9l7cY8lDRXQ9d"
+      crossorigin="anonymous"
+      defer></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/vega-lite@5"
+      integrity="sha384-D9LYH0esGjcxQJsBuxOuXtCDJGXRWW1+KhluzWPqi0rLJmiR/ygPChefaD+rFFDQ"
+      crossorigin="anonymous"
+      defer></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/vega-embed@6"
+      integrity="sha384-M+Ax7e/WFJpxSOF09HzI+Sj4wg9ottVd/uxmV2ItGGh02fLH28t2FAOJx3TJBap5"
+      crossorigin="anonymous"
+      defer></script>
   </>
 )}
 
 {plotly && (
-  <script src="https://cdn.jsdelivr.net/npm/plotly.js@2/dist/plotly.min.js" defer></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/plotly.js@2/dist/plotly.min.js"
+    integrity="sha384-MqL7Cy3itNqCI1Wlc926K0XhyRKJ/NMqTaytIIEB+QIdInOploxqRIHRKLlhPykM"
+    crossorigin="anonymous"
+    defer></script>
 )}
 
 {pseudocode && (
   <>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@2.4.1/build/pseudocode.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/pseudocode@2.4.1/build/pseudocode.min.js" defer></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/pseudocode@2.4.1/build/pseudocode.min.css"
+      integrity="sha384-ff9LEHNvuDqxJT/JRjAeQ1cWTWambRLe5j49SnOzhaotb23KEQkCanV+ooL+ch4k"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/pseudocode@2.4.1/build/pseudocode.min.js"
+      integrity="sha384-i3+YbLfC66kxqBVtgH6I+lEFAr+57mVZY/MSthCK/oTPo0rWCRzW/kSg2mJnTKLs"
+      crossorigin="anonymous"
+      defer></script>
   </>
 )}
 
@@ -231,6 +273,7 @@ const jsonLd = {
 
 {tikzjax && (
   <>
+    {/* tikzjax uses unversioned URLs — SRI cannot be pinned; self-host if supply-chain integrity is critical */}
     <link rel="stylesheet" href="https://tikzjax.com/v1/fonts.css" />
     <script src="https://tikzjax.com/v1/tikzjax.js"></script>
   </>
@@ -238,28 +281,62 @@ const jsonLd = {
 
 {map && (
   <>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH"
+      crossorigin="anonymous"
+      defer></script>
   </>
 )}
 
 {img_comparison && (
   <>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/img-comparison-slider@8/dist/index.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/img-comparison-slider@8/dist/styles.css" />
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/img-comparison-slider@8/dist/index.js"
+      integrity="sha384-FCXElAg99YO+h+5Ky3gZ9cVwc8wyg6sq3jn79ugH0u5jh0NR5cvr0hGP+tzpjI+A"
+      crossorigin="anonymous"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/img-comparison-slider@8/dist/styles.css"
+      integrity="sha384-TYCxyqTqCrHZ0yHG2B7VENYnxnIBGWt8GHLLkGegAYCw+1UkvUd0YpsVPrt+8//z"
+      crossorigin="anonymous"
+    />
   </>
 )}
 
 {code_diff && (
   <>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui.min.js" defer></script>
+    {/* pinned to diff2html@3.4.56 — update SRI when upgrading */}
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/diff2html@3.4.56/bundles/css/diff2html.min.css"
+      integrity="sha384-PdRCG/+r1waybtXfuDB9Kmv2h7AGoN6WaTZ5OF+ctPeR9BGne0FaKRQnUeGV4nDL"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/diff2html@3.4.56/bundles/js/diff2html-ui.min.js"
+      integrity="sha384-NRd5i/CwvZ20mJEQt3yaDU1LeU+tu0bqyVYojXi8d7Lf1B0/TIs2K3FTvlf8aO7p"
+      crossorigin="anonymous"
+      defer></script>
   </>
 )}
 
 {gallery && (
   <>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe.css"
+      integrity="sha384-IfxC36XL/toUyJ939C73PcgMuRzAZuIzZxE38drsmO5p6jD7ei+Zx/1oA/0l8ysE"
+      crossorigin="anonymous"
+    />
+    {/* photoswipe ESM imports are inline dynamic imports — SRI not applicable to dynamic import() */}
     <script type="module">{`
       import PhotoSwipeLightbox from 'https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe-lightbox.esm.js';
       const lightbox = new PhotoSwipeLightbox({

@@ -185,6 +185,16 @@ export default defineConfig({
         '@data': '/src/data',
       },
     },
+    build: {
+      rollupOptions: {
+        output: {
+          // Shorter, readable asset paths (e.g. _s/abc123.js instead of _astro/abc123.js)
+          assetFileNames: '_s/[hash][extname]',
+          chunkFileNames: '_s/[hash].js',
+          entryFileNames: '_s/[hash].js',
+        },
+      },
+    },
   },
   markdown: {
     remarkPlugins: [remarkMath],

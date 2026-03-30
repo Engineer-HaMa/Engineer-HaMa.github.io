@@ -37,6 +37,11 @@ if (redirect) {
 
 const githubUrl = github ? `https://github.com/${github}` : undefined;
 
+// Generated OG image (falls back to hero image if present)
+const ogImagePath = img
+  ? new URL(img, site.url).toString()
+  : new URL(`${site.base}/og/project/${project.id}.png`, site.url).toString();
+
 // Resolve related publications if citation keys are provided
 const allEntries = parseBibtex(bibRaw);
 const relatedEntries =
@@ -45,7 +50,7 @@ const relatedEntries =
     : [];
 ---
 
-<Page title={title} description={description}>
+<Page title={title} description={description} image={ogImagePath}>
   <div class="post">
     <!-- Breadcrumb -->
     <nav aria-label="Breadcrumb" class="breadcrumb-nav">
@@ -188,7 +193,10 @@ const relatedEntries =
       zoom = mediumZoom(imgs, { background: 'rgba(0,0,0,0.7)', margin: 24 });
     }
   }
-  document.addEventListener('astro:page-load', initZoom);
+  // Direct call for the initial page load (astro:page-load fires before deferred module scripts)
+  initZoom();
+  // Re-init after each View Transition navigation
+  document.addEventListener('astro:after-swap', initZoom);
 </script>
 
 <style>
