@@ -1,7 +1,6 @@
 import mdx from '@astrojs/mdx';
 import partytown from '@astrojs/partytown';
 import react from '@astrojs/react';
-import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import icon from 'astro-icon';
 import { defineConfig } from 'astro/config';
@@ -32,40 +31,6 @@ export default defineConfig({
   integrations: [
     react(),
     mdx(),
-    sitemap({
-      filter: (page) => !page.includes('/404'),
-      serialize(item) {
-        // Homepage: highest priority, frequent updates
-        if (
-          /\/$/.test(item.url) &&
-          !item.url.includes('/blog/') &&
-          !item.url.includes('/projects/')
-        ) {
-          item.priority = 1.0;
-          item.changefreq = 'weekly';
-          return item;
-        }
-        // Blog posts
-        if (item.url.includes('/blog/')) {
-          item.changefreq = 'monthly';
-          item.priority = 0.7;
-          return item;
-        }
-        // Publications, projects, CV
-        if (
-          item.url.includes('/publications/') ||
-          item.url.includes('/projects/') ||
-          item.url.includes('/cv/')
-        ) {
-          item.changefreq = 'monthly';
-          item.priority = 0.8;
-          return item;
-        }
-        item.changefreq = 'yearly';
-        item.priority = 0.5;
-        return item;
-      },
-    }),
     partytown({
       config: {
         forward: ['dataLayer.push'],
