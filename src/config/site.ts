@@ -417,6 +417,23 @@ export const site = {
      * 'system' follows OS preference.
      */
     default: 'system' as 'light' | 'dark' | 'system',
+
+    /**
+     * Primary accent color used for links, active nav items, badges, and highlights.
+     * Accepts any CSS color string (hex, hsl, rgb, etc.).
+     * Set to 'auto' to use the built-in defaults (purple in light mode, cyan in dark mode).
+     *
+     * Example presets:
+     *   Purple (default): { light: '#b509ac', dark: '#2698ba' }
+     *   Blue:             { light: '#0076df', dark: '#68c0d9' }
+     *   Red:              { light: '#ff3636', dark: '#f29105' }
+     *   Green:            { light: '#009f06', dark: '#b7d12a' }
+     *   Orange:           { light: '#f29105', dark: '#efcc00' }
+     */
+    color: {
+      light: 'auto' as string,
+      dark: 'auto' as string,
+    },
   },
 } as const;
 

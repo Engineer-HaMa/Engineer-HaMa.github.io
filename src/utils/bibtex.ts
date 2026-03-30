@@ -57,7 +57,9 @@ export function parseBibtex(src: string): BibEntry[] {
     // Extract citation key (first token before the first comma)
     const keyMatch = body.match(/^\s*([\w:-]+)\s*,/);
     if (!keyMatch) {
-      console.warn(`[as-folio] BibTeX: could not parse citation key in @${type} entry — skipped`);
+      if (import.meta.env.DEV) {
+        console.warn(`[as-folio] BibTeX: could not parse citation key in @${type} entry — skipped`);
+      }
       continue;
     }
     const key = keyMatch[1];

@@ -32,6 +32,20 @@ const pageTitle = title === site.author.name ? title : `${title} | ${site.author
 const canonicalURL = new URL(Astro.url.pathname, site.url);
 const ogImage = image ? new URL(image, site.url).toString() : undefined;
 
+// Theme color override — only injected when site.theme.color is not 'auto'
+const lightColor = site.theme.color.light === 'auto' ? null : site.theme.color.light;
+const darkColor = site.theme.color.dark === 'auto' ? null : site.theme.color.dark;
+const colorOverrideStyle = [
+  lightColor
+    ? `:root,[data-theme='light']{--global-theme-color:${lightColor};--global-hover-color:${lightColor};}`
+    : '',
+  darkColor
+    ? `[data-theme='dark']{--global-theme-color:${darkColor};--global-hover-color:${darkColor};}`
+    : '',
+]
+  .filter(Boolean)
+  .join('');
+
 // Person JSON-LD for homepage — helps search engines associate content with the author
 const personJsonLd = isHome ? JSON.stringify({
   '@context': 'https://schema.org',
@@ -65,6 +79,9 @@ const personJsonLd = isHome ? JSON.stringify({
     <!-- Fonts are self-hosted via Fontsource (imported in global.css) — no FOUT -->
 
     <!-- KaTeX CSS is bundled via global.css (@import 'katex/dist/katex.min.css') -->
+
+    <!-- Theme color override (from site.theme.color — 'auto' means use _colors.css defaults) -->
+    {colorOverrideStyle && <Fragment set:html={`<style>${colorOverrideStyle}</style>`} />}
 
     <!-- Open Graph + Twitter Card -->
     {

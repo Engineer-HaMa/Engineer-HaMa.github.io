@@ -169,14 +169,16 @@ const jsonLd = {
 <!-- Medium zoom for post images -->
 <script>
   import mediumZoom from 'medium-zoom';
+  let zoom: ReturnType<typeof mediumZoom> | null = null;
   function initZoom() {
-    mediumZoom('#post-content img:not(.no-zoom)', {
-      background: 'rgba(0,0,0,0.7)',
-      margin: 24,
-    });
+    zoom?.detach();
+    zoom = null;
+    const imgs = document.querySelectorAll<HTMLImageElement>('#post-content img:not(.no-zoom)');
+    if (imgs.length > 0) {
+      zoom = mediumZoom(imgs, { background: 'rgba(0,0,0,0.7)', margin: 24 });
+    }
   }
-  initZoom();
-  document.addEventListener('astro:after-swap', initZoom);
+  document.addEventListener('astro:page-load', initZoom);
 </script>
 
 <!-- ── Per-post CDN widgets ──────────────────────────────────────────────── -->

@@ -49,7 +49,7 @@ const renderedAnnouncements = await Promise.all(
         class="post-title"
         style="font-family: var(--font-sans); color: var(--global-text-color);"
       >
-        {site.title === 'blank' ? site.author.name : site.title}
+        {(site.title as string) === 'blank' ? site.author.name : site.title}
       </h1>
       {
         site.author.subtitle && (

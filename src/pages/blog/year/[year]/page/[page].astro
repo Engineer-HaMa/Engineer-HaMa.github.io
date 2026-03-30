@@ -2,7 +2,7 @@
 import PostCard from '@components/blog/PostCard.astro';
 import Pagination from '@components/Pagination.astro';
 import { site } from '@config/site';
-import Page from '@layouts/Page.astro';
+import PageLayout from '@layouts/Page.astro';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -34,7 +34,7 @@ const { year, posts, currentPage, totalPages } = Astro.props;
 const base = site.base;
 ---
 
-<Page
+<PageLayout
   title={`Blog — ${year} — Page ${currentPage}`}
   description={`Posts from ${year}, page ${currentPage}`}
 >
@@ -66,4 +66,4 @@ const base = site.base;
       basePath={`${base}/blog/year/${year}/`}
     />
   </div>
-</Page>
+</PageLayout>

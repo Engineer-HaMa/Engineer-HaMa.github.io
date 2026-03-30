@@ -2,7 +2,7 @@
 import PostCard from '@components/blog/PostCard.astro';
 import Pagination from '@components/Pagination.astro';
 import { site } from '@config/site';
-import Page from '@layouts/Page.astro';
+import PageLayout from '@layouts/Page.astro';
 import { readingTime } from '@utils/reading-time';
 import { getCollection } from 'astro:content';
 import { Icon } from 'astro-icon/components';
@@ -51,7 +51,7 @@ for (const post of posts) {
 const postYears = [...postsByYear.keys()].sort((a, b) => b - a);
 ---
 
-<Page title={`Blog — Page ${currentPage}`} description={site.blog.description}>
+<PageLayout title={`Blog — Page ${currentPage}`} description={site.blog.description}>
   <!-- Header bar -->
   <div class="header-bar">
     <h1>{site.blog.name}</h1>
@@ -164,4 +164,4 @@ const postYears = [...postsByYear.keys()].sort((a, b) => b - a);
     nextUrl={currentPage < totalPages ? `${base}/blog/page/${currentPage + 1}/` : undefined}
     basePath={`${base}/blog/`}
   />
-</Page>
+</PageLayout>

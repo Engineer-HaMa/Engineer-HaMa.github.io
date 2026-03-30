@@ -476,6 +476,33 @@ theme: {
 
 Users can always toggle with the sun/moon button in the navbar.
 
+### Theme color
+
+Override the primary accent color (used for links, active nav items, buttons, and badges)
+in `site.ts`:
+
+```typescript
+theme: {
+  default: 'system',
+  color: {
+    light: '#b509ac',  // accent color in light mode (any CSS color string)
+    dark: '#2698ba',   // accent color in dark mode
+  },
+},
+```
+
+Set either value to `'auto'` to keep the built-in default for that mode.
+
+**Preset palettes:**
+
+| Name             | `light`     | `dark`      |
+| ---------------- | ----------- | ----------- |
+| Purple (default) | `#b509ac`   | `#2698ba`   |
+| Blue             | `#0076df`   | `#68c0d9`   |
+| Red              | `#ff3636`   | `#f29105`   |
+| Green            | `#009f06`   | `#b7d12a`   |
+| Orange           | `#f29105`   | `#efcc00`   |
+
 ---
 
 ## 15. Comments (Giscus / Disqus)
@@ -646,7 +673,7 @@ All theming is done through CSS custom properties defined in `src/styles/_colors
 }
 ```
 
-To change the accent color, update `--global-theme-color` in both `:root` and `[data-theme='dark']`.
+The easiest way to change the accent color is via `site.ts` (see §14 — Dark mode → Theme color). For other CSS variable overrides (background, text, borders, fonts, etc.), edit `src/styles/_colors.css` directly.
 
 ---
 

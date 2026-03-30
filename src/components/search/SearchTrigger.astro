@@ -51,7 +51,7 @@ const projects = (await getCollection('projects')).map(
     title: p.data.title,
     section: 'Projects',
     href: `${base}/projects/${p.id}/`,
-    keywords: (p.data.tags ?? []).join(' '),
+    keywords: p.data.category ?? '',
   }),
 );
 

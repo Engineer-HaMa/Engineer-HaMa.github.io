@@ -1175,6 +1175,16 @@ body[data-footer-position='sticky'] {
   padding-bottom: 60px; /* approx footer height */
 }
 
+/* ─── medium-zoom — ensure overlay sits above all fixed UI (navbar, progress bar, ninja-keys) ── */
+
+.medium-zoom-overlay {
+  z-index: 10000;
+}
+
+.medium-zoom-image--opened {
+  z-index: 10001;
+}
+
 /* ─── Back-to-top button ─────────────────────────────────────────────────── */
 
 #back-to-top {
