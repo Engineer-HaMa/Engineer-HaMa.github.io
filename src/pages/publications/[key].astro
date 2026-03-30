@@ -52,11 +52,27 @@ const bibtexFields = Object.entries(entry.fields)
   .map(([k, v]) => `  ${k} = {${v}}`)
   .join(',\n');
 const bibtexBlock = `@${entry.type}{${entry.key},\n${bibtexFields}\n}`;
+
+const canonicalURL = new URL(`${site.base}/publications/${entry.key}/`, site.url).toString();
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Publications',
+      item: new URL(`${site.base}/publications/`, site.url).toString(),
+    },
+    { '@type': 'ListItem', position: 2, name: title, item: canonicalURL },
+  ],
+};
 ---
 
 <Page title={title} description={abstract ?? `${title} by ${authors}`}>
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
     <!-- Highwire Press meta tags for Google Scholar indexing -->
     <meta name="citation_title" content={title} />
     {authors.split(', ').map((a) => <meta name="citation_author" content={a} />)}
@@ -74,6 +90,10 @@ const bibtexBlock = `@${entry.type}{${entry.key},\n${bibtexFields}\n}`;
   </Fragment>
 
   <div class="post">
+    <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+      <a href={`${site.base}/publications/`} class="breadcrumb-link">← Publications</a>
+    </nav>
+
     <header class="post-header">
       <h1 class="post-title">{title}</h1>
       <p class="pub-authors">
@@ -133,7 +153,6 @@ const bibtexBlock = `@${entry.type}{${entry.key},\n${bibtexFields}\n}`;
             </a>
           )
         }
-        <a href={`${site.base}/publications/`} class="btn">← All publications</a>
       </div>
 
       {

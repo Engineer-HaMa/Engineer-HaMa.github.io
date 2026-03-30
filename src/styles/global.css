@@ -82,6 +82,26 @@
 /* Configure dark: variant to use data-theme attribute (matches Base.astro) */
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
+/* ─── Breadcrumb navigation (shared by blog posts, projects, publications) ── */
+
+.breadcrumb-nav {
+  margin-bottom: 1.25rem;
+}
+
+.breadcrumb-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--global-theme-color);
+  text-decoration: none;
+}
+
+.breadcrumb-link:hover {
+  opacity: 0.75;
+}
+
 /* ─── Layout utilities ───────────────────────────────────────────────────── */
 
 @layer utilities {
