@@ -296,15 +296,27 @@ const personJsonLd = isHome ? JSON.stringify({
     </button>
 
     <script>
-      const btn = document.getElementById('back-to-top');
-      window.addEventListener(
-        'scroll',
-        () => {
-          btn?.classList.toggle('visible', window.scrollY > 300);
-        },
-        { passive: true },
-      );
-      btn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+      let btn = document.getElementById('back-to-top');
+
+      function updateVisibility() {
+        btn?.classList.toggle('visible', window.scrollY > 300);
+      }
+
+      function attachClick() {
+        btn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+      }
+
+      window.addEventListener('scroll', updateVisibility, { passive: true });
+      attachClick();
+
+      // After each View Transition the DOM is swapped — re-query the new element,
+      // re-attach the click handler, and re-evaluate visibility immediately
+      // (the scroll event doesn't fire when the browser resets scroll position).
+      document.addEventListener('astro:after-swap', () => {
+        btn = document.getElementById('back-to-top');
+        attachClick();
+        updateVisibility();
+      });
     </script>
   </body>
 </html>
