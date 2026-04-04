@@ -937,6 +937,20 @@
     align-items: center;
   }
 
+  /* Soften third-party Altmetric/Dimensions widget colours in dark mode */
+  html[data-theme='dark'] .publications .altmetric-embed,
+  html[data-theme='dark'] .publications .__dimensions_badge_embed__ {
+    filter: brightness(0.85) contrast(1.1) saturate(0.9);
+  }
+
+  /* Ensure badge images sit correctly inside flex rows */
+  .publications .badges img,
+  .publications .badges a {
+    display: inline-flex;
+    align-items: center;
+    line-height: 0;
+  }
+
   /* ─── CV card layout (matches al-folio _cv.scss) ─────────────────── */
   .cv .card {
     border: 1px solid var(--global-divider-color);

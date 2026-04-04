@@ -1,7 +1,12 @@
 import { useMemo, useState } from 'react';
 
 import type { BibEntry } from '../../utils/bibtex';
-import { getAuthors, getBoolField, getTitle, getVenue, getYear } from '../../utils/bibtex';
+import { getAuthors, getBoolField, getCleanBibtex, getTitle, getVenue, getYear } from '../../utils/bibtex';
+import type { CoauthorMap } from '../../utils/authors';
+import { linkAuthors } from '../../utils/authors';
+import { BadgeSet } from './BadgeSet';
+import { GoogleScholarBadge } from './GoogleScholarBadge';
+import { InspireHEPBadge } from './InspireHEPBadge';
 
 interface Labels {
   abstract?: string;
@@ -9,6 +14,13 @@ interface Labels {
   supp?: string;
   searchPlaceholder?: string;
   noResults?: string;
+}
+
+interface BadgeConfig {
+  altmetric: boolean;
+  dimensions: boolean;
+  googleScholar: boolean;
+  inspirehep: boolean;
 }
 
 interface Props {
@@ -25,39 +37,20 @@ interface Props {
   labels?: Labels;
   /** site.base value used to build links to individual publication detail pages. */
   detailBase?: string;
+  /** Parsed coauthors.yml — used to link co-author names to their profiles. */
+  coauthors?: CoauthorMap;
+  /** google_scholar_id → citation count (from citations.yml). */
+  citations?: Record<string, number>;
+  /** Google Scholar user ID for badge profile links (site.socials.scholar_userid). */
+  scholarUserId?: string;
+  /** Badge visibility flags from site.publications.badges. */
+  badges?: BadgeConfig;
 }
 
 function entryUrl(entry: BibEntry): string {
   if (entry.fields.html) return entry.fields.html;
   if (entry.fields.doi) return `https://doi.org/${entry.fields.doi}`;
   return '';
-}
-
-function buildBibtex(entry: BibEntry): string {
-  const fields = Object.entries(entry.fields)
-    .filter(
-      ([k]) =>
-        ![
-          'abbr',
-          'abstract',
-          'selected',
-          'preview',
-          'bibtex_show',
-          'award',
-          'award_name',
-          'html',
-          'code',
-          'blog',
-          'website',
-          'altmetric',
-          'dimensions',
-          'google_scholar_id',
-          'inspirehep_id',
-        ].includes(k),
-    )
-    .map(([k, v]) => `  ${k} = {${v}}`)
-    .join(',\n');
-  return `@${entry.type}{${entry.key},\n${fields}\n}`;
 }
 
 function PublicationEntry({
@@ -69,6 +62,10 @@ function PublicationEntry({
   pdfDir = '/assets/pdf/',
   labels = {},
   detailBase,
+  coauthors = {},
+  citations = {},
+  scholarUserId = '',
+  badges,
 }: {
   entry: BibEntry;
   maxAuthorLimit?: number;
@@ -78,6 +75,10 @@ function PublicationEntry({
   pdfDir?: string;
   labels?: Labels;
   detailBase?: string;
+  coauthors?: CoauthorMap;
+  citations?: Record<string, number>;
+  scholarUserId?: string;
+  badges?: BadgeConfig;
 }) {
   const [abstractOpen, setAbstractOpen] = useState(false);
   const [bibtexOpen, setBibtexOpen] = useState(false);
@@ -106,9 +107,36 @@ function PublicationEntry({
   const hasAward = entry.fields.award ?? '';
   const awardName = entry.fields.award_name ?? '';
   const bibtex_show = getBoolField(entry, 'bibtex_show');
+  const annotation = entry.fields.annotation ?? '';
+  const additionalInfo = entry.fields.additional_info ?? '';
 
-  const visibleAuthors = maxAuthorLimit ? authorList.slice(0, maxAuthorLimit) : authorList;
-  const hiddenCount = authorList.length - visibleAuthors.length;
+  // Badge fields
+  const googleScholarId = entry.fields.google_scholar_id ?? '';
+  const inspirehepId = entry.fields.inspirehep_id ?? '';
+  const altmetricField = entry.fields.altmetric ?? '';
+  const dimensionsField = entry.fields.dimensions ?? '';
+
+  // Altmetric: explicit ID overrides DOI/arXiv lookup when value is not "true"
+  const altmetricExplicitId =
+    altmetricField && altmetricField !== 'true' ? altmetricField : undefined;
+  const hasAltmetricSource = !!(altmetricExplicitId || doi || arxiv);
+
+  const showAltmetric = !!(badges?.altmetric && altmetricField && hasAltmetricSource);
+  const showDimensions = !!(badges?.dimensions && dimensionsField && doi);
+  const showGoogleScholar = !!(badges?.googleScholar && googleScholarId && scholarUserId);
+  const showInspireHEP = !!(badges?.inspirehep && inspirehepId);
+  const hasBadges = showAltmetric || showDimensions || showGoogleScholar || showInspireHEP;
+
+  // Author links with coauthor URL and self-identification
+  const authorLinks = useMemo(
+    () => linkAuthors(authorList, coauthors, authorLastName),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [authorsRaw, authorLastName],
+  );
+  const visibleAuthorLinks = maxAuthorLimit
+    ? authorLinks.slice(0, maxAuthorLimit)
+    : authorLinks;
+  const hiddenCount = authorLinks.length - visibleAuthorLinks.length;
 
   const contentColClass = showThumbnails && (abbr || preview) ? 'col-sm-8' : 'col-sm-10';
 
@@ -118,6 +146,8 @@ function PublicationEntry({
   const suppHref = supp.startsWith('http') ? supp : `${pdfDir}${supp}`;
   const slidesHref = slides.startsWith('http') ? slides : `${pdfDir}${slides}`;
   const posterHref = poster.startsWith('http') ? poster : `${pdfDir}${poster}`;
+
+  const scholarCount = googleScholarId ? citations[googleScholarId] : undefined;
 
   return (
     <li>
@@ -152,17 +182,21 @@ function PublicationEntry({
             )}
           </div>
 
-          {/* Authors */}
-          {authorList.length > 0 && (
+          {/* Authors with coauthor links and self-identification */}
+          {authorLinks.length > 0 && (
             <div className="author">
-              {visibleAuthors.map((author, i) => {
-                const isMe =
-                  authorLastName !== '' &&
-                  author.toLowerCase().includes(authorLastName.toLowerCase());
-                const isLast = i === visibleAuthors.length - 1 && hiddenCount === 0;
+              {visibleAuthorLinks.map((al, i) => {
+                const isLast = i === visibleAuthorLinks.length - 1 && hiddenCount === 0;
+                const nameEl = al.isSelf ? <em>{al.name}</em> : <>{al.name}</>;
                 return (
                   <span key={i}>
-                    {isMe ? <em>{author}</em> : author}
+                    {al.url ? (
+                      <a href={al.url} target="_blank" rel="noopener noreferrer">
+                        {nameEl}
+                      </a>
+                    ) : (
+                      nameEl
+                    )}
                     {!isLast && ', '}
                   </span>
                 );
@@ -172,15 +206,28 @@ function PublicationEntry({
                   , and {hiddenCount} more author{hiddenCount > 1 ? 's' : ''}
                 </span>
               )}
+              {/* Annotation tooltip — info icon with hover text */}
+              {annotation && (
+                <span
+                  title={annotation}
+                  aria-label={annotation}
+                  style={{ cursor: 'help', marginLeft: '0.3rem', opacity: 0.65, fontSize: '0.9em' }}
+                >
+                  ⓘ
+                </span>
+              )}
             </div>
           )}
 
-          {/* Venue + year */}
+          {/* Venue + year + additional_info */}
           {(venue || year) && (
             <div className="periodical">
               {venue && <em>{venue}</em>}
               {venue && year ? ', ' : ''}
               {year || ''}
+              {additionalInfo && (
+                <span style={{ marginLeft: '0.25rem' }}> · {additionalInfo}</span>
+              )}
             </div>
           )}
 
@@ -242,6 +289,16 @@ function PublicationEntry({
               >
                 {labels.bibtex ?? 'Bib'}
               </button>
+            )}
+            {entry.fields.html && (
+              <a
+                href={entry.fields.html}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-sm z-depth-0"
+              >
+                HTML
+              </a>
             )}
             {pdfPath && (
               <a
@@ -330,6 +387,27 @@ function PublicationEntry({
             )}
           </div>
 
+          {/* Metric badges row */}
+          {hasBadges && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.4rem' }}>
+              <BadgeSet
+                doi={doi || undefined}
+                arxiv={arxiv || undefined}
+                altmetricId={altmetricExplicitId}
+                showAltmetric={showAltmetric}
+                showDimensions={showDimensions}
+              />
+              {showGoogleScholar && (
+                <GoogleScholarBadge
+                  scholarUserId={scholarUserId}
+                  googleScholarId={googleScholarId}
+                  count={scholarCount}
+                />
+              )}
+              {showInspireHEP && <InspireHEPBadge inspirehepId={inspirehepId} />}
+            </div>
+          )}
+
           {/* Award hidden block */}
           {hasAward && (
             <div className={`award hidden${awardOpen ? 'open' : ''}`}>
@@ -344,10 +422,10 @@ function PublicationEntry({
             </div>
           )}
 
-          {/* BibTeX hidden block */}
+          {/* BibTeX hidden block — internal fields filtered out */}
           {bibtex_show && (
             <div className={`bibtex hidden${bibtexOpen ? 'open' : ''}`}>
-              <pre>{buildBibtex(entry)}</pre>
+              <pre>{getCleanBibtex(entry)}</pre>
             </div>
           )}
         </div>
@@ -365,6 +443,10 @@ export function BibSearch({
   pdfDir = '/assets/pdf/',
   labels = {},
   detailBase,
+  coauthors = {},
+  citations = {},
+  scholarUserId = '',
+  badges,
 }: Props) {
   const [query, setQuery] = useState('');
 
@@ -445,6 +527,10 @@ export function BibSearch({
                   pdfDir={pdfDir}
                   labels={labels}
                   detailBase={detailBase}
+                  coauthors={coauthors}
+                  citations={citations}
+                  scholarUserId={scholarUserId}
+                  badges={badges}
                 />
               ))}
             </ol>

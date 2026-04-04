@@ -156,3 +156,46 @@ export function getTitle(entry: BibEntry): string {
 export function getBoolField(entry: BibEntry, field: string): boolean {
   return entry.fields[field]?.toLowerCase() === 'true';
 }
+
+// ─── Clean BibTeX output ──────────────────────────────────────────────────────
+
+/**
+ * as-folio display-only fields that should be excluded from the copyable
+ * BibTeX citation block. These are template metadata, not standard BibTeX.
+ */
+export const BIBTEX_INTERNAL_FIELDS = new Set([
+  'abbr',
+  'abstract',
+  'additional_info',
+  'altmetric',
+  'annotation',
+  'award',
+  'award_name',
+  'bibtex_show',
+  'blog',
+  'code',
+  'dimensions',
+  'google_scholar_id',
+  'html',
+  'inspirehep_id',
+  'pdf',
+  'poster',
+  'preview',
+  'selected',
+  'slides',
+  'supp',
+  'video',
+  'website',
+]);
+
+/**
+ * Build a clean BibTeX citation string with as-folio internal fields removed.
+ * Use this whenever displaying or copying citations to end users.
+ */
+export function getCleanBibtex(entry: BibEntry): string {
+  const fields = Object.entries(entry.fields)
+    .filter(([k]) => !BIBTEX_INTERNAL_FIELDS.has(k))
+    .map(([k, v]) => `  ${k} = {${v}}`)
+    .join(',\n');
+  return `@${entry.type}{${entry.key},\n${fields}\n}`;
+}

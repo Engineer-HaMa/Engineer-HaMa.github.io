@@ -1,0 +1,10 @@
+# Google Scholar citation counts for the publications page.
+#
+# Format:
+#   google_scholar_id: count
+#
+# The google_scholar_id must match the value set in the BibTeX entry.
+# Update these counts before each deploy, or run: yarn citations:update
+#
+# Demo entry for the EPR paper (einstein1935epr):
+qyhmnyLat1gC: 14200

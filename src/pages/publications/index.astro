@@ -1,10 +1,15 @@
 ---
+import yaml from 'js-yaml';
+
 import BibSearch from '@components/publications/BibSearch.tsx';
 import { site } from '@config/site';
 import Page from '@layouts/Page.astro';
+import type { CoauthorMap } from '@utils/authors';
 import { getAuthors, getTitle, getVenue, parseBibtex } from '@utils/bibtex';
 
 import bibRaw from '../../data/papers.bib?raw';
+import coauthorsRaw from '../../data/coauthors.yml?raw';
+import citationsRaw from '../../data/citations.yml?raw';
 
 const entries = parseBibtex(bibRaw).sort((a, b) => {
   const yearA = parseInt(a.fields.year ?? '0', 10);
@@ -12,12 +17,17 @@ const entries = parseBibtex(bibRaw).sort((a, b) => {
   return yearB - yearA;
 });
 
+const coauthors = (yaml.load(coauthorsRaw) ?? {}) as CoauthorMap;
+const citations = (yaml.load(citationsRaw) ?? {}) as Record<string, number>;
+
 const showAltmetric = site.publications.badges.altmetric;
 const showDimensions = site.publications.badges.dimensions;
 const maxAuthorLimit = site.publications.maxAuthorLimit;
 const showThumbnails = site.publications.thumbnails;
 const authorLastName = site.publications.authorLastName ?? site.author.name.split(' ').pop() ?? '';
 const { previewDir, pdfDir, labels } = site.publications;
+const scholarUserId = site.socials.scholar_userid ?? '';
+const badges = site.publications.badges;
 ---
 
 <Page title="Publications" description={`Publications by ${site.author.name}`}>
@@ -69,6 +79,10 @@ const { previewDir, pdfDir, labels } = site.publications;
         pdfDir={pdfDir}
         labels={labels}
         detailBase={site.base}
+        coauthors={coauthors}
+        citations={citations}
+        scholarUserId={scholarUserId}
+        badges={badges}
       />
     </article>
   </div>
