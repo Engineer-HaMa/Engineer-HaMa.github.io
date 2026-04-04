@@ -163,6 +163,5 @@ const timezone = site.teaching.timezone;
     });
   }
 
-  initCalendar();
-  document.addEventListener('astro:after-swap', initCalendar);
+  document.addEventListener('astro:page-load', initCalendar);
 </script>

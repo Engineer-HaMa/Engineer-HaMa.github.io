@@ -110,10 +110,7 @@ const hasCategories = categories.length > 0;
     );
   }
 
-  initCards();
-  loadGithubStars();
-
-  document.addEventListener('astro:after-swap', () => {
+  document.addEventListener('astro:page-load', () => {
     initCards();
     loadGithubStars();
   });

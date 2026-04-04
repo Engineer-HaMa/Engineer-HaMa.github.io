@@ -123,8 +123,7 @@ const rt = post.body ? calcReadingTime(post.body) : 1;
       pre.appendChild(btn);
     });
   }
-  addCopyButtons();
-  document.addEventListener('astro:after-swap', addCopyButtons);
+  document.addEventListener('astro:page-load', addCopyButtons);
 </script>
 
 <style>

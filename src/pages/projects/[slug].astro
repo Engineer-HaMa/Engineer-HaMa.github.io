@@ -217,8 +217,7 @@ const relatedEntries =
     });
   }
 
-  initZoom();
-  document.addEventListener('astro:after-swap', initZoom);
+  document.addEventListener('astro:page-load', initZoom);
 </script>
 
 <style>

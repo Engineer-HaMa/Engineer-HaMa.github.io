@@ -168,8 +168,7 @@ const jsonLd = {
       pre.appendChild(btn);
     });
   }
-  addCopyButtons();
-  document.addEventListener('astro:after-swap', addCopyButtons);
+  document.addEventListener('astro:page-load', addCopyButtons);
 </script>
 
 <!-- Medium zoom for post images -->
@@ -218,8 +217,10 @@ const jsonLd = {
     });
   }
 
-  initZoom();
-  document.addEventListener('astro:after-swap', initZoom);
+  // astro:page-load fires on both hard loads and View Transitions soft navigations.
+  // Using only this event avoids the timing race where astro:after-swap fires
+  // before this module has been evaluated on the first soft navigation to a post.
+  document.addEventListener('astro:page-load', initZoom);
 </script>
 
 <!-- ── Per-post CDN widgets ──────────────────────────────────────────────── -->

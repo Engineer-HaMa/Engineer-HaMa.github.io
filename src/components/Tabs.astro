@@ -44,22 +44,27 @@ const { tabs, id = 'tabs-' + Math.random().toString(36).slice(2, 7) } = Astro.pr
     }
   </ul>
 
-  <!-- Tab panels -->
-  {
-    tabs.map((_, i) => (
-      <div
-        class="as-tab-panel"
-        role="tabpanel"
-        id={`${id}-panel-${i}`}
-        aria-labelledby={`${id}-tab-${i}`}
-        data-tab={i}
-        data-tabs-group={id}
-        hidden={i !== 0}
-      >
-        <slot name={`tab-${i}`} />
-      </div>
-    ))
-  }
+  <!-- Tab panels — static named slots (supports up to 8 tabs) -->
+  {[0, 1, 2, 3, 4, 5, 6, 7].filter((i) => i < tabs.length).map((i) => (
+    <div
+      class="as-tab-panel"
+      role="tabpanel"
+      id={`${id}-panel-${i}`}
+      aria-labelledby={`${id}-tab-${i}`}
+      data-tab={i}
+      data-tabs-group={id}
+      hidden={i !== 0}
+    >
+      {i === 0 && <slot name="tab-0" />}
+      {i === 1 && <slot name="tab-1" />}
+      {i === 2 && <slot name="tab-2" />}
+      {i === 3 && <slot name="tab-3" />}
+      {i === 4 && <slot name="tab-4" />}
+      {i === 5 && <slot name="tab-5" />}
+      {i === 6 && <slot name="tab-6" />}
+      {i === 7 && <slot name="tab-7" />}
+    </div>
+  ))}
 </div>
 
 <script>
@@ -84,8 +89,7 @@ const { tabs, id = 'tabs-' + Math.random().toString(36).slice(2, 7) } = Astro.pr
     });
   }
 
-  initTabs();
-  document.addEventListener('astro:after-swap', initTabs);
+  document.addEventListener('astro:page-load', initTabs);
 </script>
 
 <style>
