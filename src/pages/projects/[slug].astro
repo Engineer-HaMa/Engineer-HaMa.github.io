@@ -185,17 +185,39 @@ const relatedEntries =
 <script>
   import mediumZoom from 'medium-zoom';
   let zoom: ReturnType<typeof mediumZoom> | null = null;
+
   function initZoom() {
     zoom?.detach();
     zoom = null;
-    const imgs = document.querySelectorAll<HTMLImageElement>('#project-content img:not(.no-zoom)');
-    if (imgs.length > 0) {
-      zoom = mediumZoom(imgs, { background: 'rgba(0,0,0,0.7)', margin: 24 });
-    }
+
+    const imgs = document.querySelectorAll<HTMLImageElement>('#project-content img[data-zoomable]');
+    if (imgs.length === 0) return;
+
+    zoom = mediumZoom(imgs, { background: 'rgba(0,0,0,0.7)', margin: 24 });
+
+    zoom.on('open', (event: Event) => {
+      const original = event.target as HTMLElement;
+      let resolved = false;
+
+      const markResolved = () => { resolved = true; };
+      original.addEventListener('medium-zoom:opened', markResolved, { once: true });
+
+      setTimeout(() => {
+        original.removeEventListener('medium-zoom:opened', markResolved);
+        if (resolved) return;
+        const clone = document.querySelector<HTMLElement>('.medium-zoom-image--opened');
+        clone?.dispatchEvent(
+          new TransitionEvent('transitionend', {
+            bubbles: false,
+            propertyName: 'transform',
+            elapsedTime: 0.3,
+          }),
+        );
+      }, 400);
+    });
   }
-  // Direct call for the initial page load (astro:page-load fires before deferred module scripts)
+
   initZoom();
-  // Re-init after each View Transition navigation
   document.addEventListener('astro:after-swap', initZoom);
 </script>
 

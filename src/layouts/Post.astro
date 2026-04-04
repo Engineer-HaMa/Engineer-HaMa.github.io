@@ -176,17 +176,49 @@ const jsonLd = {
 <script>
   import mediumZoom from 'medium-zoom';
   let zoom: ReturnType<typeof mediumZoom> | null = null;
+
   function initZoom() {
     zoom?.detach();
     zoom = null;
-    const imgs = document.querySelectorAll<HTMLImageElement>('#post-content img:not(.no-zoom)');
-    if (imgs.length > 0) {
-      zoom = mediumZoom(imgs, { background: 'rgba(0,0,0,0.7)', margin: 24 });
-    }
+
+    // Only images explicitly marked with data-zoomable (from <Figure zoomable />).
+    // This prevents accidentally capturing images that should not be zoomable.
+    const imgs = document.querySelectorAll<HTMLImageElement>('#post-content img[data-zoomable]');
+    if (imgs.length === 0) return;
+
+    zoom = mediumZoom(imgs, { background: 'rgba(0,0,0,0.7)', margin: 24 });
+
+    // Failsafe: medium-zoom's close() exits early when isAnimating === true.
+    // isAnimating resets only when transitionend fires on the zoomed clone.
+    // If the CSS transition doesn't start (transform set synchronously in the
+    // same frame the clone is inserted), transitionend never fires and the zoom
+    // gets permanently stuck open. Fix: after the open event, if the library's
+    // own medium-zoom:opened event (fired inside _handleOpenEnd after the real
+    // transitionend) hasn't fired within 400 ms, dispatch a synthetic
+    // transitionend on the clone to unblock close().
+    zoom.on('open', (event: Event) => {
+      const original = event.target as HTMLElement;
+      let resolved = false;
+
+      const markResolved = () => { resolved = true; };
+      original.addEventListener('medium-zoom:opened', markResolved, { once: true });
+
+      setTimeout(() => {
+        original.removeEventListener('medium-zoom:opened', markResolved);
+        if (resolved) return;
+        const clone = document.querySelector<HTMLElement>('.medium-zoom-image--opened');
+        clone?.dispatchEvent(
+          new TransitionEvent('transitionend', {
+            bubbles: false,
+            propertyName: 'transform',
+            elapsedTime: 0.3,
+          }),
+        );
+      }, 400);
+    });
   }
-  // Direct call for the initial page load (astro:page-load fires before deferred module scripts)
+
   initZoom();
-  // Re-init after each View Transition navigation
   document.addEventListener('astro:after-swap', initZoom);
 </script>
 
