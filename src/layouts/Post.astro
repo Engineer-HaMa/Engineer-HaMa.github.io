@@ -297,6 +297,18 @@ const jsonLd = {
       integrity="sha384-i3+YbLfC66kxqBVtgH6I+lEFAr+57mVZY/MSthCK/oTPo0rWCRzW/kSg2mJnTKLs"
       crossorigin="anonymous"
       defer></script>
+    {/* Re-render on page load (handles both hard load and View Transitions).
+        Polls until pseudocode.js is available, then renders all pre.pseudocode elements. */}
+    <script is:inline>
+      document.addEventListener('astro:page-load', function () {
+        (function poll() {
+          if (typeof pseudocode === 'undefined') { setTimeout(poll, 50); return; }
+          document.querySelectorAll('pre.pseudocode').forEach(function (el) {
+            try { pseudocode.renderElement(el); } catch (_) {}
+          });
+        })();
+      });
+    </script>
   </>
 )}
 
@@ -309,6 +321,19 @@ const jsonLd = {
     {/* tikzjax uses unversioned URLs — SRI cannot be pinned; self-host if supply-chain integrity is critical */}
     <link rel="stylesheet" href="https://tikzjax.com/v1/fonts.css" />
     <script src="https://tikzjax.com/v1/tikzjax.js"></script>
+    {/* On View Transitions, DOMContentLoaded doesn't re-fire. Clone unprocessed tikz script
+        elements so TikZJax (which uses readyState check on execution) can process them. */}
+    <script is:inline>
+      document.addEventListener('astro:page-load', function () {
+        document.querySelectorAll('script[type="text/tikz"]:not([data-tikz-done])').forEach(function (el) {
+          var clone = document.createElement('script');
+          clone.type = 'text/tikz';
+          clone.textContent = el.textContent;
+          clone.setAttribute('data-tikz-done', 'true');
+          el.replaceWith(clone);
+        });
+      });
+    </script>
   </>
 )}
 
@@ -369,16 +394,30 @@ const jsonLd = {
       integrity="sha384-IfxC36XL/toUyJ939C73PcgMuRzAZuIzZxE38drsmO5p6jD7ei+Zx/1oA/0l8ysE"
       crossorigin="anonymous"
     />
-    {/* photoswipe ESM imports are inline dynamic imports — SRI not applicable to dynamic import() */}
-    <script type="module">{`
-      import PhotoSwipeLightbox from 'https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe-lightbox.esm.js';
-      const lightbox = new PhotoSwipeLightbox({
-        gallery: '#post-content',
-        children: 'a[data-pswp-width]',
-        pswpModule: () => import('https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe.esm.js'),
+    {/* is:inline + dynamic import() — Astro does not process <script type="module">{...}</script>
+        JSX template literals as real ES modules, so static ESM import won't execute.
+        Dynamic import() inside is:inline works correctly and survives View Transitions. */}
+    <script is:inline>
+      document.addEventListener('astro:page-load', function () {
+        if (window.__pswpLightbox) {
+          window.__pswpLightbox.destroy();
+          window.__pswpLightbox = null;
+        }
+        if (!document.querySelector('#post-content a[data-pswp-width]')) return;
+        import('https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe-lightbox.esm.js')
+          .then(function (mod) {
+            var PhotoSwipeLightbox = mod.default;
+            window.__pswpLightbox = new PhotoSwipeLightbox({
+              gallery: '#post-content',
+              children: 'a[data-pswp-width]',
+              pswpModule: function () {
+                return import('https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe.esm.js');
+              },
+            });
+            window.__pswpLightbox.init();
+          });
       });
-      lightbox.init();
-    `}</script>
+    </script>
   </>
 )}
 
