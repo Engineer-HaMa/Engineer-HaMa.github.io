@@ -47,6 +47,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
+    "prebuild": "node --strip-types scripts/update-citations.ts",
     "build": "astro build --timings && pagefind --site dist",
     "preview": "astro preview",
     "astro": "astro",
@@ -62,7 +63,8 @@
     "test:e2e:ci": "playwright test --reporter=junit",
     "test:all": "yarn test:types && yarn lint:ci && yarn test && yarn test:e2e",
     "validate": "yarn test:all",
-    "prepare": "husky"
+    "prepare": "husky",
+    "citations:update": "node --strip-types scripts/update-citations.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.2",

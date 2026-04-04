@@ -1,20 +1,17 @@
-name: Deploy to GitHub Pages
+name: Update Citations
 
 on:
-  push:
-    branches: [main]
+  schedule:
+    # Runs every Sunday at 02:00 UTC
+    - cron: '0 2 * * 0'
   workflow_dispatch:
 
-concurrency:
-  group: pages
-  cancel-in-progress: false
-
 jobs:
-  build:
-    name: Build
+  update:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+
     steps:
       - uses: actions/checkout@v4
 
@@ -22,14 +19,14 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Enable Corepack
+      - name: Enable Corepack (Yarn 4)
         run: corepack enable
 
       - name: Install dependencies
         run: yarn install --immutable
 
-      - name: Build site
-        run: yarn build
+      - name: Fetch citation counts from OpenAlex
+        run: yarn citations:update
 
       - name: Commit updated citations.yml
         run: |
@@ -37,26 +34,8 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add src/data/citations.yml
           if git diff --cached --quiet; then
-            echo "No citation changes to commit."
+            echo "No changes to citation counts."
           else
             git commit -m "chore: update citation counts [skip ci]"
             git push
           fi
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist/
-
-  deploy:
-    name: Deploy
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    permissions:
-      pages: write
-      id-token: write
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4

@@ -20,7 +20,7 @@ export function BadgeSet({ doi, arxiv, altmetricId, showAltmetric, showDimension
   useEffect(() => {
     if (typeof window === 'undefined') return;
     // window may have badge reinit functions after scripts load — cast to access dynamic keys
-    const w = window as Record<string, unknown>;
+    const w = window as unknown as Record<string, unknown>;
     if (showAltmetric && typeof w['_altmetric_embed_init'] === 'function') {
       (w['_altmetric_embed_init'] as () => void)();
     }
