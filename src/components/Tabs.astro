@@ -44,8 +44,13 @@ const { tabs, id = 'tabs-' + Math.random().toString(36).slice(2, 7) } = Astro.pr
     }
   </ul>
 
-  <!-- Tab panels — static named slots (supports up to 8 tabs) -->
-  {[0, 1, 2, 3, 4, 5, 6, 7].filter((i) => i < tabs.length).map((i) => (
+  <!-- Tab panels — static named slots (supports up to 10 tabs).
+       WHY HARDCODED: Astro requires slot names to be static string literals at compile
+       time — dynamic expressions like slot={`tab-${i}`} are a compiler error. This means
+       the maximum tab count is a build-time constant that cannot come from site config or
+       any runtime value. 10 covers all practical use cases; add more slot entries here if
+       you ever need more than 10 tabs. -->
+  {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].filter((i) => i < tabs.length).map((i) => (
     <div
       class="as-tab-panel"
       role="tabpanel"
@@ -63,6 +68,8 @@ const { tabs, id = 'tabs-' + Math.random().toString(36).slice(2, 7) } = Astro.pr
       {i === 5 && <slot name="tab-5" />}
       {i === 6 && <slot name="tab-6" />}
       {i === 7 && <slot name="tab-7" />}
+      {i === 8 && <slot name="tab-8" />}
+      {i === 9 && <slot name="tab-9" />}
     </div>
   ))}
 </div>
