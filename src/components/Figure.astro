@@ -6,7 +6,8 @@
  *   import Figure from '@components/Figure.astro';
  *
  *   <Figure path="/assets/img/1.jpg" class="img-fluid rounded z-depth-1" />
- *   <Figure path="/assets/img/2.jpg" class="img-fluid rounded z-depth-1" zoomable caption="My caption" />
+ *   <Figure path="/assets/img/2.jpg" class="img-fluid rounded z-depth-1" caption="My caption" />
+ *   <Figure path="/assets/img/icon.png" class="img-fluid" zoomable={false} />
  *   <Figure path="/assets/img/3.jpg" class="img-fluid rounded z-depth-1" slot="first" />
  *
  * Legacy API (as-folio v1):
@@ -26,7 +27,7 @@ interface Props {
   title?: string;
   /** Caption shown below the image */
   caption?: string;
-  /** Enable medium-zoom click-to-zoom (adds data-zoomable attribute) */
+  /** Disable medium-zoom click-to-zoom (adds class no-zoom). Default: true (all figures are zoomable). */
   zoomable?: boolean;
   /** Loading strategy */
   loading?: 'lazy' | 'eager';
@@ -45,7 +46,7 @@ const {
   alt = '',
   title,
   caption,
-  zoomable = false,
+  zoomable = true,
   loading = 'lazy',
   width = '100%',
   height = 'auto',
@@ -53,18 +54,18 @@ const {
 } = Astro.props;
 
 const imgSrc = path ?? src ?? '';
+const imgClass = zoomable ? className : `${className} no-zoom`.trim();
 ---
 
 <figure {...slotName ? { slot: slotName } : {}}>
   <img
     src={imgSrc}
-    class={className}
+    class={imgClass}
     alt={alt}
     title={title}
     loading={loading}
     width={width}
     height={height}
-    {...zoomable ? { 'data-zoomable': true } : {}}
     onerror="this.style.opacity='0.3';this.style.border='2px dashed #ccc'"
   />
   {caption && <figcaption class="caption">{caption}</figcaption>}

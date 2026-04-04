@@ -13,7 +13,7 @@ pinned: true
 
 import Figure from '@components/Figure.astro';
 
-This is an example post with image galleries. Images in as-folio posts get click-to-zoom behaviour via [medium-zoom](https://github.com/francoischalifour/medium-zoom) — click any zoomable image below to see it open full-screen.
+This is an example post with image galleries. All images in as-folio posts are click-to-zoom by default via [medium-zoom](https://github.com/francoischalifour/medium-zoom) — click any image below to see it open full-screen.
 
 ## Simple row of images
 
@@ -30,35 +30,32 @@ This is an example post with image galleries. Images in as-folio posts get click
   there at all.
 </div>
 
-## Zoomable images
+## Image rows
 
-Images can be made zoomable by passing `zoomable`. Click the images below to zoom in.
+Click any image to zoom in — all Figure components are zoomable by default.
 
 <div class="row mt-3">
   <div class="col-sm mt-md-0 mt-3">
-    <Figure loading="eager" path="/assets/img/8.jpg" class="img-fluid z-depth-1 rounded" zoomable />
+    <Figure loading="eager" path="/assets/img/8.jpg" class="img-fluid z-depth-1 rounded" />
   </div>
   <div class="col-sm mt-md-0 mt-3">
     <Figure
       loading="eager"
       path="/assets/img/10.jpg"
       class="img-fluid z-depth-1 rounded"
-      zoomable
     />
   </div>
 </div>
 
-The rest of the images in this post are all zoomable, arranged into different mini-galleries.
-
 <div class="row mt-3">
   <div class="col-sm mt-md-0 mt-3">
-    <Figure path="/assets/img/11.jpg" class="img-fluid z-depth-1 rounded" zoomable />
+    <Figure path="/assets/img/11.jpg" class="img-fluid z-depth-1 rounded" />
   </div>
   <div class="col-sm mt-md-0 mt-3">
-    <Figure path="/assets/img/12.jpg" class="img-fluid z-depth-1 rounded" zoomable />
+    <Figure path="/assets/img/12.jpg" class="img-fluid z-depth-1 rounded" />
   </div>
   <div class="col-sm mt-md-0 mt-3">
-    <Figure path="/assets/img/7.jpg" class="img-fluid z-depth-1 rounded" zoomable />
+    <Figure path="/assets/img/7.jpg" class="img-fluid z-depth-1 rounded" />
   </div>
 </div>
 
@@ -68,10 +65,10 @@ You can also have artistically styled 2/3 + 1/3 images:
 
 <div class="row justify-content-sm-center mt-3">
   <div class="col-sm-8 mt-md-0 mt-3">
-    <Figure path="/assets/img/6.jpg" class="img-fluid z-depth-1 rounded" zoomable />
+    <Figure path="/assets/img/6.jpg" class="img-fluid z-depth-1 rounded" />
   </div>
   <div class="col-sm-4 mt-md-0 mt-3">
-    <Figure path="/assets/img/11.jpg" class="img-fluid z-depth-1 rounded" zoomable />
+    <Figure path="/assets/img/11.jpg" class="img-fluid z-depth-1 rounded" />
   </div>
 </div>
 <div class="caption">Artistically styled 2/3 + 1/3 images using Bootstrap's grid system.</div>
@@ -80,13 +77,13 @@ You can also have artistically styled 2/3 + 1/3 images:
 
 <div class="row mt-3">
   <div class="col-sm mt-md-0 mt-3">
-    <Figure path="/assets/img/1.jpg" class="img-fluid z-depth-1 rounded" zoomable />
+    <Figure path="/assets/img/1.jpg" class="img-fluid z-depth-1 rounded" />
   </div>
   <div class="col-sm mt-md-0 mt-3">
-    <Figure path="/assets/img/3.jpg" class="img-fluid z-depth-1 rounded" zoomable />
+    <Figure path="/assets/img/3.jpg" class="img-fluid z-depth-1 rounded" />
   </div>
   <div class="col-sm mt-md-0 mt-3">
-    <Figure path="/assets/img/5.jpg" class="img-fluid z-depth-1 rounded" zoomable />
+    <Figure path="/assets/img/5.jpg" class="img-fluid z-depth-1 rounded" />
   </div>
 </div>
 <div class="caption">
@@ -100,7 +97,6 @@ You can also have artistically styled 2/3 + 1/3 images:
     <Figure
       path="/assets/img/2.jpg"
       class="img-fluid z-depth-1 rounded"
-      zoomable
       caption="A full-width image spanning the entire content area."
     />
   </div>
@@ -108,25 +104,28 @@ You can also have artistically styled 2/3 + 1/3 images:
 
 ## Using the Figure component
 
-The `Figure` component mirrors al-folio's `figure.liquid` interface:
+The `Figure` component mirrors al-folio's `figure.liquid` interface. All figures are zoomable by default — pass `zoomable={false}` to opt out:
 
 ```mdx
 import Figure from '@components/Figure.astro';
 
+{/* zoomable by default */}
 <Figure path="/assets/img/1.jpg" class="img-fluid z-depth-1 rounded" />
 <Figure
   path="/assets/img/2.jpg"
   class="img-fluid z-depth-1 rounded"
-  zoomable
   caption="My caption"
 />
+
+{/* opt out of zoom */}
+<Figure path="/assets/img/icon.png" class="img-fluid" zoomable={false} />
 ```
 
 Available props: `path`, `class`, `zoomable`, `caption`, `alt`, `title`, `loading`, `width`, `height`.
 
 ## Standard Markdown images
 
-Standard Markdown images are also supported and get zoom behaviour automatically:
+Standard Markdown images are also zoomable automatically:
 
 ```md
 ![Alt text](/assets/img/profile.jpg)

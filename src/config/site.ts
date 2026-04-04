@@ -380,8 +380,8 @@ export const site = {
     githubUsers: true,
     /** Show GitHub repository pin cards. */
     githubRepos: true,
-    /** Show GitHub trophy stats (repo_trophies). */
-    trophies: true,
+    /** Show GitHub trophy stats (repo_trophies). Disabled by default — the service has known reliability issues. */
+    trophies: false,
     /** Theme for light mode (from github-readme-stats themes). */
     themeLight: 'default' as string,
     /** Theme for dark mode. */

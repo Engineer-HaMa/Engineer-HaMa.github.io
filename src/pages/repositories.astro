@@ -39,21 +39,26 @@ const maxLines = reposData.repo_description_lines_max ?? 2;
                   >
                     <img
                       class="only-light"
-                      alt={username}
+                      alt={`GitHub stats for ${username}`}
                       src={`https://github-readme-stats.vercel.app/api/?username=${username}&theme=${site.repositories.themeLight}&show_icons=true`}
                       loading="lazy"
                       width="495"
                       height="195"
+                      onerror="this.closest('.repo-card').classList.add('has-error')"
                     />
                     <img
                       class="only-dark"
-                      alt={username}
+                      alt={`GitHub stats for ${username}`}
                       src={`https://github-readme-stats.vercel.app/api/?username=${username}&theme=${site.repositories.themeDark}&show_icons=true`}
                       loading="lazy"
                       width="495"
                       height="195"
+                      onerror="this.closest('.repo-card').classList.add('has-error')"
                     />
                   </a>
+                  <div class="repo-card-placeholder" aria-hidden="true">
+                    <span>Stats temporarily unavailable</span>
+                  </div>
                 </div>
               ))}
             </div>
@@ -73,21 +78,26 @@ const maxLines = reposData.repo_description_lines_max ?? 2;
                         >
                           <img
                             class="only-light"
-                            alt={`${username} trophies`}
+                            alt={`GitHub achievements for ${username}`}
                             src={`https://github-profile-trophy.vercel.app/?username=${username}&theme=${site.repositories.trophyThemeLight}`}
                             loading="lazy"
                             width="800"
                             height="190"
+                            onerror="this.closest('.repo-card').classList.add('has-error')"
                           />
                           <img
                             class="only-dark"
-                            alt={`${username} trophies`}
+                            alt={`GitHub achievements for ${username}`}
                             src={`https://github-profile-trophy.vercel.app/?username=${username}&theme=${site.repositories.trophyThemeDark}`}
                             loading="lazy"
                             width="800"
                             height="190"
+                            onerror="this.closest('.repo-card').classList.add('has-error')"
                           />
                         </a>
+                        <div class="repo-card-placeholder" aria-hidden="true">
+                          <span>Trophies temporarily unavailable</span>
+                        </div>
                       </div>
                     </div>
                   </>
@@ -116,21 +126,26 @@ const maxLines = reposData.repo_description_lines_max ?? 2;
                     >
                       <img
                         class="only-light"
-                        alt={repo}
+                        alt={`GitHub repository ${repo}`}
                         src={`https://github-readme-stats.vercel.app/api/pin/?username=${owner}&repo=${repoName}&theme=${site.repositories.themeLight}&show_owner=${showOwner}&description_lines_count=${maxLines}`}
                         loading="lazy"
                         width="400"
                         height="150"
+                        onerror="this.closest('.repo-card').classList.add('has-error')"
                       />
                       <img
                         class="only-dark"
-                        alt={repo}
+                        alt={`GitHub repository ${repo}`}
                         src={`https://github-readme-stats.vercel.app/api/pin/?username=${owner}&repo=${repoName}&theme=${site.repositories.themeDark}&show_owner=${showOwner}&description_lines_count=${maxLines}`}
                         loading="lazy"
                         width="400"
                         height="150"
+                        onerror="this.closest('.repo-card').classList.add('has-error')"
                       />
                     </a>
+                    <div class="repo-card-placeholder" aria-hidden="true">
+                      <span>Repository card temporarily unavailable</span>
+                    </div>
                   </div>
                 );
               })}
@@ -177,19 +192,16 @@ const maxLines = reposData.repo_description_lines_max ?? 2;
     font-family: var(--font-sans);
   }
   .repo-grid {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
     gap: 1rem;
-    justify-content: center;
     margin-bottom: 1rem;
   }
   .repo-card {
-    max-width: 400px;
-    flex: 1 1 300px;
+    position: relative;
   }
   .repo-card--wide {
-    max-width: 100%;
-    flex: 1 1 600px;
+    grid-column: 1 / -1;
   }
   .repo-card a {
     display: block;
@@ -199,6 +211,19 @@ const maxLines = reposData.repo_description_lines_max ?? 2;
     max-width: 100%;
     height: auto;
     border-radius: 6px;
+  }
+  /* Error fallback: hide the link, show the placeholder */
+  .repo-card:not(.has-error) .repo-card-placeholder { display: none; }
+  .repo-card.has-error a { display: none; }
+  .repo-card-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed var(--global-divider-color, #ccc);
+    border-radius: 8px;
+    color: var(--global-text-color-light, #666);
+    font-size: 0.875rem;
+    min-height: 150px;
   }
   /* Dark mode visibility helpers */
   [data-theme='light'] .only-dark,

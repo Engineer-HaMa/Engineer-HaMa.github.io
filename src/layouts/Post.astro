@@ -181,9 +181,9 @@ const jsonLd = {
     zoom?.detach();
     zoom = null;
 
-    // Only images explicitly marked with data-zoomable (from <Figure zoomable />).
-    // This prevents accidentally capturing images that should not be zoomable.
-    const imgs = document.querySelectorAll<HTMLImageElement>('#post-content img[data-zoomable]');
+    // All images in post content are zoomable by default.
+    // Add class="no-zoom" (or use <Figure zoomable={false} />) to opt out.
+    const imgs = document.querySelectorAll<HTMLImageElement>('#post-content img:not(.no-zoom)');
     if (imgs.length === 0) return;
 
     zoom = mediumZoom(imgs, { background: 'rgba(0,0,0,0.7)', margin: 24 });
