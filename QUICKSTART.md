@@ -56,7 +56,7 @@ The GitHub Actions workflow runs automatically on every push to `main`.
 
 Check progress: **Actions** tab → **Deploy to GitHub Pages** → latest run.
 
-Build takes ~60–90 seconds.
+Build takes ~90–120 seconds. The first step fetches citation counts from OpenAlex — this adds a few seconds but requires no configuration.
 
 ---
 
@@ -74,6 +74,7 @@ https://YOUR-USERNAME.github.io
 
 - Replace the demo content in `src/content/` with your own
 - Add your BibTeX papers to `src/data/papers.bib`
+- Add co-author links to `src/data/coauthors.yml`
 - Replace `public/assets/img/prof_pic.jpg` with your photo
 - Update your CV in `src/data/cv.yml` or `src/data/resume.json`
 

@@ -11,11 +11,19 @@ as-folio/
 ├── src/
 │   ├── config/site.ts        ← single config file (start here)
 │   ├── content/              ← collections: posts, projects, people, teaching, books, announcements
-│   ├── data/                 ← papers.bib, cv.yml, resume.json, repositories.yml
+│   ├── data/
+│   │   ├── papers.bib        ← BibTeX bibliography
+│   │   ├── coauthors.yml     ← co-author profile links (LastName: { url, scholar, orcid })
+│   │   ├── citations.yml     ← citation counts keyed by google_scholar_id (auto-updated)
+│   │   ├── cv.yml            ← RenderCV format CV
+│   │   ├── resume.json       ← JSONResume format CV
+│   │   └── repositories.yml  ← GitHub repos config
 │   ├── layouts/              ← Base.astro, Page.astro, Post.astro, Distill.astro
 │   ├── components/           ← UI components
 │   ├── pages/                ← Astro route pages
 │   └── styles/               ← global.css, _colors.css, _typography.css
+├── scripts/
+│   └── update-citations.ts   ← fetches citation counts from OpenAlex API (run via yarn citations:update)
 ├── public/                   ← static assets (images, favicon, PDFs)
 ├── astro.config.mjs
 ├── package.json
@@ -163,17 +171,20 @@ const { pirsch } = site.analytics;
 
 ## Files you will frequently modify
 
-| File                     | Purpose                                 |
-| ------------------------ | --------------------------------------- |
-| `src/config/site.ts`     | Add feature flags, config options       |
-| `src/content.config.ts`  | Add collection fields                   |
-| `src/layouts/Post.astro` | Add per-post CDN widgets                |
-| `src/layouts/Base.astro` | Add global scripts (analytics, consent) |
-| `src/components/*.astro` | New UI components                       |
-| `src/pages/*.astro`      | New or modified pages                   |
-| `src/content/**/*.md`    | Demo content                            |
-| `src/data/papers.bib`    | BibTeX demo entries                     |
-| `CUSTOMIZE.md`           | Document new features                   |
+| File                        | Purpose                                               |
+| --------------------------- | ----------------------------------------------------- |
+| `src/config/site.ts`        | Add feature flags, config options                     |
+| `src/content.config.ts`     | Add collection fields                                 |
+| `src/layouts/Post.astro`    | Add per-post CDN widgets                              |
+| `src/layouts/Base.astro`    | Add global scripts (analytics, consent)               |
+| `src/components/*.astro`    | New UI components                                     |
+| `src/pages/*.astro`         | New or modified pages                                 |
+| `src/content/**/*.md`       | Demo content                                          |
+| `src/data/papers.bib`       | BibTeX demo entries                                   |
+| `src/data/coauthors.yml`    | Co-author links (LastName → url/scholar/orcid)        |
+| `src/data/citations.yml`    | Citation counts; auto-updated — rarely edit manually  |
+| `scripts/update-citations.ts` | Citation fetch script; edit to change API/options   |
+| `CUSTOMIZE.md`              | Document new features                                 |
 
 ---
 

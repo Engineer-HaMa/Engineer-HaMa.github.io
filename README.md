@@ -129,10 +129,14 @@ src/
 │   └── people/          ← lab member profiles (.md)
 ├── data/
 │   ├── papers.bib       ← BibTeX bibliography
+│   ├── coauthors.yml    ← co-author profile links
+│   ├── citations.yml    ← citation counts (auto-updated)
 │   ├── cv.yml           ← RenderCV format CV
 │   ├── resume.json      ← JSONResume format CV
 │   └── repositories.yml ← GitHub repos config
-└── pages/               ← Astro pages (rarely need editing)
+├── pages/               ← Astro pages (rarely need editing)
+scripts/
+└── update-citations.ts  ← fetches citation counts from OpenAlex
 ```
 
 ---
@@ -164,17 +168,33 @@ Add an entry to `src/data/papers.bib`:
 
 ```bibtex
 @article{einstein1905,
-  title   = {On the Electrodynamics of Moving Bodies},
-  author  = {Einstein, Albert},
-  journal = {Annalen der Physik},
-  year    = {1905},
-  volume  = {17},
-  pages   = {891--921},
-  selected = {true},   % shows on About page
-  abbr    = {Ann. Phys.},
-  pdf     = {https://example.com/paper.pdf},
+  title            = {On the Electrodynamics of Moving Bodies},
+  author           = {Einstein, Albert},
+  journal          = {Annalen der Physik},
+  year             = {1905},
+  volume           = {17},
+  pages            = {891--921},
+  doi              = {10.1002/andp.19053221004},
+
+  % as-folio display fields:
+  selected         = {true},           % shows on About page
+  abbr             = {Ann. Phys.},
+  abstract         = {Your abstract.},
+  pdf              = {https://example.com/paper.pdf},
+  code             = {https://github.com/you/repo},
+  slides           = {/assets/pdf/talk.pdf},
+  video            = {https://youtube.com/watch?v=...},
+  html             = {https://doi.org/...},
+
+  % citation metric badges (all optional):
+  google_scholar_id = {YOUR_PAPER_ID},  % from Scholar URL citation_for_view=...
+  altmetric        = {true},            % true = use DOI; or explicit Altmetric ID
+  dimensions       = {true},            % true = use DOI
+  inspirehep_id    = {12345},           % InspireHEP literature record ID
 }
 ```
+
+Citation counts for `google_scholar_id` entries are stored in `src/data/citations.yml` and refreshed automatically on every deploy (via the pre-build script) or on demand with `yarn citations:update`.
 
 ### Project
 

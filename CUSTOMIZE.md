@@ -11,7 +11,7 @@ This guide walks through every aspect of personalizing your as-folio site.
 3. [Social links](#3-social-links)
 4. [About page content](#4-about-page-content)
 5. [Blog posts](#5-blog-posts)
-6. [Publications (BibTeX)](#6-publications-bibtex)
+6. [Publications (BibTeX)](#6-publications-bibtex) — BibTeX fields, co-author links, citation badges
 7. [Projects](#7-projects)
 8. [CV](#8-cv)
 9. [Books](#9-books)
@@ -193,29 +193,48 @@ Enable in frontmatter:
 
 ## 6. Publications (BibTeX)
 
-Edit `src/data/papers.bib`. Standard BibTeX format with extra fields:
+Edit `src/data/papers.bib`. Standard BibTeX format with extra as-folio fields:
 
 ```bibtex
 @article{yourkey2024,
+  % ── Standard BibTeX fields ──────────────────────────────────────────────
   title    = {Your Paper Title},
   author   = {Your Name and Coauthor Name},
   journal  = {Journal of Example},
   year     = {2024},
   volume   = {42},
   pages    = {1--10},
+  doi      = {10.1000/xyz123},
 
-  % as-folio extra fields:
-  selected = {true},    % show on About page under Selected Publications
-  abbr     = {J. Ex.},  % short venue label shown as badge
-  pdf      = {https://arxiv.org/pdf/...},
-  code     = {https://github.com/you/repo},
-  slides   = {/assets/pdf/talk.pdf},
-  poster   = {/assets/pdf/poster.pdf},
-  video    = {https://www.youtube.com/watch?v=...},
-  website  = {https://project-page.example.com},
-  html     = {https://journal.example.com/article},
-  preview  = {/assets/img/paper-thumb.jpg},
-  abstract = {Your abstract text here.},
+  % ── Display / layout ────────────────────────────────────────────────────
+  selected    = {true},               % show on About page under Selected Publications
+  abbr        = {J. Ex.},             % short venue badge (e.g. NeurIPS, Nature)
+  abstract    = {Your abstract.},
+  annotation  = {Short note shown below authors as italic tooltip.},
+  additional_info = {Workshop version also presented at ICML.},
+  preview     = {paper-thumb.jpg},    % relative to publications.previewDir
+  award       = {Best Paper Award},
+  award_name  = {Best Paper},         % short badge label (defaults to award text)
+  bibtex_show = {true},               % show Bib button (copies clean BibTeX)
+
+  % ── Links ───────────────────────────────────────────────────────────────
+  html    = {https://journal.example.com/article},  % landing page
+  pdf     = {https://arxiv.org/pdf/...},            % URL or local path (relative to pdfDir)
+  arxiv   = {2400.00001},                           % arXiv ID — auto-links to arxiv.org
+  hal     = {hal-00000000},                         % HAL ID — auto-links to hal.science
+  code    = {https://github.com/you/repo},
+  slides  = {/assets/pdf/talk.pdf},
+  poster  = {/assets/pdf/poster.pdf},
+  supp    = {/assets/pdf/supplemental.pdf},
+  video   = {https://www.youtube.com/watch?v=...},
+  blog    = {https://example.com/blog-post},
+  website = {https://project-page.example.com},
+
+  % ── Citation metric badges (all optional) ───────────────────────────────
+  google_scholar_id = {PAPER_ID},   % paper-level Scholar ID (from citation_for_view= in URL)
+  altmetric         = {true},       % {true} uses DOI; or supply an explicit Altmetric ID
+  dimensions        = {true},       % {true} uses DOI
+  inspirehep_id     = {12345},      % InspireHEP literature record ID
 }
 ```
 
@@ -223,19 +242,33 @@ The publication page groups entries by year, newest first. BibTeX is parsed at b
 
 ### Author highlighting and asset paths
 
-The publication list bolds **your name** in author lists. Configure this in `site.ts`:
+The publication list italicises **your name** in author lists. Configure in `site.ts`:
 
 ```typescript
 publications: {
-  /** Last name used to bold your name in author lists.
+  /** Last name used to italicise your name in author lists.
    *  Defaults to the last word of site.author.name — usually correct without setting. */
   authorLastName: undefined,   // e.g. 'Einstein' — omit to auto-derive
+
+  /** Max authors shown before "and N more..." link. undefined = always show all. */
+  maxAuthorLimit: 3,
+
+  /** Show thumbnail images when `preview` is set in BibTeX. */
+  thumbnails: true,
 
   /** Directory prefix for thumbnail images (value of the `preview` BibTeX field). */
   previewDir: '/assets/img/publication_preview/',
 
   /** Directory prefix for local PDF files (value of the `pdf` BibTeX field). */
   pdfDir: '/assets/pdf/',
+
+  /** Enable or disable metric badge types globally. */
+  badges: {
+    altmetric: true,
+    dimensions: true,
+    googleScholar: true,
+    inspirehep: true,
+  },
 
   /** UI labels — override to translate or rename buttons. */
   labels: {
@@ -249,6 +282,43 @@ publications: {
 ```
 
 `authorLastName` auto-derives from `site.author.name`, so most users never need to set it explicitly.
+
+### Co-author links
+
+Add co-author profile links to `src/data/coauthors.yml`. Any author whose last name matches a key will get a hyperlink on the publications page:
+
+```yaml
+# src/data/coauthors.yml
+# Key is the author's last name as it appears in the BibTeX `author` field.
+Einstein:
+  url: https://en.wikipedia.org/wiki/Albert_Einstein
+  scholar: qc6CJjYAAAAJ
+  orcid: 0000-0000-0000-0000
+
+Podolsky:
+  url: https://en.wikipedia.org/wiki/Boris_Podolsky
+```
+
+Supported keys per entry: `url` (profile link), `scholar` (Google Scholar ID), `orcid`.
+
+### Citation counts
+
+Citation counts for Google Scholar badges come from `src/data/citations.yml`, keyed by the `google_scholar_id` BibTeX field:
+
+```yaml
+# src/data/citations.yml — auto-generated, do not edit by hand
+qyhmnyLat1gC: 14200   # EPR paper
+```
+
+**Refreshing counts:**
+
+```bash
+yarn citations:update
+```
+
+This calls the [OpenAlex API](https://openalex.org) (free, no auth) to fetch current counts for every paper that has both `doi` and `google_scholar_id` set. Results are written back to `citations.yml`.
+
+`citations.yml` is also refreshed automatically before every production build (`prebuild` hook) and by the weekly GitHub Actions workflow (`.github/workflows/update-citations.yml`). The workflow commits the updated file back to the repo if any counts changed.
 
 ---
 
