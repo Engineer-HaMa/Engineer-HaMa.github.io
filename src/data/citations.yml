@@ -1,10 +1,9 @@
 # Google Scholar citation counts for the publications page.
 #
-# Format:
-#   google_scholar_id: count
+# Keys are google_scholar_id values from papers.bib.
+# Counts sourced from OpenAlex (https://openalex.org) — a close approximation
+# to Google Scholar citation counts, updated within days of a new citation.
 #
-# The google_scholar_id must match the value set in the BibTeX entry.
-# Update these counts before each deploy, or run: yarn citations:update
-#
-# Demo entry for the EPR paper (einstein1935epr):
-qyhmnyLat1gC: 14200
+# Last updated: 2026-04-05
+# To refresh: yarn citations:update
+qyhmnyLat1gC: 16572
