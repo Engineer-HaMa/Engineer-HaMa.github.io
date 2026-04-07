@@ -48,6 +48,11 @@ const rt = post.body ? calcReadingTime(post.body) : 1;
 
       <!-- Main distill article -->
       <article class="distill-article min-w-0 flex-1">
+        <!-- Breadcrumb -->
+        <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+          <a href={`${site.base}/blog/`} class="breadcrumb-link">← Blog</a>
+        </nav>
+
         <!-- Distill-style header -->
         <header
           class="distill-header mb-8 border-b pb-6"
@@ -252,5 +257,33 @@ const rt = post.body ? calcReadingTime(post.body) : 1;
     border-radius: 0 6px 6px 0;
     margin: 1.5rem 0;
     font-size: 0.9rem;
+  }
+
+  /* Breadcrumb — mirrors Post.astro styling via global CSS, scoped here for the distill layout */
+  .breadcrumb-nav {
+    margin-bottom: 1rem;
+  }
+
+  .breadcrumb-link {
+    font-size: 0.875rem;
+    color: var(--global-text-color-light);
+    text-decoration: none;
+  }
+
+  .breadcrumb-link:hover {
+    color: var(--global-theme-color);
+  }
+
+  /* distillpub template.v2.js injects its own <style id="distill-prerendered-styles"> into
+     <head> which includes Prism.js rules (color:black on code[class*="language-"]) and
+     d-article aside (color:rgba(0,0,0,0.6)). Override any leaked hardcoded colours inside
+     our distill content area so text is always readable in dark mode. */
+  :global(html[data-theme='dark']) .distill-article {
+    color: var(--global-text-color);
+  }
+
+  :global(html[data-theme='dark']) .distill-content :global(code),
+  :global(html[data-theme='dark']) .distill-content :global(pre) {
+    color: inherit;
   }
 </style>

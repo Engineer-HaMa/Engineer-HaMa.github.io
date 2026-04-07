@@ -1183,6 +1183,45 @@ html[data-theme='dark'] .astro-code span {
   text-decoration: var(--shiki-dark-text-decoration) !important;
 }
 
+/* ─── diff2html dark mode ────────────────────────────────────────────────── */
+/* diff2html defines --d2h-dark-* variables and applies them via              */
+/* prefers-color-scheme: dark. We use [data-theme='dark'] instead, so        */
+/* remap the base variables here to match our theme toggle.                  */
+
+html[data-theme='dark'] {
+  --d2h-bg-color: var(--d2h-dark-bg-color, #0d1117);
+  --d2h-border-color: var(--d2h-dark-border-color, #30363d);
+  --d2h-dim-color: var(--d2h-dark-dim-color, #6e7681);
+  --d2h-line-border-color: var(--d2h-dark-line-border-color, #21262d);
+  --d2h-file-header-bg-color: var(--d2h-dark-file-header-bg-color, #161b22);
+  --d2h-file-header-border-color: var(--d2h-dark-file-header-border-color, #30363d);
+  --d2h-empty-placeholder-bg-color: var(--d2h-dark-empty-placeholder-bg-color, hsla(215,8%,47%,.1));
+  --d2h-empty-placeholder-border-color: var(--d2h-dark-empty-placeholder-border-color, #30363d);
+  --d2h-selected-color: var(--d2h-dark-selected-color, rgba(56,139,253,.1));
+  --d2h-ins-bg-color: var(--d2h-dark-ins-bg-color, rgba(46,160,67,.15));
+  --d2h-ins-border-color: var(--d2h-dark-ins-border-color, rgba(46,160,67,.4));
+  --d2h-ins-highlight-bg-color: var(--d2h-dark-ins-highlight-bg-color, rgba(46,160,67,.4));
+  --d2h-ins-label-color: var(--d2h-dark-ins-label-color, #3fb950);
+  --d2h-del-bg-color: var(--d2h-dark-del-bg-color, rgba(248,81,73,.1));
+  --d2h-del-border-color: var(--d2h-dark-del-border-color, rgba(248,81,73,.4));
+  --d2h-del-highlight-bg-color: var(--d2h-dark-del-highlight-bg-color, rgba(248,81,73,.4));
+  --d2h-del-label-color: var(--d2h-dark-del-label-color, #f85149);
+  --d2h-change-del-color: var(--d2h-dark-change-del-color, rgba(210,153,34,.2));
+  --d2h-change-ins-color: var(--d2h-dark-change-ins-color, rgba(46,160,67,.25));
+  --d2h-info-bg-color: var(--d2h-dark-info-bg-color, rgba(56,139,253,.1));
+  --d2h-info-border-color: var(--d2h-dark-info-border-color, rgba(56,139,253,.4));
+  --d2h-change-label-color: var(--d2h-dark-change-label-color, #d29922);
+  --d2h-moved-label-color: var(--d2h-dark-moved-label-color, #3572b0);
+  --d2h-color: var(--d2h-dark-color, #e6edf3);
+}
+
+html[data-theme='dark'] .d2h-wrapper {
+  color: var(--d2h-color, #e6edf3);
+}
+html[data-theme='dark'] .d2h-file-wrapper {
+  background-color: var(--d2h-bg-color);
+}
+
 /* ─── Sticky footer: add body padding so content isn't hidden behind it ───── */
 
 body[data-footer-position='sticky'] {

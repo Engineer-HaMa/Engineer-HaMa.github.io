@@ -85,6 +85,52 @@ const jsonLd = {
         ],
       })}
     />
+
+    {vega && (
+      <>
+        {/* Preconnect to CDN to start TCP/TLS handshake early — reduces first-load
+            latency for the three vega scripts (~1.6 MB total). */}
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+        {/* is:inline prevents Astro from bundling external URLs as `import"url"`.
+            defer in <head> gives spec-guaranteed execution order: vega → vega-lite →
+            vega-embed. vega-embed reads window.vega and window.vegaLite synchronously
+            at execution time, so strict ordering is required. Scripts placed after
+            </html> are in the browser's error-recovery zone where defer order is NOT
+            guaranteed — that's why these must live in <head>. */}
+        <script is:inline
+          src="https://cdn.jsdelivr.net/npm/vega@5"
+          integrity="sha384-NMXhl2TbCXxcN7o4ROC56Funm78m4AylL8gMg/7Kn4YU+wrm23K9l7cY8lDRXQ9d"
+          crossorigin="anonymous"
+          defer></script>
+        <script is:inline
+          src="https://cdn.jsdelivr.net/npm/vega-lite@5"
+          integrity="sha384-D9LYH0esGjcxQJsBuxOuXtCDJGXRWW1+KhluzWPqi0rLJmiR/ygPChefaD+rFFDQ"
+          crossorigin="anonymous"
+          defer></script>
+        <script is:inline
+          src="https://cdn.jsdelivr.net/npm/vega-embed@6"
+          integrity="sha384-M+Ax7e/WFJpxSOF09HzI+Sj4wg9ottVd/uxmV2ItGGh02fLH28t2FAOJx3TJBap5"
+          crossorigin="anonymous"
+          defer></script>
+      </>
+    )}
+
+    {tikzjax && (
+      <>
+        {/* Preconnect to tikzjax.com to start TCP/TLS handshake before the large
+            tikzjax.js bundle (~several hundred KB) and WASM (~2 MB) download. */}
+        <link rel="preconnect" href="https://tikzjax.com" crossorigin />
+        {/* tikzjax.js is a synchronous IIFE (webpack bundle) with no DOMContentLoaded
+            or readyState logic — it scans for <script type="text/tikz"> elements
+            immediately when it executes. It MUST run with defer so that the full document
+            (including the body tikz elements) is already in the DOM at execution time.
+            Without defer the script runs in <head> before the body is parsed and finds
+            no tikz elements. The astro:after-swap handler below re-injects it for
+            View Transitions navigations where the head script does not re-execute. */}
+        <link rel="stylesheet" href="https://tikzjax.com/v1/fonts.css" />
+        <script is:inline src="https://tikzjax.com/v1/tikzjax.js" defer></script>
+      </>
+    )}
   </Fragment>
   {site.features.progressBar && <ReadingProgress />}
 
@@ -217,27 +263,44 @@ const jsonLd = {
     });
   }
 
-  // astro:page-load fires on both hard loads and View Transitions soft navigations.
-  // Using only this event avoids the timing race where astro:after-swap fires
-  // before this module has been evaluated on the first soft navigation to a post.
+  // Call immediately: the module is implicitly deferred so the DOM is ready, and this
+  // handles the case where astro:page-load (fired from window.load in ClientRouter) fires
+  // before this module script has been evaluated on an uncached first visit.
+  initZoom();
+  // Re-run on View Transitions (astro:page-load fires after each swap).
   document.addEventListener('astro:page-load', initZoom);
 </script>
 
 <!-- ── Per-post CDN widgets ──────────────────────────────────────────────── -->
 
 {mermaid && (
-  <script type="module">
-    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
-    mermaid.initialize({ startOnLoad: true, theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default' });
-    document.querySelectorAll('pre.language-mermaid code, code.language-mermaid').forEach((el) => {
-      const pre = el.closest('pre') ?? el;
-      const div = document.createElement('div');
-      div.className = 'mermaid';
-      div.textContent = el.textContent ?? '';
-      pre.replaceWith(div);
-    });
-    mermaid.run();
-  </script>
+  <>
+    {/* is:inline + dynamic import — see PhotoSwipe for why <script type="module">{...} doesn't work.
+        Astro renders mermaid code fences as <pre data-language="mermaid">, NOT pre.language-mermaid.
+        On each page-load (hard or View Transitions), destroy any previous instance and re-render. */}
+    <script is:inline>
+      document.addEventListener('astro:page-load', function () {
+        import('https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs')
+          .then(function (mod) {
+            var mermaid = mod.default;
+            var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            mermaid.initialize({ startOnLoad: false, theme: isDark ? 'dark' : 'default' });
+
+            // Astro/Shiki renders ```mermaid fences as <pre data-language="mermaid">
+            document.querySelectorAll('pre[data-language="mermaid"]').forEach(function (pre) {
+              var code = pre.querySelector('code');
+              if (!code) return;
+              var div = document.createElement('div');
+              div.className = 'mermaid';
+              div.textContent = code.textContent || '';
+              pre.replaceWith(div);
+            });
+
+            mermaid.run();
+          });
+      });
+    </script>
+  </>
 )}
 
 {chart_js && (
@@ -256,25 +319,7 @@ const jsonLd = {
     defer></script>
 )}
 
-{vega && (
-  <>
-    <script
-      src="https://cdn.jsdelivr.net/npm/vega@5"
-      integrity="sha384-NMXhl2TbCXxcN7o4ROC56Funm78m4AylL8gMg/7Kn4YU+wrm23K9l7cY8lDRXQ9d"
-      crossorigin="anonymous"
-      defer></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/vega-lite@5"
-      integrity="sha384-D9LYH0esGjcxQJsBuxOuXtCDJGXRWW1+KhluzWPqi0rLJmiR/ygPChefaD+rFFDQ"
-      crossorigin="anonymous"
-      defer></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/vega-embed@6"
-      integrity="sha384-M+Ax7e/WFJpxSOF09HzI+Sj4wg9ottVd/uxmV2ItGGh02fLH28t2FAOJx3TJBap5"
-      crossorigin="anonymous"
-      defer></script>
-  </>
-)}
+{/* vega CDN scripts moved to <Fragment slot="head"> above */}
 
 {plotly && (
   <script
@@ -286,28 +331,48 @@ const jsonLd = {
 
 {pseudocode && (
   <>
+    {/* CSS from CDN */}
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/pseudocode@2.4.1/build/pseudocode.min.css"
       integrity="sha384-ff9LEHNvuDqxJT/JRjAeQ1cWTWambRLe5j49SnOzhaotb23KEQkCanV+ooL+ch4k"
       crossorigin="anonymous"
     />
-    <script
+    {/* Use the CDN build (pseudocode.min.js), loaded synchronously so window.pseudocode is
+        set before our deferred module script calls renderElement. The Renderer is created
+        lazily inside renderElement(), so katex does NOT need to be available at script
+        load time — only at renderElement() call time.
+
+        The npm browserify bundle has an unfixable issue in Vite's ESM output: the internal
+        `katex = require('katex')` assignment to an undeclared free variable throws
+        ReferenceError in strict mode. Even setting window.katex doesn't reliably fix it
+        because Vite's module scope isolation can prevent free-variable global lookup. The
+        CDN build bypasses this entirely: it runs in a normal browser context and reads
+        window.katex as a global at Renderer construction time. */}
+    <script is:inline
       src="https://cdn.jsdelivr.net/npm/pseudocode@2.4.1/build/pseudocode.min.js"
       integrity="sha384-i3+YbLfC66kxqBVtgH6I+lEFAr+57mVZY/MSthCK/oTPo0rWCRzW/kSg2mJnTKLs"
       crossorigin="anonymous"
-      defer></script>
-    {/* Re-render on page load (handles both hard load and View Transitions).
-        Polls until pseudocode.js is available, then renders all pre.pseudocode elements. */}
-    <script is:inline>
-      document.addEventListener('astro:page-load', function () {
-        (function poll() {
-          if (typeof pseudocode === 'undefined') { setTimeout(poll, 50); return; }
-          document.querySelectorAll('pre.pseudocode').forEach(function (el) {
-            try { pseudocode.renderElement(el); } catch (_) {}
-          });
-        })();
-      });
+    ></script>
+    {/* Module script: import katex (bundled by Vite) and expose as window.katex so the
+        CDN pseudocode.min.js Renderer can detect it via `typeof katex`. Then render all
+        pre.pseudocode elements. Re-runs on every astro:page-load for View Transitions.
+        data-psc-done prevents double-rendering on the initial hard load. */}
+    <script>
+      import katex from 'katex';
+
+      (window as Window & { katex: typeof katex }).katex = katex;
+
+      function runPseudocode() {
+        const lib = (window as Window & { pseudocode?: { renderElement(el: HTMLElement): void } }).pseudocode;
+        if (!lib) return;
+        document.querySelectorAll<HTMLElement>('pre.pseudocode:not([data-psc-done])').forEach((el) => {
+          el.setAttribute('data-psc-done', '1');
+          try { lib.renderElement(el); } catch { el.style.display = ''; }
+        });
+      }
+      runPseudocode();
+      document.addEventListener('astro:page-load', runPseudocode);
     </script>
   </>
 )}
@@ -318,20 +383,17 @@ const jsonLd = {
 
 {tikzjax && (
   <>
-    {/* tikzjax uses unversioned URLs — SRI cannot be pinned; self-host if supply-chain integrity is critical */}
-    <link rel="stylesheet" href="https://tikzjax.com/v1/fonts.css" />
-    <script src="https://tikzjax.com/v1/tikzjax.js"></script>
-    {/* On View Transitions, DOMContentLoaded doesn't re-fire. Clone unprocessed tikz script
-        elements so TikZJax (which uses readyState check on execution) can process them. */}
+    {/* tikzjax fonts + main script are in <Fragment slot="head"> for guaranteed defer ordering
+        on initial hard load. This listener handles View Transitions: astro:after-swap fires only
+        during VT, after the new body is in the DOM. Re-injecting tikzjax.js causes it to re-scan
+        for <script type="text/tikz"> elements. Do NOT use astro:page-load here — it can fire
+        while the WASM pipeline is still running, setting parentNode=null → silent failure. */}
     <script is:inline>
-      document.addEventListener('astro:page-load', function () {
-        document.querySelectorAll('script[type="text/tikz"]:not([data-tikz-done])').forEach(function (el) {
-          var clone = document.createElement('script');
-          clone.type = 'text/tikz';
-          clone.textContent = el.textContent;
-          clone.setAttribute('data-tikz-done', 'true');
-          el.replaceWith(clone);
-        });
+      document.addEventListener('astro:after-swap', function () {
+        if (!document.querySelector('script[type="text/tikz"]')) return;
+        var s = document.createElement('script');
+        s.src = 'https://tikzjax.com/v1/tikzjax.js';
+        document.head.appendChild(s);
       });
     </script>
   </>
@@ -439,7 +501,42 @@ const jsonLd = {
   </>
 )}
 
-<style>
+<style is:global>
+  /* TikZJax processes <script type="text/tikz"> elements asynchronously (WASM).
+     Show a subtle "Loading diagram…" placeholder while the WASM pipeline runs.
+     Once tikzjax replaces the element with an <svg>, this rule no longer applies. */
+  #post-content script[type="text/tikz"] {
+    display: block;
+    min-height: 3rem;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--global-card-bg-color, #f5f5f5) 0,
+      var(--global-card-bg-color, #f5f5f5) 40%,
+      color-mix(in srgb, var(--global-card-bg-color, #f5f5f5) 60%, transparent) 50%,
+      var(--global-card-bg-color, #f5f5f5) 60%,
+      var(--global-card-bg-color, #f5f5f5) 100%
+    );
+    background-size: 200% 100%;
+    animation: tikz-shimmer 1.6s infinite;
+    border-radius: 4px;
+  }
+  @keyframes tikz-shimmer {
+    0%   { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+  }
+
+  /* vega-embed injects .vega-embed { display: inline-block } into the page, which
+     changes the chart container from block (full width) to inline-block (content-sized).
+     Before the chart content renders, the container has 0 width, so charts using
+     "width": "container" measure 0 and render invisible. Override to block so the
+     container keeps its natural 100% width when vegaEmbed() measures it. */
+  #post-content .vega-embed {
+    display: block;
+    width: 100%;
+  }
+
+  /* Copy button is dynamically injected via JS — scoped CSS won't reach it.
+     Use :global so the class name isn't mangled with a data-astro-cid attribute. */
   .copy-btn {
     position: absolute;
     top: 0.5rem;

@@ -3364,6 +3364,7 @@ __metadata:
     prettier: "npm:^3.5.3"
     prettier-plugin-astro: "npm:^0.14.1"
     prettier-plugin-tailwindcss: "npm:^0.7.2"
+    pseudocode: "npm:^2.4.1"
     react: "npm:^19.1.0"
     react-dom: "npm:^19.1.0"
     rehype-external-links: "npm:^3.0.0"
@@ -6651,6 +6652,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"katex@npm:^0.16.7":
+  version: 0.16.45
+  resolution: "katex@npm:0.16.45"
+  dependencies:
+    commander: "npm:^8.3.0"
+  bin:
+    katex: cli.js
+  checksum: 10c0/f715eb9a73daff68ac14dcc8c2f47f02f5fc756a74077d22479e64e06872b2b44f0d81f1c91a98a9873722a08841388a869a0b9ddb96b224362eb8054ddf533a
+  languageName: node
+  linkType: hard
+
 "keyv@npm:^4.5.4":
   version: 4.5.4
   resolution: "keyv@npm:4.5.4"
@@ -7101,6 +7113,13 @@ __metadata:
   version: 1.1.0
   resolution: "math-intrinsics@npm:1.1.0"
   checksum: 10c0/7579ff94e899e2f76ab64491d76cf606274c874d8f2af4a442c016bd85688927fcfca157ba6bf74b08e9439dc010b248ce05b96cc7c126a354c3bae7fcb48b7f
+  languageName: node
+  linkType: hard
+
+"mathjax@npm:^3.2.2":
+  version: 3.2.2
+  resolution: "mathjax@npm:3.2.2"
+  checksum: 10c0/26c8557f948d1ef76ce2b0bc1ad66128c9a78a7e4f3d96587f90b23dd25cfbf14c9b58a1c75a7d8d35f92b72bab054eab61873443babe646b7bfd6b40bb717e6
   languageName: node
   linkType: hard
 
@@ -8766,6 +8785,19 @@ __metadata:
   version: 7.1.0
   resolution: "property-information@npm:7.1.0"
   checksum: 10c0/e0fe22cff26103260ad0e82959229106563fa115a54c4d6c183f49d88054e489cc9f23452d3ad584179dc13a8b7b37411a5df873746b5e4086c865874bfa968e
+  languageName: node
+  linkType: hard
+
+"pseudocode@npm:^2.4.1":
+  version: 2.4.1
+  resolution: "pseudocode@npm:2.4.1"
+  dependencies:
+    katex: "npm:^0.16.7"
+    mathjax: "npm:^3.2.2"
+  dependenciesMeta:
+    mathjax:
+      optional: true
+  checksum: 10c0/13b28581001155d2a4d2c3173985dc0dab7faf53964cb5a81a4a954fb1ff84632b77591e813e78323451001c91afc2e7b456482f47d56ff742474294b489b87c
   languageName: node
   linkType: hard
 
