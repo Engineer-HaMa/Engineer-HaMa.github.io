@@ -45,7 +45,7 @@ const isExternal = !!project.data.redirect;
         project.data.github && (
           <div class="row-icons">
             <div class="github-icon">
-              <div class="icon" title="Code Repository">
+              <div class="icon" title="Code Repository" data-tooltip="Code Repository">
                 <a
                   href={`https://github.com/${project.data.github}`}
                   target="_blank"
@@ -64,7 +64,7 @@ const isExternal = !!project.data.redirect;
                 </a>
               </div>
               {project.data.github_stars && (
-                <span class="stars" title="GitHub Stars">
+                <span class="stars" title="GitHub Stars" data-tooltip="GitHub Stars">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 16 16"

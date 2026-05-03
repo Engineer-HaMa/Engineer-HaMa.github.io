@@ -240,7 +240,8 @@ export const site = {
     masonry: true,
     /** Enable click-to-zoom on images (medium-zoom). */
     mediumZoom: true,
-    /** Enable tooltip links for section headings. */
+    /** Show styled CSS tooltips on hover for project card icons and publication annotations.
+     *  When false, the browser's native title-attribute tooltip is used instead. */
     tooltips: false,
     /** Enable GDPR-compliant cookie consent dialog. */
     cookieConsent: false,

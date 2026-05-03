@@ -1279,6 +1279,62 @@ body[data-footer-position='sticky'] #back-to-top {
   border-radius: 2px;
 }
 
+/* ─── Tooltips (features.tooltips: true) ────────────────────────────────── */
+/* CSS-only; activated by body[data-tooltips]. No JS, no external deps.
+   Uses content: attr(data-tooltip) — plain text only, XSS-safe. */
+
+body[data-tooltips] [data-tooltip] {
+  position: relative;
+}
+
+/* Tooltip bubble */
+body[data-tooltips] [data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 7px);
+  left: 50%;
+  transform: translateX(-50%) scale(0.9);
+  background: var(--global-text-color);
+  color: var(--global-bg-color);
+  padding: 0.25rem 0.55rem;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-family: var(--font-sans);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+  z-index: 9999;
+}
+
+/* Arrow */
+body[data-tooltips] [data-tooltip]::before {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 3px);
+  left: 50%;
+  transform: translateX(-50%);
+  border: 4px solid transparent;
+  border-top-color: var(--global-text-color);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 9999;
+}
+
+body[data-tooltips] [data-tooltip]:hover::after,
+body[data-tooltips] [data-tooltip]:focus-within::after {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+body[data-tooltips] [data-tooltip]:hover::before,
+body[data-tooltips] [data-tooltip]:focus-within::before {
+  opacity: 1;
+}
+
 /* ─── Print styles ───────────────────────────────────────────────────────── */
 
 @media print {

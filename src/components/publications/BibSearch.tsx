@@ -211,6 +211,7 @@ function PublicationEntry({
                 <span
                   title={annotation}
                   aria-label={annotation}
+                  data-tooltip={annotation}
                   style={{ cursor: 'help', marginLeft: '0.3rem', opacity: 0.65, fontSize: '0.9em' }}
                 >
                   ⓘ
