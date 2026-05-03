@@ -213,8 +213,12 @@ const maxLines = reposData.repo_description_lines_max ?? 2;
     border-radius: 6px;
   }
   /* Error fallback: hide the link, show the placeholder */
-  .repo-card:not(.has-error) .repo-card-placeholder { display: none; }
-  .repo-card.has-error a { display: none; }
+  .repo-card:not(.has-error) .repo-card-placeholder {
+    display: none;
+  }
+  .repo-card.has-error a {
+    display: none;
+  }
   .repo-card-placeholder {
     display: flex;
     align-items: center;

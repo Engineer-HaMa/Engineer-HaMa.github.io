@@ -199,7 +199,9 @@ const relatedEntries =
       const original = event.target as HTMLElement;
       let resolved = false;
 
-      const markResolved = () => { resolved = true; };
+      const markResolved = () => {
+        resolved = true;
+      };
       original.addEventListener('medium-zoom:opened', markResolved, { once: true });
 
       setTimeout(() => {

@@ -1,9 +1,16 @@
 import { useMemo, useState } from 'react';
 
-import type { BibEntry } from '../../utils/bibtex';
-import { getAuthors, getBoolField, getCleanBibtex, getTitle, getVenue, getYear } from '../../utils/bibtex';
 import type { CoauthorMap } from '../../utils/authors';
 import { linkAuthors } from '../../utils/authors';
+import type { BibEntry } from '../../utils/bibtex';
+import {
+  getAuthors,
+  getBoolField,
+  getCleanBibtex,
+  getTitle,
+  getVenue,
+  getYear,
+} from '../../utils/bibtex';
 import { BadgeSet } from './BadgeSet';
 import { GoogleScholarBadge } from './GoogleScholarBadge';
 import { InspireHEPBadge } from './InspireHEPBadge';
@@ -130,12 +137,10 @@ function PublicationEntry({
   // Author links with coauthor URL and self-identification
   const authorLinks = useMemo(
     () => linkAuthors(authorList, coauthors, authorLastName),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     [authorsRaw, authorLastName],
   );
-  const visibleAuthorLinks = maxAuthorLimit
-    ? authorLinks.slice(0, maxAuthorLimit)
-    : authorLinks;
+  const visibleAuthorLinks = maxAuthorLimit ? authorLinks.slice(0, maxAuthorLimit) : authorLinks;
   const hiddenCount = authorLinks.length - visibleAuthorLinks.length;
 
   const contentColClass = showThumbnails && (abbr || preview) ? 'col-sm-8' : 'col-sm-10';
@@ -226,9 +231,7 @@ function PublicationEntry({
               {venue && <em>{venue}</em>}
               {venue && year ? ', ' : ''}
               {year || ''}
-              {additionalInfo && (
-                <span style={{ marginLeft: '0.25rem' }}> · {additionalInfo}</span>
-              )}
+              {additionalInfo && <span style={{ marginLeft: '0.25rem' }}> · {additionalInfo}</span>}
             </div>
           )}
 
@@ -390,7 +393,15 @@ function PublicationEntry({
 
           {/* Metric badges row */}
           {hasBadges && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.4rem' }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                flexWrap: 'wrap',
+                marginTop: '0.4rem',
+              }}
+            >
               <BadgeSet
                 doi={doi || undefined}
                 arxiv={arxiv || undefined}

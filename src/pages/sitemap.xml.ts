@@ -12,10 +12,11 @@
  * Replaces @astrojs/sitemap which cannot access content-layer dates.
  */
 
-import type { APIContext } from 'astro';
 import { spawnSync } from 'node:child_process';
-import { getCollection } from 'astro:content';
+
 import { site } from '@config/site';
+import type { APIContext } from 'astro';
+import { getCollection } from 'astro:content';
 
 const siteUrl = site.url.replace(/\/$/, '');
 const base = (site.base ?? '').replace(/\/$/, '');

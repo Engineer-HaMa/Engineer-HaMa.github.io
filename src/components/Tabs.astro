@@ -50,28 +50,32 @@ const { tabs, id = 'tabs-' + Math.random().toString(36).slice(2, 7) } = Astro.pr
        the maximum tab count is a build-time constant that cannot come from site config or
        any runtime value. 10 covers all practical use cases; add more slot entries here if
        you ever need more than 10 tabs. -->
-  {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].filter((i) => i < tabs.length).map((i) => (
-    <div
-      class="as-tab-panel"
-      role="tabpanel"
-      id={`${id}-panel-${i}`}
-      aria-labelledby={`${id}-tab-${i}`}
-      data-tab={i}
-      data-tabs-group={id}
-      hidden={i !== 0}
-    >
-      {i === 0 && <slot name="tab-0" />}
-      {i === 1 && <slot name="tab-1" />}
-      {i === 2 && <slot name="tab-2" />}
-      {i === 3 && <slot name="tab-3" />}
-      {i === 4 && <slot name="tab-4" />}
-      {i === 5 && <slot name="tab-5" />}
-      {i === 6 && <slot name="tab-6" />}
-      {i === 7 && <slot name="tab-7" />}
-      {i === 8 && <slot name="tab-8" />}
-      {i === 9 && <slot name="tab-9" />}
-    </div>
-  ))}
+  {
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+      .filter((i) => i < tabs.length)
+      .map((i) => (
+        <div
+          class="as-tab-panel"
+          role="tabpanel"
+          id={`${id}-panel-${i}`}
+          aria-labelledby={`${id}-tab-${i}`}
+          data-tab={i}
+          data-tabs-group={id}
+          hidden={i !== 0}
+        >
+          {i === 0 && <slot name="tab-0" />}
+          {i === 1 && <slot name="tab-1" />}
+          {i === 2 && <slot name="tab-2" />}
+          {i === 3 && <slot name="tab-3" />}
+          {i === 4 && <slot name="tab-4" />}
+          {i === 5 && <slot name="tab-5" />}
+          {i === 6 && <slot name="tab-6" />}
+          {i === 7 && <slot name="tab-7" />}
+          {i === 8 && <slot name="tab-8" />}
+          {i === 9 && <slot name="tab-9" />}
+        </div>
+      ))
+  }
 </div>
 
 <script>

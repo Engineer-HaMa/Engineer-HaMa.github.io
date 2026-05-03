@@ -7,12 +7,13 @@
  *   /og/project/<slug>.png   (linked from [slug].astro og:image)
  */
 
-import type { APIContext, GetStaticPathsResult } from 'astro';
-import { Resvg } from '@resvg/resvg-js';
-import { site } from '@config/site';
-import { getCollection } from 'astro:content';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+
+import { site } from '@config/site';
+import { Resvg } from '@resvg/resvg-js';
+import type { APIContext, GetStaticPathsResult } from 'astro';
+import { getCollection } from 'astro:content';
 import React from 'react';
 import satori from 'satori';
 
@@ -22,8 +23,18 @@ const fontRegular = readFileSync(resolve(fontRoot, 'roboto-latin-400-normal.woff
 const fontBold = readFileSync(resolve(fontRoot, 'roboto-latin-700-normal.woff'));
 
 const FONTS = [
-  { name: 'Roboto', data: fontRegular.buffer as ArrayBuffer, weight: 400 as const, style: 'normal' as const },
-  { name: 'Roboto', data: fontBold.buffer as ArrayBuffer, weight: 700 as const, style: 'normal' as const },
+  {
+    name: 'Roboto',
+    data: fontRegular.buffer as ArrayBuffer,
+    weight: 400 as const,
+    style: 'normal' as const,
+  },
+  {
+    name: 'Roboto',
+    data: fontBold.buffer as ArrayBuffer,
+    weight: 700 as const,
+    style: 'normal' as const,
+  },
 ];
 
 const W = 1200;

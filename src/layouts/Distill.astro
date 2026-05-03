@@ -101,7 +101,8 @@ const rt = post.body ? calcReadingTime(post.body) : 1;
 
   <!-- Load distillpub scripts at end of body so custom elements upgrade -->
   <script is:inline src={`${import.meta.env.BASE_URL}assets/js/distillpub/template.v2.js`}></script>
-  <script is:inline src={`${import.meta.env.BASE_URL}assets/js/distillpub/transforms.v2.js`}></script>
+  <script is:inline src={`${import.meta.env.BASE_URL}assets/js/distillpub/transforms.v2.js`}
+  ></script>
   <script is:inline src={`${import.meta.env.BASE_URL}assets/js/distillpub/overrides.js`}></script>
 </Base>
 

@@ -33,7 +33,10 @@ export function BadgeSet({ doi, arxiv, altmetricId, showAltmetric, showDimension
   if (!showAltmetric && !showDimensions) return null;
 
   return (
-    <div className="badges" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+    <div
+      className="badges"
+      style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}
+    >
       {showAltmetric && hasAltmetricSource && (
         <>
           {altmetricId ? (

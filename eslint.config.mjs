@@ -87,6 +87,17 @@ export default tseslint.config(
     },
   },
 
+  // Root-level JS/MJS config files (Astro, Prettier, etc.) — Node.js environment
+  {
+    files: ['*.config.mjs', '*.config.js'],
+    languageOptions: {
+      globals: { process: 'readonly' },
+    },
+    rules: {
+      'no-undef': 'off',
+    },
+  },
+
   // Astro files
   {
     files: ['**/*.astro'],
@@ -105,10 +116,15 @@ export default tseslint.config(
   },
 
   // Files that Prettier's Astro plugin cannot parse (inline scripts with object literals,
-  // HTML entities in JSX attributes) — disable the prettier/prettier rule for them only.
+  // HTML entities in JSX attributes, adjacent JSX in ternaries) — disable prettier rule only.
   // This override must come AFTER the Astro files block to take precedence.
   {
-    files: ['src/layouts/Base.astro', 'src/layouts/Post.astro', 'src/pages/cv.astro'],
+    files: [
+      'src/layouts/Base.astro',
+      'src/layouts/Post.astro',
+      'src/pages/cv.astro',
+      'src/components/Giscus.astro',
+    ],
     rules: { 'prettier/prettier': 'off' },
   },
 );

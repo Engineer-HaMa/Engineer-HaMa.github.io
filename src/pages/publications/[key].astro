@@ -1,17 +1,23 @@
 ---
-import yaml from 'js-yaml';
-
 import { InspireHEPBadge } from '@components/publications/InspireHEPBadge.tsx';
 import { site } from '@config/site';
 import Page from '@layouts/Page.astro';
 import type { CoauthorMap } from '@utils/authors';
 import { linkAuthors } from '@utils/authors';
-import { getAuthors, getCleanBibtex, getTitle, getVenue, getYear, parseBibtex } from '@utils/bibtex';
 import { withBase } from '@utils/base';
+import {
+  getAuthors,
+  getCleanBibtex,
+  getTitle,
+  getVenue,
+  getYear,
+  parseBibtex,
+} from '@utils/bibtex';
+import yaml from 'js-yaml';
 
-import bibRaw from '../../data/papers.bib?raw';
-import coauthorsRaw from '../../data/coauthors.yml?raw';
 import citationsRaw from '../../data/citations.yml?raw';
+import coauthorsRaw from '../../data/coauthors.yml?raw';
+import bibRaw from '../../data/papers.bib?raw';
 
 export async function getStaticPaths() {
   const entries = parseBibtex(bibRaw);
@@ -58,23 +64,11 @@ const pdfHref = pdfPath
     : `${pdfDir}${pdfPath}`
   : undefined;
 
-const suppHref = supp
-  ? supp.startsWith('http')
-    ? supp
-    : `${pdfDir}${supp}`
-  : undefined;
+const suppHref = supp ? (supp.startsWith('http') ? supp : `${pdfDir}${supp}`) : undefined;
 
-const slidesHref = slides
-  ? slides.startsWith('http')
-    ? slides
-    : `${pdfDir}${slides}`
-  : undefined;
+const slidesHref = slides ? (slides.startsWith('http') ? slides : `${pdfDir}${slides}`) : undefined;
 
-const posterHref = poster
-  ? poster.startsWith('http')
-    ? poster
-    : `${pdfDir}${poster}`
-  : undefined;
+const posterHref = poster ? (poster.startsWith('http') ? poster : `${pdfDir}${poster}`) : undefined;
 
 // Load co-author links
 const coauthors = (yaml.load(coauthorsRaw) ?? {}) as CoauthorMap;
@@ -84,12 +78,16 @@ const authorLinks = linkAuthors(authorsRaw.split(', '), coauthors, authorLastNam
 // Google Scholar badge — two variants for light/dark theme
 const citations = (yaml.load(citationsRaw) ?? {}) as Record<string, number>;
 const scholarCount = googleScholarId ? citations[googleScholarId] : undefined;
-const scholarLabel = scholarCount !== undefined
-  ? scholarCount >= 1000 ? `${Math.round(scholarCount / 100) / 10}K` : String(scholarCount)
-  : 'cite';
-const scholarProfileUrl = googleScholarId && scholarUserId
-  ? `https://scholar.google.com/citations?view_op=view_citation&hl=en&user=${scholarUserId}&citation_for_view=${scholarUserId}:${googleScholarId}`
-  : undefined;
+const scholarLabel =
+  scholarCount !== undefined
+    ? scholarCount >= 1000
+      ? `${Math.round(scholarCount / 100) / 10}K`
+      : String(scholarCount)
+    : 'cite';
+const scholarProfileUrl =
+  googleScholarId && scholarUserId
+    ? `https://scholar.google.com/citations?view_op=view_citation&hl=en&user=${scholarUserId}&citation_for_view=${scholarUserId}:${googleScholarId}`
+    : undefined;
 const scholarBadgeLight = scholarProfileUrl
   ? `https://img.shields.io/badge/scholar-${encodeURIComponent(scholarLabel)}-4285F4?logo=googlescholar&labelColor=f6f8fa&style=flat`
   : undefined;
@@ -106,7 +104,11 @@ const showAltmetric = !!(
   (altmetricExplicitId || doi || arxiv)
 );
 const showDimensions = !!(site.publications.badges.dimensions && dimensionsField && doi);
-const showGoogleScholar = !!(site.publications.badges.googleScholar && googleScholarId && scholarUserId);
+const showGoogleScholar = !!(
+  site.publications.badges.googleScholar &&
+  googleScholarId &&
+  scholarUserId
+);
 const showInspireHEP = !!(site.publications.badges.inspirehep && inspirehepId);
 const hasBadges = showAltmetric || showDimensions || showGoogleScholar || showInspireHEP;
 
@@ -159,7 +161,11 @@ const breadcrumbLd = {
       )
     }
     <!-- Badge scripts (loaded only when at least one badge is enabled for this entry) -->
-    {showAltmetric && <script is:inline src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js" />}
+    {
+      showAltmetric && (
+        <script is:inline src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js" />
+      )
+    }
     {showDimensions && <script is:inline async src="https://badge.dimensions.ai/badge.js" />}
   </Fragment>
 
@@ -173,174 +179,234 @@ const breadcrumbLd = {
 
       <!-- Authors with co-author links and self-identification -->
       <p class="pub-authors">
-        {authorLinks.map((al, i) => (
-          <>
-            {al.url ? (
-              <a href={al.url} target="_blank" rel="noopener noreferrer">
-                {al.isSelf ? <em>{al.name}</em> : al.name}
-              </a>
-            ) : al.isSelf ? (
-              <em>{al.name}</em>
-            ) : (
-              al.name
-            )}
-            {i < authorLinks.length - 1 && ', '}
-          </>
-        ))}
-        {(venue || yearStr) && (
-          <em>
-            {' '}
-            &middot; {venue}
-            {venue && yearStr ? ', ' : ''}
-            {yearStr}
-          </em>
-        )}
+        {
+          authorLinks.map((al, i) => (
+            <>
+              {al.url ? (
+                <a href={al.url} target="_blank" rel="noopener noreferrer">
+                  {al.isSelf ? <em>{al.name}</em> : al.name}
+                </a>
+              ) : al.isSelf ? (
+                <em>{al.name}</em>
+              ) : (
+                al.name
+              )}
+              {i < authorLinks.length - 1 && ', '}
+            </>
+          ))
+        }
+        {
+          (venue || yearStr) && (
+            <em>
+              {' '}
+              &middot; {venue}
+              {venue && yearStr ? ', ' : ''}
+              {yearStr}
+            </em>
+          )
+        }
         {additionalInfo && <span class="additional-info"> · {additionalInfo}</span>}
       </p>
 
-      {annotation && (
-        <p class="pub-annotation">{annotation}</p>
-      )}
+      {annotation && <p class="pub-annotation">{annotation}</p>}
 
-      {award && (
-        <p>
-          <span class="award-badge">{awardName ?? award}</span>
-        </p>
-      )}
+      {
+        award && (
+          <p>
+            <span class="award-badge">{awardName ?? award}</span>
+          </p>
+        )
+      }
     </header>
 
     <article>
       <!-- Action buttons: full set matching the index page -->
       <div class="pub-actions">
-        {htmlLink && (
-          <a href={htmlLink} target="_blank" rel="noopener noreferrer" class="btn">
-            HTML
-          </a>
-        )}
-        {doi && (
-          <a href={`https://doi.org/${doi}`} target="_blank" rel="noopener noreferrer" class="btn">
-            DOI
-          </a>
-        )}
-        {arxiv && (
-          <a href={`https://arxiv.org/abs/${arxiv}`} target="_blank" rel="noopener noreferrer" class="btn">
-            arXiv
-          </a>
-        )}
-        {hal && (
-          <a href={`https://hal.science/${hal}`} target="_blank" rel="noopener noreferrer" class="btn">
-            HAL
-          </a>
-        )}
-        {pdfHref && (
-          <a href={pdfHref} target="_blank" rel="noopener noreferrer" class="btn">
-            PDF
-          </a>
-        )}
-        {suppHref && (
-          <a href={suppHref} target="_blank" rel="noopener noreferrer" class="btn">
-            Supp
-          </a>
-        )}
-        {slidesHref && (
-          <a href={slidesHref} target="_blank" rel="noopener noreferrer" class="btn">
-            Slides
-          </a>
-        )}
-        {posterHref && (
-          <a href={posterHref} target="_blank" rel="noopener noreferrer" class="btn">
-            Poster
-          </a>
-        )}
-        {video && (
-          <a href={video} target="_blank" rel="noopener noreferrer" class="btn">
-            Video
-          </a>
-        )}
-        {code && (
-          <a href={code} target="_blank" rel="noopener noreferrer" class="btn">
-            Code
-          </a>
-        )}
-        {blog && (
-          <a href={blog} target="_blank" rel="noopener noreferrer" class="btn">
-            Blog
-          </a>
-        )}
-        {website && (
-          <a href={website} target="_blank" rel="noopener noreferrer" class="btn">
-            Website
-          </a>
-        )}
+        {
+          htmlLink && (
+            <a href={htmlLink} target="_blank" rel="noopener noreferrer" class="btn">
+              HTML
+            </a>
+          )
+        }
+        {
+          doi && (
+            <a
+              href={`https://doi.org/${doi}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn"
+            >
+              DOI
+            </a>
+          )
+        }
+        {
+          arxiv && (
+            <a
+              href={`https://arxiv.org/abs/${arxiv}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn"
+            >
+              arXiv
+            </a>
+          )
+        }
+        {
+          hal && (
+            <a
+              href={`https://hal.science/${hal}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn"
+            >
+              HAL
+            </a>
+          )
+        }
+        {
+          pdfHref && (
+            <a href={pdfHref} target="_blank" rel="noopener noreferrer" class="btn">
+              PDF
+            </a>
+          )
+        }
+        {
+          suppHref && (
+            <a href={suppHref} target="_blank" rel="noopener noreferrer" class="btn">
+              Supp
+            </a>
+          )
+        }
+        {
+          slidesHref && (
+            <a href={slidesHref} target="_blank" rel="noopener noreferrer" class="btn">
+              Slides
+            </a>
+          )
+        }
+        {
+          posterHref && (
+            <a href={posterHref} target="_blank" rel="noopener noreferrer" class="btn">
+              Poster
+            </a>
+          )
+        }
+        {
+          video && (
+            <a href={video} target="_blank" rel="noopener noreferrer" class="btn">
+              Video
+            </a>
+          )
+        }
+        {
+          code && (
+            <a href={code} target="_blank" rel="noopener noreferrer" class="btn">
+              Code
+            </a>
+          )
+        }
+        {
+          blog && (
+            <a href={blog} target="_blank" rel="noopener noreferrer" class="btn">
+              Blog
+            </a>
+          )
+        }
+        {
+          website && (
+            <a href={website} target="_blank" rel="noopener noreferrer" class="btn">
+              Website
+            </a>
+          )
+        }
       </div>
 
       <!-- Metric badges row -->
-      {hasBadges && (
-        <div class="pub-badges">
-          {showAltmetric && (
-            <>
-              {altmetricExplicitId ? (
-                <div
-                  class="altmetric-embed"
-                  data-badge-type="2"
-                  data-badge-popover="right"
-                  data-altmetric-id={altmetricExplicitId}
-                />
-              ) : doi ? (
-                <div
-                  class="altmetric-embed"
-                  data-badge-type="2"
-                  data-badge-popover="right"
-                  data-doi={doi}
-                />
-              ) : (
-                <div
-                  class="altmetric-embed"
-                  data-badge-type="2"
-                  data-badge-popover="right"
-                  data-arxiv-id={arxiv}
-                />
-              )}
-            </>
-          )}
-          {showDimensions && doi && (
-            <span
-              class="__dimensions_badge_embed__"
-              data-doi={doi}
-              data-legend="hover-right"
-              data-style="small_rectangle"
-            />
-          )}
-          {showGoogleScholar && scholarBadgeLight && scholarBadgeDark && scholarProfileUrl && (
-            <a href={scholarProfileUrl} target="_blank" rel="noopener noreferrer" style="line-height:0">
-              <img
-                src={scholarBadgeLight}
-                alt={scholarCount !== undefined ? `Google Scholar: ${scholarCount} citations` : 'Google Scholar'}
-                class="only-light"
-                loading="lazy"
-                style="height:20px;vertical-align:middle"
+      {
+        hasBadges && (
+          <div class="pub-badges">
+            {showAltmetric && (
+              <>
+                {altmetricExplicitId ? (
+                  <div
+                    class="altmetric-embed"
+                    data-badge-type="2"
+                    data-badge-popover="right"
+                    data-altmetric-id={altmetricExplicitId}
+                  />
+                ) : doi ? (
+                  <div
+                    class="altmetric-embed"
+                    data-badge-type="2"
+                    data-badge-popover="right"
+                    data-doi={doi}
+                  />
+                ) : (
+                  <div
+                    class="altmetric-embed"
+                    data-badge-type="2"
+                    data-badge-popover="right"
+                    data-arxiv-id={arxiv}
+                  />
+                )}
+              </>
+            )}
+            {showDimensions && doi && (
+              <span
+                class="__dimensions_badge_embed__"
+                data-doi={doi}
+                data-legend="hover-right"
+                data-style="small_rectangle"
               />
-              <img
-                src={scholarBadgeDark}
-                alt={scholarCount !== undefined ? `Google Scholar: ${scholarCount} citations` : 'Google Scholar'}
-                class="only-dark"
-                loading="lazy"
-                style="height:20px;vertical-align:middle"
-              />
-            </a>
-          )}
-          {showInspireHEP && inspirehepId && (
-            <InspireHEPBadge client:load inspirehepId={inspirehepId} />
-          )}
-        </div>
-      )}
+            )}
+            {showGoogleScholar && scholarBadgeLight && scholarBadgeDark && scholarProfileUrl && (
+              <a
+                href={scholarProfileUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style="line-height:0"
+              >
+                <img
+                  src={scholarBadgeLight}
+                  alt={
+                    scholarCount !== undefined
+                      ? `Google Scholar: ${scholarCount} citations`
+                      : 'Google Scholar'
+                  }
+                  class="only-light"
+                  loading="lazy"
+                  style="height:20px;vertical-align:middle"
+                />
+                <img
+                  src={scholarBadgeDark}
+                  alt={
+                    scholarCount !== undefined
+                      ? `Google Scholar: ${scholarCount} citations`
+                      : 'Google Scholar'
+                  }
+                  class="only-dark"
+                  loading="lazy"
+                  style="height:20px;vertical-align:middle"
+                />
+              </a>
+            )}
+            {showInspireHEP && inspirehepId && (
+              <InspireHEPBadge client:load inspirehepId={inspirehepId} />
+            )}
+          </div>
+        )
+      }
 
-      {abstract && (
-        <section class="pub-section">
-          <h2>Abstract</h2>
-          <p>{abstract}</p>
-        </section>
-      )}
+      {
+        abstract && (
+          <section class="pub-section">
+            <h2>Abstract</h2>
+            <p>{abstract}</p>
+          </section>
+        )
+      }
 
       <section class="pub-section">
         <h2>Citation</h2>

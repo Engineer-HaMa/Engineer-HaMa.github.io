@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { linkAuthors } from './authors';
+
 import type { CoauthorMap } from './authors';
+import { linkAuthors } from './authors';
 
 const coauthors: CoauthorMap = {
   Podolsky: { url: 'https://example.com/podolsky', scholar: 'abc123' },

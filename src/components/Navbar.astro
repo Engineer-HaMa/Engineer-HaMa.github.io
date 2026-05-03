@@ -431,48 +431,60 @@ const items = site.navbar.items;
     const toggler = document.getElementById('navbar-toggler') as HTMLButtonElement | null;
     const collapse = document.getElementById('navbar-collapse') as HTMLElement | null;
 
-    toggler?.addEventListener('click', () => {
-      const isOpen = !collapse?.classList.contains('hidden');
-      if (isOpen) {
-        collapse?.classList.add('hidden');
-        toggler.setAttribute('aria-expanded', 'false');
-        toggler.classList.add('collapsed');
-        document.body.style.overflow = '';
-      } else {
-        collapse?.classList.remove('hidden');
-        toggler.setAttribute('aria-expanded', 'true');
-        toggler.classList.remove('collapsed');
-        document.body.style.overflow = 'hidden';
-      }
-    }, { signal });
+    toggler?.addEventListener(
+      'click',
+      () => {
+        const isOpen = !collapse?.classList.contains('hidden');
+        if (isOpen) {
+          collapse?.classList.add('hidden');
+          toggler.setAttribute('aria-expanded', 'false');
+          toggler.classList.add('collapsed');
+          document.body.style.overflow = '';
+        } else {
+          collapse?.classList.remove('hidden');
+          toggler.setAttribute('aria-expanded', 'true');
+          toggler.classList.remove('collapsed');
+          document.body.style.overflow = 'hidden';
+        }
+      },
+      { signal },
+    );
 
     // Close mobile menu on link click
     document.querySelectorAll('#navbar-collapse a').forEach((link) => {
-      link.addEventListener('click', () => {
-        collapse?.classList.add('hidden');
-        toggler?.setAttribute('aria-expanded', 'false');
-        toggler?.classList.add('collapsed');
-        document.body.style.overflow = '';
-      }, { signal });
+      link.addEventListener(
+        'click',
+        () => {
+          collapse?.classList.add('hidden');
+          toggler?.setAttribute('aria-expanded', 'false');
+          toggler?.classList.add('collapsed');
+          document.body.style.overflow = '';
+        },
+        { signal },
+      );
     });
 
     // ── Mobile sub-dropdowns ──────────────────────────────────────────────
     document.querySelectorAll('.mobile-dropdown-trigger').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const parent = btn.closest('.mobile-dropdown');
-        const children = parent?.querySelector('.mobile-dropdown-children');
-        const chevron = btn.querySelector('.mobile-dropdown-chevron') as SVGElement | null;
-        const isOpen = !children?.classList.contains('hidden');
-        if (isOpen) {
-          children?.classList.add('hidden');
-          btn.setAttribute('aria-expanded', 'false');
-          if (chevron) chevron.style.transform = '';
-        } else {
-          children?.classList.remove('hidden');
-          btn.setAttribute('aria-expanded', 'true');
-          if (chevron) chevron.style.transform = 'rotate(180deg)';
-        }
-      }, { signal });
+      btn.addEventListener(
+        'click',
+        () => {
+          const parent = btn.closest('.mobile-dropdown');
+          const children = parent?.querySelector('.mobile-dropdown-children');
+          const chevron = btn.querySelector('.mobile-dropdown-chevron') as SVGElement | null;
+          const isOpen = !children?.classList.contains('hidden');
+          if (isOpen) {
+            children?.classList.add('hidden');
+            btn.setAttribute('aria-expanded', 'false');
+            if (chevron) chevron.style.transform = '';
+          } else {
+            children?.classList.remove('hidden');
+            btn.setAttribute('aria-expanded', 'true');
+            if (chevron) chevron.style.transform = 'rotate(180deg)';
+          }
+        },
+        { signal },
+      );
     });
 
     // ── Desktop dropdown keyboard navigation ──────────────────────────────
@@ -491,42 +503,54 @@ const items = site.navbar.items;
         trigger?.setAttribute('aria-expanded', 'false');
       }
 
-      trigger?.addEventListener('keydown', (e: KeyboardEvent) => {
-        if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
-          e.preventDefault();
-          openDropdown();
-        } else if (e.key === 'ArrowUp') {
-          e.preventDefault();
-          openDropdown();
-          menuItems[menuItems.length - 1]?.focus();
-        }
-      }, { signal });
+      trigger?.addEventListener(
+        'keydown',
+        (e: KeyboardEvent) => {
+          if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            openDropdown();
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            openDropdown();
+            menuItems[menuItems.length - 1]?.focus();
+          }
+        },
+        { signal },
+      );
 
       menuItems.forEach((item, i) => {
         item.setAttribute('tabindex', '-1');
-        item.addEventListener('keydown', (e: KeyboardEvent) => {
-          if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            menuItems[(i + 1) % menuItems.length]?.focus();
-          } else if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            menuItems[(i - 1 + menuItems.length) % menuItems.length]?.focus();
-          } else if (e.key === 'Escape' || e.key === 'Tab') {
-            closeDropdown();
-            if (e.key === 'Escape') {
+        item.addEventListener(
+          'keydown',
+          (e: KeyboardEvent) => {
+            if (e.key === 'ArrowDown') {
               e.preventDefault();
-              trigger?.focus();
+              menuItems[(i + 1) % menuItems.length]?.focus();
+            } else if (e.key === 'ArrowUp') {
+              e.preventDefault();
+              menuItems[(i - 1 + menuItems.length) % menuItems.length]?.focus();
+            } else if (e.key === 'Escape' || e.key === 'Tab') {
+              closeDropdown();
+              if (e.key === 'Escape') {
+                e.preventDefault();
+                trigger?.focus();
+              }
             }
-          }
-        }, { signal });
+          },
+          { signal },
+        );
       });
 
       // On document so needs signal to avoid accumulating across navigations
-      document.addEventListener('click', (e) => {
-        if (!dropdown.contains(e.target as Node)) {
-          closeDropdown();
-        }
-      }, { signal });
+      document.addEventListener(
+        'click',
+        (e) => {
+          if (!dropdown.contains(e.target as Node)) {
+            closeDropdown();
+          }
+        },
+        { signal },
+      );
     });
   }
 
