@@ -18,7 +18,10 @@ interface Props {
   type?: string;
 }
 
-const { src, title, caption, type } = Astro.props;
+import { withBase } from '@utils/base';
+
+const { src: srcProp, title, caption, type } = Astro.props;
+const src = withBase(srcProp);
 
 // Auto-detect MIME type from extension
 function getMimeType(url: string, explicit?: string): string {

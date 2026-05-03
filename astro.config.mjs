@@ -9,9 +9,31 @@ import rehypeKatex from 'rehype-katex';
 import remarkMath from 'remark-math';
 
 /**
- * Rehype plugin: rewrite root-relative src/href in markdown HTML nodes to include
- * the Astro base path. Required when base != '' (e.g. GitHub project pages).
- * Handles raw <img src="/..."> and <a href="/..."> in .md / .mdx content.
+ * Remark plugin: rewrite root-relative src/href inside raw HTML blocks in .md files.
+ * Markdown raw HTML (e.g. <img src="/assets/...">) stays as mdast 'html' nodes and
+ * is never parsed into hast elements — string replacement is the only reliable path.
+ */
+function remarkBasePaths() {
+  const base = (process.env.ASTRO_BASE ?? '').replace(/\/$/, '');
+  if (!base) return (tree) => tree;
+
+  // Match src="/" or href="/" but not src="//" (protocol-relative)
+  const re = /((?:src|href)=")\/(?!\/)/g;
+
+  function walk(node) {
+    if (node.type === 'html' && typeof node.value === 'string') {
+      node.value = node.value.replace(re, `$1${base}/`);
+    }
+    node.children?.forEach(walk);
+  }
+
+  return (tree) => walk(tree);
+}
+
+/**
+ * Rehype plugin: rewrite root-relative src/href on hast element nodes.
+ * Handles standard markdown images (![](/)  → <img src="/">) and MDX JSX elements
+ * after remark-rehype converts them to hast.
  */
 function rehypeBasePaths() {
   const base = (process.env.ASTRO_BASE ?? '').replace(/\/$/, '');
@@ -188,7 +210,7 @@ export default defineConfig({
     },
   },
   markdown: {
-    remarkPlugins: [remarkMath],
+    remarkPlugins: [remarkMath, remarkBasePaths],
     rehypePlugins: [
       [rehypeKatex, { strict: false }],
       [

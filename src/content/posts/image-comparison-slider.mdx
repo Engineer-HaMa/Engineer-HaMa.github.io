@@ -9,6 +9,7 @@ img_comparison: true
 ---
 
 import Figure from '@components/Figure.astro';
+import { withBase } from '@utils/base';
 
 The `img_comparison: true` flag loads [img-comparison-slider](https://img-comparison-slider.sneas.io/).
 Drag the handle to reveal either image. Works with any two images — use it for
@@ -31,11 +32,11 @@ Adding descriptive labels on each side using the `tabindex` attribute for keyboa
 
 <img-comparison-slider tabindex="0" style="--divider-width: 3px; --divider-color: hsl(210 80% 55%);">
   <figure slot="first" style="margin:0; position:relative;">
-    <img src="/assets/img/9.jpg" class="img-fluid" alt="Light theme" style="display:block; width:100%;" />
+    <img src={withBase("/assets/img/9.jpg")} class="img-fluid" alt="Light theme" style="display:block; width:100%;" />
     <figcaption style="position:absolute; bottom:8px; left:8px; background:rgba(0,0,0,.55); color:#fff; padding:2px 8px; border-radius:4px; font-size:.8rem;">Before</figcaption>
   </figure>
   <figure slot="second" style="margin:0; position:relative;">
-    <img src="/assets/img/10.jpg" class="img-fluid" alt="Dark theme" style="display:block; width:100%;" />
+    <img src={withBase("/assets/img/10.jpg")} class="img-fluid" alt="Dark theme" style="display:block; width:100%;" />
     <figcaption style="position:absolute; bottom:8px; right:8px; background:rgba(0,0,0,.55); color:#fff; padding:2px 8px; border-radius:4px; font-size:.8rem;">After</figcaption>
   </figure>
 </img-comparison-slider>

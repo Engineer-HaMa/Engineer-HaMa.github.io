@@ -2,6 +2,7 @@
 import Giscus from '@components/Giscus.astro';
 import { site } from '@config/site';
 import Page from '@layouts/Page.astro';
+import { withBase } from '@utils/base';
 import { getAuthors, getTitle, getVenue, getYear, parseBibtex } from '@utils/bibtex';
 import { getCollection, render } from 'astro:content';
 
@@ -123,7 +124,7 @@ const relatedEntries =
         img && (
           <div class="project-hero">
             <img
-              src={img}
+              src={withBase(img)}
               alt={img_alt ?? title}
               loading="eager"
               class="img-fluid z-depth-1 rounded"

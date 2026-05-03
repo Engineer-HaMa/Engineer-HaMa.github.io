@@ -3,8 +3,9 @@ import CVEntry from '@components/cv/CVEntry.astro';
 import CVSection from '@components/cv/CVSection.astro';
 import { site } from '@config/site';
 import Page from '@layouts/Page.astro';
+import { withBase } from '@utils/base';
 import type { JSONResume, RenderCV, RenderCVEntry } from '@utils/cv';
-import { formatCVDate,formatDateRange } from '@utils/cv';
+import { formatCVDate, formatDateRange } from '@utils/cv';
 import { Icon } from 'astro-icon/components';
 import yaml from 'js-yaml';
 
@@ -59,7 +60,7 @@ if (format === 'rendercv' && rc) {
         cv
         {site.cv.pdfPath && (
           <a
-            href={site.cv.pdfPath}
+            href={withBase(site.cv.pdfPath)}
             target="_blank"
             rel="noopener noreferrer"
             class="float-right"
