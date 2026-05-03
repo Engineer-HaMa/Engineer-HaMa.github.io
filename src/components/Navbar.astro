@@ -418,109 +418,124 @@ const items = site.navbar.items;
 </style>
 
 <script>
-  // ── Mobile hamburger ────────────────────────────────────────────────────
-  const toggler = document.getElementById('navbar-toggler');
-  const collapse = document.getElementById('navbar-collapse');
+  // AbortController tears down all listeners before each re-init,
+  // preventing document-level listener accumulation across View Transitions.
+  let navbarController: AbortController | null = null;
 
-  toggler?.addEventListener('click', () => {
-    const isOpen = !collapse?.classList.contains('hidden');
-    if (isOpen) {
-      collapse?.classList.add('hidden');
-      toggler.setAttribute('aria-expanded', 'false');
-      toggler.classList.add('collapsed');
-      document.body.style.overflow = '';
-    } else {
-      collapse?.classList.remove('hidden');
-      toggler.setAttribute('aria-expanded', 'true');
-      toggler.classList.remove('collapsed');
-      document.body.style.overflow = 'hidden';
-    }
-  });
+  function initNavbar(): void {
+    navbarController?.abort();
+    navbarController = new AbortController();
+    const { signal } = navbarController;
 
-  // Close mobile menu on link click
-  document.querySelectorAll('#navbar-collapse a').forEach((link) => {
-    link.addEventListener('click', () => {
-      collapse?.classList.add('hidden');
-      toggler?.setAttribute('aria-expanded', 'false');
-      toggler?.classList.add('collapsed');
-      document.body.style.overflow = '';
-    });
-  });
+    // ── Mobile hamburger ────────────────────────────────────────────────
+    const toggler = document.getElementById('navbar-toggler') as HTMLButtonElement | null;
+    const collapse = document.getElementById('navbar-collapse') as HTMLElement | null;
 
-  document.addEventListener('astro:before-swap', () => {
-    document.body.style.overflow = '';
-  });
-
-  // ── Mobile sub-dropdowns ────────────────────────────────────────────────
-  document.querySelectorAll('.mobile-dropdown-trigger').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const parent = btn.closest('.mobile-dropdown');
-      const children = parent?.querySelector('.mobile-dropdown-children');
-      const chevron = btn.querySelector('.mobile-dropdown-chevron') as SVGElement | null;
-      const isOpen = !children?.classList.contains('hidden');
+    toggler?.addEventListener('click', () => {
+      const isOpen = !collapse?.classList.contains('hidden');
       if (isOpen) {
-        children?.classList.add('hidden');
-        btn.setAttribute('aria-expanded', 'false');
-        if (chevron) chevron.style.transform = '';
+        collapse?.classList.add('hidden');
+        toggler.setAttribute('aria-expanded', 'false');
+        toggler.classList.add('collapsed');
+        document.body.style.overflow = '';
       } else {
-        children?.classList.remove('hidden');
-        btn.setAttribute('aria-expanded', 'true');
-        if (chevron) chevron.style.transform = 'rotate(180deg)';
+        collapse?.classList.remove('hidden');
+        toggler.setAttribute('aria-expanded', 'true');
+        toggler.classList.remove('collapsed');
+        document.body.style.overflow = 'hidden';
       }
-    });
-  });
+    }, { signal });
 
-  // ── Desktop dropdown keyboard navigation ────────────────────────────────
-  document.querySelectorAll('.nav-dropdown').forEach((dropdown) => {
-    const trigger = dropdown.querySelector('.nav-dropdown-trigger') as HTMLButtonElement | null;
-    const menuItems = [...dropdown.querySelectorAll<HTMLAnchorElement>('[role="menuitem"]')];
-
-    function openDropdown() {
-      dropdown.classList.add('is-open');
-      trigger?.setAttribute('aria-expanded', 'true');
-      menuItems[0]?.focus();
-    }
-
-    function closeDropdown() {
-      dropdown.classList.remove('is-open');
-      trigger?.setAttribute('aria-expanded', 'false');
-    }
-
-    trigger?.addEventListener('keydown', (e: KeyboardEvent) => {
-      if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
-        e.preventDefault();
-        openDropdown();
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        openDropdown();
-        menuItems[menuItems.length - 1]?.focus();
-      }
+    // Close mobile menu on link click
+    document.querySelectorAll('#navbar-collapse a').forEach((link) => {
+      link.addEventListener('click', () => {
+        collapse?.classList.add('hidden');
+        toggler?.setAttribute('aria-expanded', 'false');
+        toggler?.classList.add('collapsed');
+        document.body.style.overflow = '';
+      }, { signal });
     });
 
-    menuItems.forEach((item, i) => {
-      item.setAttribute('tabindex', '-1');
-      item.addEventListener('keydown', (e: KeyboardEvent) => {
-        if (e.key === 'ArrowDown') {
+    // ── Mobile sub-dropdowns ──────────────────────────────────────────────
+    document.querySelectorAll('.mobile-dropdown-trigger').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const parent = btn.closest('.mobile-dropdown');
+        const children = parent?.querySelector('.mobile-dropdown-children');
+        const chevron = btn.querySelector('.mobile-dropdown-chevron') as SVGElement | null;
+        const isOpen = !children?.classList.contains('hidden');
+        if (isOpen) {
+          children?.classList.add('hidden');
+          btn.setAttribute('aria-expanded', 'false');
+          if (chevron) chevron.style.transform = '';
+        } else {
+          children?.classList.remove('hidden');
+          btn.setAttribute('aria-expanded', 'true');
+          if (chevron) chevron.style.transform = 'rotate(180deg)';
+        }
+      }, { signal });
+    });
+
+    // ── Desktop dropdown keyboard navigation ──────────────────────────────
+    document.querySelectorAll('.nav-dropdown').forEach((dropdown) => {
+      const trigger = dropdown.querySelector('.nav-dropdown-trigger') as HTMLButtonElement | null;
+      const menuItems = [...dropdown.querySelectorAll<HTMLAnchorElement>('[role="menuitem"]')];
+
+      function openDropdown() {
+        dropdown.classList.add('is-open');
+        trigger?.setAttribute('aria-expanded', 'true');
+        menuItems[0]?.focus();
+      }
+
+      function closeDropdown() {
+        dropdown.classList.remove('is-open');
+        trigger?.setAttribute('aria-expanded', 'false');
+      }
+
+      trigger?.addEventListener('keydown', (e: KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
           e.preventDefault();
-          menuItems[(i + 1) % menuItems.length]?.focus();
+          openDropdown();
         } else if (e.key === 'ArrowUp') {
           e.preventDefault();
-          menuItems[(i - 1 + menuItems.length) % menuItems.length]?.focus();
-        } else if (e.key === 'Escape' || e.key === 'Tab') {
-          closeDropdown();
-          if (e.key === 'Escape') {
-            e.preventDefault();
-            trigger?.focus();
-          }
+          openDropdown();
+          menuItems[menuItems.length - 1]?.focus();
         }
-      });
-    });
+      }, { signal });
 
-    // Close when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!dropdown.contains(e.target as Node)) {
-        closeDropdown();
-      }
+      menuItems.forEach((item, i) => {
+        item.setAttribute('tabindex', '-1');
+        item.addEventListener('keydown', (e: KeyboardEvent) => {
+          if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            menuItems[(i + 1) % menuItems.length]?.focus();
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            menuItems[(i - 1 + menuItems.length) % menuItems.length]?.focus();
+          } else if (e.key === 'Escape' || e.key === 'Tab') {
+            closeDropdown();
+            if (e.key === 'Escape') {
+              e.preventDefault();
+              trigger?.focus();
+            }
+          }
+        }, { signal });
+      });
+
+      // On document so needs signal to avoid accumulating across navigations
+      document.addEventListener('click', (e) => {
+        if (!dropdown.contains(e.target as Node)) {
+          closeDropdown();
+        }
+      }, { signal });
     });
+  }
+
+  // Initial load + re-init after every View Transition DOM swap
+  initNavbar();
+  document.addEventListener('astro:after-swap', initNavbar);
+
+  // Reset overflow lock before swap so it doesn't bleed into the next page
+  document.addEventListener('astro:before-swap', () => {
+    document.body.style.overflow = '';
   });
 </script>
