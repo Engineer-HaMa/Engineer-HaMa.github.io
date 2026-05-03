@@ -1,5 +1,6 @@
 ---
 import { site } from '@config/site';
+import { withBase } from '@utils/base';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
@@ -20,7 +21,7 @@ const isExternal = !!project.data.redirect;
     {
       project.data.img && (
         <img
-          src={project.data.img}
+          src={withBase(project.data.img)}
           alt={project.data.img_alt ?? project.data.title}
           loading="lazy"
           width="400"

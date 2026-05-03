@@ -1,6 +1,7 @@
 ---
 import { site } from '@config/site';
 import { readingTime } from '@utils/reading-time';
+import { withBase } from '@utils/base';
 import type { CollectionEntry } from 'astro:content';
 import { Icon } from 'astro-icon/components';
 
@@ -40,6 +41,7 @@ const tags = post.data.tags ?? [];
 const categories = post.data.categories ?? [];
 // Use `image` field as thumbnail (matches schema field name)
 const thumbnail = (post.data as { image?: string }).image;
+const thumbnailSrc = thumbnail ? withBase(thumbnail) : undefined;
 
 const href = isExternal ? (post as ExternalPost).url : `${site.base}/blog/${post.id}/`;
 
@@ -104,7 +106,7 @@ const year = d.getFullYear();
       <div class="col-sm-3">
         <img
           class="img-fluid z-depth-1 rounded"
-          src={thumbnail}
+          src={thumbnailSrc}
           alt=""
           loading="lazy"
           width="150"
