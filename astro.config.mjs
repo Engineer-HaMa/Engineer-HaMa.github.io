@@ -10,8 +10,8 @@ import remarkMath from 'remark-math';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://example.github.io', // ← update with your site URL
-  base: '', // ← set to '/repo-name' for GitHub project pages, leave '' for user/org pages
+  site: process.env.ASTRO_SITE ?? 'https://example.github.io', // override via ASTRO_SITE env var or edit directly
+  base: process.env.ASTRO_BASE ?? '', // override via ASTRO_BASE env var or set '/repo-name' for project pages
   output: 'static',
   trailingSlash: 'always',
   compressHTML: true,
