@@ -378,7 +378,7 @@ const jsonLd = {
 )}
 
 {typograms && (
-  <script src="/assets/js/typograms.js" type="module"></script>
+  <script is:inline src={`${import.meta.env.BASE_URL}assets/js/typograms.js`} type="module"></script>
 )}
 
 {tikzjax && (

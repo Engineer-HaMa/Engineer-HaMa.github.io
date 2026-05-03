@@ -1,5 +1,6 @@
 ---
 import { site } from '@config/site';
+import { withBase } from '@utils/base';
 import { Icon } from 'astro-icon/components';
 
 interface Props {
@@ -118,7 +119,7 @@ if (s.medium_username) {
   });
 }
 if (s.cv_pdf) {
-  links.push({ href: s.cv_pdf, label: 'CV', icon: 'fa-solid:file-pdf' });
+  links.push({ href: withBase(s.cv_pdf), label: 'CV', icon: 'fa-solid:file-pdf' });
 }
 if (s.rss_icon) {
   links.push({ href: `${site.base}/feed.xml`, label: 'RSS', icon: 'fa-solid:rss' });

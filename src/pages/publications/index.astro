@@ -6,6 +6,7 @@ import { site } from '@config/site';
 import Page from '@layouts/Page.astro';
 import type { CoauthorMap } from '@utils/authors';
 import { getAuthors, getTitle, getVenue, parseBibtex } from '@utils/bibtex';
+import { withBase } from '@utils/base';
 
 import bibRaw from '../../data/papers.bib?raw';
 import coauthorsRaw from '../../data/coauthors.yml?raw';
@@ -25,7 +26,9 @@ const showDimensions = site.publications.badges.dimensions;
 const maxAuthorLimit = site.publications.maxAuthorLimit;
 const showThumbnails = site.publications.thumbnails;
 const authorLastName = site.publications.authorLastName ?? site.author.name.split(' ').pop() ?? '';
-const { previewDir, pdfDir, labels } = site.publications;
+const { labels } = site.publications;
+const previewDir = withBase(site.publications.previewDir);
+const pdfDir = withBase(site.publications.pdfDir);
 const scholarUserId = site.socials.scholar_userid ?? '';
 const badges = site.publications.badges;
 ---

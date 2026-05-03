@@ -8,6 +8,32 @@ import rehypeExternalLinks from 'rehype-external-links';
 import rehypeKatex from 'rehype-katex';
 import remarkMath from 'remark-math';
 
+/**
+ * Rehype plugin: rewrite root-relative src/href in markdown HTML nodes to include
+ * the Astro base path. Required when base != '' (e.g. GitHub project pages).
+ * Handles raw <img src="/..."> and <a href="/..."> in .md / .mdx content.
+ */
+function rehypeBasePaths() {
+  const base = (process.env.ASTRO_BASE ?? '').replace(/\/$/, '');
+  if (!base) return (tree) => tree;
+
+  function walk(node) {
+    if (node.type === 'element') {
+      const src = node.properties?.src;
+      if (typeof src === 'string' && src.startsWith('/') && !src.startsWith('//')) {
+        node.properties.src = `${base}${src}`;
+      }
+      const href = node.properties?.href;
+      if (typeof href === 'string' && href.startsWith('/') && !href.startsWith('//')) {
+        node.properties.href = `${base}${href}`;
+      }
+    }
+    node.children?.forEach(walk);
+  }
+
+  return (tree) => walk(tree);
+}
+
 // https://astro.build/config
 export default defineConfig({
   site: process.env.ASTRO_SITE ?? 'https://example.github.io', // override via ASTRO_SITE env var or edit directly
@@ -172,6 +198,7 @@ export default defineConfig({
           rel: ['noopener', 'noreferrer'],
         },
       ],
+      rehypeBasePaths,
     ],
     syntaxHighlight: 'shiki',
     shikiConfig: {

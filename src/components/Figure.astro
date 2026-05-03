@@ -53,7 +53,9 @@ const {
   slot: slotName,
 } = Astro.props;
 
-const imgSrc = path ?? src ?? '';
+import { withBase } from '@utils/base';
+
+const imgSrc = withBase(path ?? src ?? '');
 const imgClass = zoomable ? className : `${className} no-zoom`.trim();
 ---
 

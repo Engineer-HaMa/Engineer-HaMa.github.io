@@ -1,6 +1,7 @@
 ---
 import { site } from '@config/site';
 import Page from '@layouts/Page.astro';
+import { withBase } from '@utils/base';
 import { getCollection } from 'astro:content';
 
 const all = await getCollection('people');
@@ -31,7 +32,7 @@ const alumni = all
             <div class="person-card text-center">
               {person.data.photo ? (
                 <img
-                  src={person.data.photo}
+                  src={withBase(person.data.photo)}
                   alt={person.data.name}
                   loading="lazy"
                   width="120"
@@ -118,7 +119,7 @@ const alumni = all
             <div class="flex items-center gap-3">
               {person.data.photo && (
                 <img
-                  src={person.data.photo}
+                  src={withBase(person.data.photo)}
                   alt={person.data.name}
                   loading="lazy"
                   width="48"

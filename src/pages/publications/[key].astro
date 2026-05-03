@@ -7,6 +7,7 @@ import Page from '@layouts/Page.astro';
 import type { CoauthorMap } from '@utils/authors';
 import { linkAuthors } from '@utils/authors';
 import { getAuthors, getCleanBibtex, getTitle, getVenue, getYear, parseBibtex } from '@utils/bibtex';
+import { withBase } from '@utils/base';
 
 import bibRaw from '../../data/papers.bib?raw';
 import coauthorsRaw from '../../data/coauthors.yml?raw';
@@ -48,7 +49,7 @@ const googleScholarId = entry.fields.google_scholar_id;
 const inspirehepId = entry.fields.inspirehep_id;
 const altmetricField = entry.fields.altmetric;
 const dimensionsField = entry.fields.dimensions;
-const pdfDir = site.publications.pdfDir;
+const pdfDir = withBase(site.publications.pdfDir);
 const scholarUserId = site.socials.scholar_userid ?? '';
 
 const pdfHref = pdfPath

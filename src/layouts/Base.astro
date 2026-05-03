@@ -30,7 +30,11 @@ const {
 
 const pageTitle = title === site.author.name ? title : `${title} | ${site.author.name}`;
 const canonicalURL = new URL(Astro.url.pathname, site.url);
-const ogImage = image ? new URL(image, site.url).toString() : undefined;
+// Prepend base path to root-relative images before resolving to absolute URL
+const resolvedImage = image?.startsWith('/')
+  ? `${import.meta.env.BASE_URL}${image.slice(1)}`
+  : image;
+const ogImage = resolvedImage ? new URL(resolvedImage, site.url).toString() : undefined;
 
 // Theme color override — only injected when site.theme.color is not 'auto'
 const lightColor = site.theme.color.light === 'auto' ? null : site.theme.color.light;

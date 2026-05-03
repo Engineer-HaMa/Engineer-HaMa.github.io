@@ -1,5 +1,6 @@
 ---
 import { site } from '@config/site';
+import { withBase } from '@utils/base';
 
 interface Props {
   src?: string;
@@ -15,19 +16,21 @@ const {
   circular = false,
 } = Astro.props;
 
+const imgSrc = withBase(src);
+const fallback = withBase('/assets/img/prof_pic.jpg');
 const imgClass = circular ? 'img-fluid z-depth-1 rounded-circle' : 'img-fluid z-depth-1 rounded';
 ---
 
 <div class={`profile float-${align}`}>
   <img
-    src={src}
+    src={imgSrc}
     alt={alt}
     loading="eager"
     fetchpriority="high"
     width="200"
     height="200"
     class={imgClass}
-    onerror="this.src='/assets/img/prof_pic.jpg'"
+    onerror={`this.src='${fallback}'`}
   />
   {site.author.moreInfo && <div class="more-info" set:html={site.author.moreInfo} />}
 </div>
