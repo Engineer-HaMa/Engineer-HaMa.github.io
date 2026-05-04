@@ -6,6 +6,24 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-dadangnh.github.io%2Fas--folio-8A2BE2)](https://dadangnh.github.io/as-folio/)
+
+---
+
+## Screenshots
+
+<table>
+  <tr>
+    <td align="center"><b>Homepage</b></td>
+    <td align="center"><b>Blog</b></td>
+    <td align="center"><b>Search</b></td>
+  </tr>
+  <tr>
+    <td><img src="public/assets/img/as_folio_homepage.png" alt="Homepage" /></td>
+    <td><img src="public/assets/img/as_folio_blog.png" alt="Blog" /></td>
+    <td><img src="public/assets/img/as_folio_search.png" alt="Search" /></td>
+  </tr>
+</table>
 
 ---
 
