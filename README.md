@@ -65,6 +65,18 @@ The template ships with demo content for three personas:
 
 ## Getting started
 
+Deployment config is env-first:
+
+- `ASTRO_SITE` and `ASTRO_BASE` are the source of truth
+- `astro.config.mjs` reads them during the build
+- `src/config/site.ts` only consumes the resolved Astro values
+
+Use `.env` for local development and repository variables for GitHub Pages.
+
+For project pages, keep `ASTRO_SITE` as the site origin, for example
+`https://YOUR-USERNAME.github.io`, and put the repo path in `ASTRO_BASE`, for example
+`/as-folio`.
+
 ### Option A — GitHub Pages (recommended)
 
 1. **Fork** this repository on GitHub
@@ -82,6 +94,9 @@ corepack enable
 git clone https://github.com/YOUR-USERNAME/as-folio.git
 cd as-folio
 
+# Copy env template
+cp .env.example .env
+
 # Install
 yarn install
 
@@ -96,6 +111,9 @@ yarn build
 
 ## Configuration
 
+Deployment URL and base path come from `ASTRO_SITE` and `ASTRO_BASE`, not from editing
+`src/config/site.ts` directly.
+
 All site settings live in one file: **`src/config/site.ts`**
 
 This replaces al-folio's `_config.yml`. Every option is typed and documented with JSDoc — your editor will catch mistakes before the build does.
@@ -108,8 +126,6 @@ This replaces al-folio's `_config.yml`. Every option is typed and documented wit
 export const site = {
   title: 'Your Name',
   description: 'Your site description',
-  url: 'https://your-username.github.io',
-  base: '', // '' for user pages, '/repo-name' for project pages
 
   author: {
     name: 'Your Name',
@@ -257,8 +273,8 @@ Optional notes about the book.
 Already configured. Push to `main` after:
 
 1. Setting source to GitHub Actions in repo Settings → Pages
-2. Setting `base: ''` (user page) or `base: '/repo-name'` (project page) in `site.ts`
-3. Setting `url: 'https://your-username.github.io'` in `site.ts`
+2. Setting repository variable `ASTRO_SITE` to your site origin, e.g. `https://username.github.io`
+3. Setting repository variable `ASTRO_BASE` to `''` for user pages or `/repo-name` for project pages
 
 ### GitLab Pages
 

@@ -21,6 +21,14 @@ export type NavDropdown = { label: string; children: NavLeaf[] };
 export type NavItem = NavLeaf | NavDropdown;
 
 export const site = {
+  // ─── Derived deployment values ────────────────────────────────────────────
+
+  /** Site origin from Astro's resolved `site` option. */
+  url: import.meta.env.SITE.replace(/\/$/, ''),
+
+  /** Base path from Astro's resolved `base` option. */
+  base: import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL.replace(/\/$/, ''),
+
   // ─── Identity ──────────────────────────────────────────────────────────────
 
   /** Site title. Shown in the browser tab and navbar. */
@@ -28,20 +36,6 @@ export const site = {
 
   /** Site description. Used in meta tags. */
   description: 'A simple, clean, and responsive Astro template for academics. Powered by as-folio.',
-
-  /**
-   * Full URL of your deployed site (no trailing slash).
-   * Automatically derived from astro.config.mjs `site` option (set ASTRO_SITE env var in CI).
-   * Falls back to 'https://example.github.io' for local development.
-   */
-  url: (import.meta.env.SITE ?? 'https://example.github.io').replace(/\/$/, ''),
-
-  /**
-   * Base path. Leave '' for user/org pages (username.github.io).
-   * Set to '/repo-name' for project pages (username.github.io/repo-name).
-   * Automatically derived from astro.config.mjs `base` option (set ASTRO_BASE env var in CI).
-   */
-  base: import.meta.env.BASE_URL === '/' ? '' : (import.meta.env.BASE_URL ?? '').replace(/\/$/, ''),
 
   /** Language code for the site. */
   lang: 'en',
