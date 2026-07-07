@@ -115,21 +115,12 @@ export const site = {
      *
      * `href` values are relative to the site root (base is prepended automatically).
      */
+    // Only sections with real content are linked. The publications / projects /
+    // repositories / cv / teaching / people / books pages still build from their
+    // (demo) collections but are intentionally unlinked until filled in.
     items: [
       { label: 'about', href: '/' },
       { label: 'blog', href: '/blog/' },
-      { label: 'publications', href: '/publications/' },
-      { label: 'projects', href: '/projects/' },
-      { label: 'repositories', href: '/repositories/' },
-      { label: 'cv', href: '/cv/' },
-      {
-        label: 'more',
-        children: [
-          { label: 'teaching', href: '/teaching/' },
-          { label: 'people', href: '/people/' },
-          { label: 'books', href: '/books/' },
-        ],
-      },
     ] as NavItem[],
   },
 
@@ -204,7 +195,7 @@ export const site = {
 
   announcements: {
     /** Show news/announcements section on the about page. */
-    enabled: true,
+    enabled: false,
     /** Enable vertical scroll if more than 3 items. */
     scrollable: true,
     /** Max news items to show (undefined = show all). */
@@ -220,7 +211,7 @@ export const site = {
 
   selectedPapers: {
     /** Show selected publications section on the about page. */
-    enabled: true,
+    enabled: false,
   },
 
   // ─── Features ─────────────────────────────────────────────────────────────
