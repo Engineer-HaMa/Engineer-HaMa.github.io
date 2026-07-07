@@ -1,13 +1,8 @@
-# pnpm settings (pnpm 11 reads these from pnpm-workspace.yaml, not .npmrc/package.json)
+# pnpm settings (pnpm 11 reads these here, not .npmrc/package.json)
 nodeLinker: hoisted
 enablePrePostScripts: true
-# Don't auto-run `pnpm install` before every `pnpm run` (it fails the build over
-# harmless ignored build scripts; sharp/esbuild ship prebuilt binaries).
 verifyDepsBeforeRun: false
-# Allow these native deps to run their (optional) install scripts.
-onlyBuiltDependencies:
-  - esbuild
-  - sharp
-allowBuilds:
-  esbuild: set this to true or false
-  sharp: set this to true or false
+# Run dependency build/install scripts (like yarn's default). pnpm 11 otherwise
+# treats ignored build scripts as a FATAL error under CI. The theme's deps
+# (sharp, esbuild) are trusted; they ship prebuilt binaries but pnpm still gates them.
+dangerouslyAllowAllBuilds: true
