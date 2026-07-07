@@ -6,6 +6,7 @@ template = "section.html"
 page_template = "blog-page.html"
 
 [extra]
-# 홈(소개) 페이지에는 최근 글 목록을 띄우지 않고 메뉴로만 노출
 index_show = false
 +++
+
+The blog posts are currently written in Korean. English versions are on the way.

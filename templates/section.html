@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container max-w-3xl mx-auto px-4">
+
+  <div class="font-sans py-8">
+    <h1 class="font-bold font-sans break-normal text-gray-900 pb-2 text-3xl md:text-4xl">{{ section.title }}</h1>
+    {% if section.description %}
+    <p class="text-gray-600">{{ section.description }}</p>
+    {% endif %}
+    {% if section.content %}
+    <article class="prose prose-indigo pt-2">{{ section.content | safe }}</article>
+    {% endif %}
+  </div>
+
+  {# Pages that live directly in this section #}
+  {% if section.pages %}
+  <ul>
+  {% for page in section.pages %}
+    <li class="pb-3">
+      {{ blog::page_summary(page=page) }}
+    </li>
+  {% endfor %}
+  </ul>
+  {% endif %}
+
+  {# Nested categories (sub-sections) rendered as groups; empty ones are hidden #}
+  {% for subsection_path in section.subsections %}
+    {% set subsection = get_section(path=subsection_path) %}
+    {% if subsection.pages %}
+    <div class="pt-8">
+      <h2 class="font-bold font-sans break-normal text-gray-900 pb-2 text-2xl">
+        <a class="hover:text-blue-800" href="{{ subsection.permalink | safe }}">{{ subsection.title }}</a>
+      </h2>
+      <ul>
+      {% for page in subsection.pages %}
+        <li class="pb-3">
+          {{ blog::page_summary(page=page) }}
+        </li>
+      {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  {% endfor %}
+
+</div>
+{% endblock content %}

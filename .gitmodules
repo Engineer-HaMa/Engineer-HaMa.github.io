@@ -4,3 +4,9 @@
 [submodule "themes/goyo"]
 	path = themes/goyo
 	url = https://github.com/hahwul/goyo
+[submodule "themes/BelResume"]
+	path = themes/BelResume
+	url = https://github.com/cx48/BelResume.git
+[submodule "themes/kodama-theme"]
+	path = themes/kodama-theme
+	url = https://github.com/adfaure/kodama-theme
