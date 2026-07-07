@@ -7,6 +7,30 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [2.0.0](https://github.com/Engineer-HaMa/Engineer-HaMa.github.io/compare/v1.2.0...v2.0.0) (2026-07-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* migrate site from Zola to Astro (as-folio) with pnpm
+
+### Features
+
+* add lab/advisor info; fix ci deploy (setup-node v5 -&gt; v4) ([f49fe6c](https://github.com/Engineer-HaMa/Engineer-HaMa.github.io/commit/f49fe6ceacc49e46495796be6137648d1076b09e))
+* migrate site from Zola to Astro (as-folio) with pnpm ([83bb99a](https://github.com/Engineer-HaMa/Engineer-HaMa.github.io/commit/83bb99ae4dc71365f886a6a66140f91b9a870be0))
+
+
+### Bug Fixes
+
+* **ci:** allow dependency build scripts (pnpm dangerouslyAllowAllBuilds) ([d998be4](https://github.com/Engineer-HaMa/Engineer-HaMa.github.io/commit/d998be4f60933bd0c59696e98535543a77c51e66))
+* **ci:** install pnpm before setup-node; move to Node 24 actions ([f3947c7](https://github.com/Engineer-HaMa/Engineer-HaMa.github.io/commit/f3947c752595e07d363602c88c97e9657d83e81b))
+
+
+### Miscellaneous
+
+* hide demo sections from nav and about page ([3b14c11](https://github.com/Engineer-HaMa/Engineer-HaMa.github.io/commit/3b14c11a1ee3276ea1a82b2f97c50dfacbf762a1))
+* strip demo content and about-page extras ([489a3ad](https://github.com/Engineer-HaMa/Engineer-HaMa.github.io/commit/489a3ad7c149a20c5894a4757f05f03f5073f39a))
+
 ## [1.2.0](https://github.com/dadangnh/as-folio/compare/v1.1.0...v1.2.0) (2026-06-21)
 
 
