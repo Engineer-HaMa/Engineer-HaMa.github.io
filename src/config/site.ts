@@ -431,7 +431,8 @@ export const site = {
      *   Orange:           { light: '#f29105', dark: '#efcc00' }
      */
     color: {
-      light: 'auto' as string,
+      // Sky-blue accent in light mode (default 'auto' is purple).
+      light: '#0ea5e9' as string,
       dark: 'auto' as string,
     },
   },
