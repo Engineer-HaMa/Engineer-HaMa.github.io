@@ -19,12 +19,13 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      # Install pnpm BEFORE setup-node: setup-node@v5 detects the packageManager
+      # field and needs pnpm on PATH, so corepack-after-setup-node fails.
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v5
         with:
           node-version: '24'
-
-      - name: Enable Corepack
-        run: corepack enable
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
