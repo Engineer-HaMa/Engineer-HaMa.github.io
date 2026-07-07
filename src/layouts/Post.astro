@@ -44,7 +44,7 @@ const related = post.data.relatedPosts ? relatedPosts(post, allPosts) : [];
 // JSON-LD BlogPosting schema
 const canonicalURL = new URL(`${site.base}/blog/${post.id}/`, site.url).toString();
 
-// Generated OG image (falls back to static og.image if post has its own cover)
+// OG image: the post's own cover if it has one, else its generated per-post card.
 const ogImagePath = post.data.image
   ? new URL(post.data.image, site.url).toString()
   : new URL(`${site.base}/og/blog/${post.id}.png`, site.url).toString();

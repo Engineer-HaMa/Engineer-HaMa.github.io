@@ -1,0 +1,135 @@
+---
+// Anti-harvest email button (ours — not part of the as-folio theme).
+//
+// Renders the contact email as a copy-to-clipboard <button>, never a `mailto:`
+// link, so the plain address (and the tell-tale `mailto:`/`@`) never appears in
+// the shipped HTML for harvester bots to scrape. The address is base64-encoded
+// per half into data-* attributes and only reassembled by the client script
+// below: hover reveals a "user [at] domain (click to copy)" hint; click copies
+// the real address.
+//
+// The theme's own consumers stay clean because `author.email` / `socials.email`
+// are left empty in site.ts — so SocialLinks, the Person JSON-LD, and the RSS
+// feed all omit the address. The real address lives in `author.contactEmail`,
+// read only here.
+import { site } from '@config/site';
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  /** Icon size in pixels (match SocialLinks, default 18). */
+  size?: number;
+}
+const { size = 18 } = Astro.props;
+
+const email = site.author.contactEmail ?? '';
+const atIdx = email.indexOf('@');
+const enc = (v: string) => Buffer.from(v, 'utf8').toString('base64');
+const emailU = atIdx > 0 ? enc(email.slice(0, atIdx)) : '';
+const emailD = atIdx > 0 ? enc(email.slice(atIdx + 1)) : '';
+const hasEmail = Boolean(emailU && emailD);
+---
+
+{
+  hasEmail && (
+    <button
+      type="button"
+      class="email-copy"
+      data-u={emailU}
+      data-d={emailD}
+      aria-label="Copy email address"
+      style="color: var(--global-text-color); transition: color 0.15s;"
+    >
+      <Icon name="fa-solid:envelope" width={size} height={size} />
+      <span class="email-copy-tip" aria-hidden="true" />
+    </button>
+  )
+}
+
+<style>
+  /* Styled to match the theme's .social-link icons but as a <button> (no mailto:). */
+  .email-copy {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    line-height: 0;
+  }
+  .email-copy:hover {
+    color: var(--global-theme-color) !important;
+  }
+
+  /* Hover/focus tooltip: obfuscated "user [at] domain (click to copy)" hint.
+     Left-aligned to the button so the wide text grows rightward, not off the
+     left edge (the envelope is the leftmost icon in the row). */
+  .email-copy-tip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 0;
+    white-space: nowrap;
+    padding: 4px 9px;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    line-height: 1.3;
+    background: var(--global-card-bg-color);
+    color: var(--global-text-color);
+    border: 1px solid var(--global-divider-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+    z-index: 10;
+  }
+  .email-copy-tip:empty {
+    display: none;
+  }
+  .email-copy:hover .email-copy-tip,
+  .email-copy:focus-visible .email-copy-tip {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  // Reassemble the email only in the browser: the shipped HTML carries just two
+  // base64 halves in data-*, so static-HTML scrapers get no address.
+  function initEmailCopy() {
+    const b64 = (v: string) => {
+      try {
+        return decodeURIComponent(escape(atob(v)));
+      } catch {
+        return '';
+      }
+    };
+    document.querySelectorAll<HTMLButtonElement>('.email-copy').forEach((btn) => {
+      if (btn.dataset.wired) return;
+      btn.dataset.wired = '1';
+      const user = b64(btn.dataset.u || '');
+      const domain = b64(btn.dataset.d || '');
+      if (!user || !domain) return;
+      const tip = btn.querySelector<HTMLElement>('.email-copy-tip');
+      // Parenthetical hint after the address — the whole button copies on click.
+      const idle = `${user} [at] ${domain}  (click to copy)`;
+      const setTip = (msg: string) => {
+        if (tip) tip.textContent = msg;
+      };
+      setTip(idle);
+      btn.addEventListener('click', async () => {
+        const addr = `${user}@${domain}`;
+        try {
+          await navigator.clipboard.writeText(addr);
+          setTip('Copied to clipboard!');
+        } catch {
+          // Clipboard unavailable (insecure context / denied) — reveal the full
+          // address so it can be selected and copied manually.
+          setTip(addr);
+        }
+        window.setTimeout(() => setTip(idle), 1500);
+      });
+    });
+  }
+
+  initEmailCopy();
+  document.addEventListener('astro:after-swap', initEmailCopy);
+</script>

@@ -6,14 +6,15 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: pages
+  group: deploy-gh-pages
   cancel-in-progress: false
 
 jobs:
-  build:
-    name: Build
+  build-and-deploy:
+    name: Build and deploy to gh-pages
     runs-on: ubuntu-latest
     permissions:
+      # Needed for peaceiris to push the built site to the gh-pages branch.
       contents: write
     steps:
       - uses: actions/checkout@v5
@@ -31,40 +32,18 @@ jobs:
       - name: Build site
         run: yarn build
         env:
-          # Deployment config is env-first.
-          # Forks should set these as repository variables in Settings → Secrets and variables → Actions.
-          # ASTRO_SITE: site origin, e.g. https://username.github.io
-          # ASTRO_BASE: project-page base path, e.g. /repo-name (leave empty for user/org pages)
-          # The fallbacks below are only for this template repository's own deployment.
-          ASTRO_SITE: ${{ vars.ASTRO_SITE || 'https://dadangnh.github.io' }}
-          ASTRO_BASE: ${{ vars.ASTRO_BASE || '/as-folio' }}
+          ASTRO_SITE: ${{ vars.ASTRO_SITE || 'https://seungjong-ha.github.io' }}
+          ASTRO_BASE: ${{ vars.ASTRO_BASE || '' }}
 
-      - name: Commit updated citations.yml
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add src/data/citations.yml
-          if git diff --cached --quiet; then
-            echo "No citation changes to commit."
-          else
-            git commit -m "chore: update citation counts [skip ci]"
-            git push
-          fi
-
-      - uses: actions/upload-pages-artifact@v3
+      # Publish dist/ to the gh-pages branch, served by GitHub Pages via
+      # "Deploy from a branch" — no Pages-source change needed. .nojekyll keeps
+      # Astro's _s/ assets from being stripped by Jekyll.
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: dist/
-
-  deploy:
-    name: Deploy
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    permissions:
-      pages: write
-      id-token: write
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
+          force_orphan: true
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'

@@ -1,5 +1,6 @@
 ---
 import ProfilePhoto from '@components/about/ProfilePhoto.astro';
+import EmailCopy from '@components/EmailCopy.astro';
 import SocialLinks from '@components/SocialLinks.astro';
 import { site } from '@config/site';
 import Base from '@layouts/Base.astro';
@@ -31,6 +32,32 @@ const allPosts = site.latestPosts.enabled
 const formatDate = (d: Date) =>
   d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 
+// Education timeline — rendered as its own listing section (like latest posts).
+const education: Array<{
+  period: string;
+  degree: string;
+  org: string;
+  detail?: string;
+  href?: string;
+  advisor?: string;
+  advisorHref?: string;
+}> = [
+  {
+    period: '2026 – present',
+    degree: 'M.S., School of Computing',
+    org: 'KAIST',
+    detail: 'CASYS Lab',
+    href: 'https://casyslab.kaist.ac.kr/',
+    advisor: 'Youngjin Kwon',
+    advisorHref: 'https://sites.google.com/view/yjkwon/home',
+  },
+  {
+    period: '2020 – 2025',
+    degree: 'B.S., School of Computing',
+    org: 'KAIST',
+  },
+];
+
 // Selected publications
 const selectedPapers = site.selectedPapers.enabled
   ? parseBibtex(bibRaw).filter((e) => getBoolField(e, 'selected'))
@@ -44,43 +71,111 @@ const renderedAnnouncements = await Promise.all(
 
 <Base isHome={true}>
   <div class="post page-container py-8">
-    <header class="post-header">
-      <h1
-        class="post-title"
-        style="font-family: var(--font-sans); color: var(--global-text-color);"
-      >
-        {(site.title as string) === 'blank' ? site.author.name : site.title}
-      </h1>
-      {
-        site.author.subtitle && (
-          <p
-            class="desc"
-            style="color: var(--global-text-color-light);"
-            set:html={site.author.subtitle}
-          />
-        )
-      }
-    </header>
-
     <article>
-      <!-- Profile photo (floats right by default) -->
+      <!-- Profile photo floats right, top-aligned with the name header -->
       <ProfilePhoto align="right" />
 
-      <div class="clearfix">
-        <!-- Bio content from about.mdx -->
-        <div class="prose max-w-none">
-          <AboutContent />
-        </div>
+      <header class="post-header">
+        <h1
+          class="post-title"
+          style="font-family: var(--font-sans); color: var(--global-text-color);"
+        >
+          {(site.title as string) === 'blank' ? site.author.name : site.title}
+        </h1>
+        {
+          site.author.subtitle && (
+            <p
+              class="desc"
+              style="color: var(--global-text-color-light);"
+              set:html={site.author.subtitle}
+            />
+          )
+        }
+      </header>
+
+      <!-- Bio content from about.mdx -->
+      <div class="prose about-bio max-w-none">
+        <AboutContent />
       </div>
+
+      <style>
+        /* The theme's global reset strips paragraph spacing on the about `prose`
+           — restore a clean rhythm for the short bio. */
+        .about-bio :global(p) {
+          margin-bottom: 0.85rem;
+        }
+      </style>
 
       <!-- Social icons -->
       {
         site.socials && (
           <div class="social mt-6">
-            <div class="contact-icons">
+            <div class="contact-icons" style="display: flex; align-items: center; gap: 0.5rem;">
+              <EmailCopy />
               <SocialLinks />
             </div>
           </div>
+        )
+      }
+
+      <!-- Clear the floated photo so the listing sections sit full-width below it -->
+      <div style="clear: both;"></div>
+
+      <!-- Education -->
+      {
+        education.length > 0 && (
+          <section class="mt-8">
+            <h2 style="color: var(--global-text-color); border-bottom: 1px solid var(--global-divider-color); padding-bottom: 0.3rem;">
+              education
+            </h2>
+            <table class="listing-table" style="width: 100%; border-collapse: collapse;">
+              <tbody>
+                {education.map((e) => (
+                  <tr style="border-bottom: 1px solid var(--global-divider-color);">
+                    <td style="padding: 0.5rem 1rem 0.5rem 0; white-space: nowrap; vertical-align: top; color: var(--global-text-color-light); font-size: 0.8rem;">
+                      {e.period}
+                    </td>
+                    <td style="padding: 0.5rem 0; font-size: 0.9rem; color: var(--global-text-color);">
+                      {e.degree}, {e.org}
+                      {e.detail &&
+                        (e.href ? (
+                          <>
+                            {' · '}
+                            <a
+                              href={e.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style="color: var(--global-theme-color); text-decoration: none;"
+                            >
+                              {e.detail}
+                            </a>
+                          </>
+                        ) : (
+                          <>{` · ${e.detail}`}</>
+                        ))}
+                      {e.advisor && (
+                        <div style="margin-top: 0.15rem; font-size: 0.8rem; color: var(--global-text-color-light);">
+                          Advised by{' '}
+                          {e.advisorHref ? (
+                            <a
+                              href={e.advisorHref}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style="color: var(--global-theme-color); text-decoration: none;"
+                            >
+                              {e.advisor}
+                            </a>
+                          ) : (
+                            e.advisor
+                          )}
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </section>
         )
       }
 
@@ -94,7 +189,7 @@ const renderedAnnouncements = await Promise.all(
               </a>
             </h2>
             <div class={site.announcements.scrollable ? 'scrollable-list' : ''}>
-              <table style="width: 100%; border-collapse: collapse;">
+              <table class="listing-table" style="width: 100%; border-collapse: collapse;">
                 <tbody>
                   {renderedAnnouncements.map(({ item, rendered: { Content } }) => (
                     <tr style="border-bottom: 1px solid var(--global-divider-color);">
@@ -123,7 +218,7 @@ const renderedAnnouncements = await Promise.all(
               </a>
             </h2>
             <div class={site.latestPosts.scrollable ? 'scrollable-list' : ''}>
-              <table style="width: 100%; border-collapse: collapse;">
+              <table class="listing-table" style="width: 100%; border-collapse: collapse;">
                 <tbody>
                   {allPosts.map((post) => (
                     <tr style="border-bottom: 1px solid var(--global-divider-color);">
@@ -219,11 +314,6 @@ const renderedAnnouncements = await Promise.all(
 </Base>
 
 <style>
-  .clearfix::after {
-    content: '';
-    display: table;
-    clear: both;
-  }
   .post-title {
     font-size: 2rem;
     font-weight: 700;
@@ -232,5 +322,14 @@ const renderedAnnouncements = await Promise.all(
   .desc {
     font-size: 1rem;
     margin-bottom: 1rem;
+  }
+  /* Tighten the header block now that the photo floats alongside the name. */
+  .post-header {
+    margin-bottom: 1rem;
+  }
+  /* Fix the date/period column to a shared width so the body-text column
+     lines up across the education and latest-posts listings. */
+  .listing-table td:first-child {
+    width: 8rem;
   }
 </style>

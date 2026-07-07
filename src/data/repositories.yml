@@ -1,13 +1,3 @@
-github_users:
-  - torvalds
-  - dadangnh
-
-github_repos:
-  - dadangnh/as-folio
-  - torvalds/linux
-  - git/git
-  - python/cpython
-  - astro/astro
-  - tailwindlabs/tailwindcss
-
-repo_description_lines_max: 2
+# GitHub repo/user cards for the /repositories/ page. Add entries to populate it.
+repositories: []
+users: []

@@ -1,0 +1,14 @@
+# GitHub Linguist: keep the repo language stats about the actual project,
+# not the third-party assets the as-folio theme bundles.
+
+# Distill.pub library (vendored by the theme; ~960 KB of JS + source maps)
+public/assets/js/distillpub/** linguist-vendored
+
+# Generated source maps
+*.map linguist-generated
+
+# Generated lockfile
+pnpm-lock.yaml linguist-generated
+
+# Demo asset shipped with the theme
+public/assets/img/as_folio_cv.mhtml linguist-vendored

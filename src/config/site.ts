@@ -32,10 +32,11 @@ export const site = {
   // ─── Identity ──────────────────────────────────────────────────────────────
 
   /** Site title. Shown in the browser tab and navbar. */
-  title: 'Albert Einstein',
+  title: 'SeungJong Ha',
 
   /** Site description. Used in meta tags. */
-  description: 'A simple, clean, and responsive Astro template for academics. Powered by as-folio.',
+  description:
+    'SeungJong Ha — M.S. student at KAIST School of Computing (CASYS Lab). Systems, operating systems, and Rust.',
 
   /** Language code for the site. */
   lang: 'en',
@@ -44,10 +45,23 @@ export const site = {
 
   author: {
     /** Full name shown in navbar, about page heading, and footer. */
-    name: 'Albert Einstein',
+    name: 'SeungJong Ha',
 
-    /** Short email address (used in social links). */
-    email: 'einstein@example.com',
+    /**
+     * Left empty ON PURPOSE. The theme's own consumers render `email` as plain
+     * text or a `mailto:` link — SocialLinks, the Person JSON-LD (Base.astro),
+     * and the RSS author/managingEditor — which harvester bots scrape. Keeping
+     * it empty makes all of them omit the address. The real address lives in
+     * `contactEmail` below and is surfaced only by our obfuscated EmailCopy
+     * component. Do NOT put the real address here.
+     */
+    email: '',
+
+    /**
+     * Real contact address — rendered ONLY by `EmailCopy.astro` (base64-split,
+     * reassembled client-side; never emitted as plain text or a `mailto:` link).
+     */
+    contactEmail: 'seungjong.ha@casys.kaist.ac.kr',
 
     /** Path to profile photo. Place image in public/assets/img/. */
     avatar: '/assets/img/prof_pic.jpg',
@@ -56,18 +70,16 @@ export const site = {
      * Subtitle below your name on the about page.
      * HTML is supported.
      */
-    subtitle: `Theoretical Physicist
+    subtitle: `M.S. Student, <a href="https://cs.kaist.ac.kr/">KAIST School of Computing</a>
       &nbsp;·&nbsp;
-      <a href="https://en.wikipedia.org/wiki/Institute_for_Advanced_Study">Institute for Advanced Study</a>,
-      Princeton`,
+      <a href="https://casyslab.kaist.ac.kr/">CASYS Lab</a>`,
 
     /**
      * Address block below profile photo.
-     * HTML is supported.
+     * HTML is supported. Left empty — affiliation and advisor now live in the
+     * education section on the homepage. Empty string hides the block entirely.
      */
-    moreInfo: `<p>Institute for Advanced Study</p>
-      <p>Einstein Drive</p>
-      <p>Princeton, NJ 08540</p>`,
+    moreInfo: ``,
   },
 
   // ─── Social links ──────────────────────────────────────────────────────────
@@ -79,16 +91,18 @@ export const site = {
   //   bluesky_handle, medium_username, cv_pdf, rss_icon
 
   socials: {
-    email: 'einstein@example.com',
+    // Left undefined so the theme's SocialLinks never emits a plain `mailto:`
+    // link. Email is shown via our EmailCopy component (see author.contactEmail).
+    email: undefined as string | undefined,
     x_username: undefined as string | undefined,
     linkedin_username: undefined as string | undefined,
-    github_username: undefined as string | undefined,
+    github_username: 'SeungJong-Ha',
     gitlab_username: undefined as string | undefined,
     /** Google Scholar user ID — the part after user= in your Scholar URL */
-    scholar_userid: 'qc6CJjYAAAAJ',
+    scholar_userid: undefined as string | undefined,
     orcid_id: undefined as string | undefined,
     /** Inspire HEP author ID */
-    inspire_id: '1010907',
+    inspire_id: undefined as string | undefined,
     researchgate_username: undefined as string | undefined,
     arxiv_id: undefined as string | undefined,
     youtube_id: undefined as string | undefined,
@@ -97,9 +111,9 @@ export const site = {
     bluesky_handle: undefined as string | undefined,
     medium_username: undefined as string | undefined,
     /** Path to CV PDF in public/assets/pdf/ */
-    cv_pdf: '/assets/pdf/example_pdf.pdf',
+    cv_pdf: undefined as string | undefined,
     /** Show RSS icon in social links */
-    rss_icon: true,
+    rss_icon: false,
   },
 
   // ─── Navigation ────────────────────────────────────────────────────────────
@@ -116,21 +130,12 @@ export const site = {
      *
      * `href` values are relative to the site root (base is prepended automatically).
      */
+    // Only sections with real content are linked. The publications / projects /
+    // repositories / cv / teaching / people / books pages still build from their
+    // (demo) collections but are intentionally unlinked until filled in.
     items: [
       { label: 'about', href: '/' },
       { label: 'blog', href: '/blog/' },
-      { label: 'publications', href: '/publications/' },
-      { label: 'projects', href: '/projects/' },
-      { label: 'repositories', href: '/repositories/' },
-      { label: 'cv', href: '/cv/' },
-      {
-        label: 'more',
-        children: [
-          { label: 'teaching', href: '/teaching/' },
-          { label: 'people', href: '/people/' },
-          { label: 'books', href: '/books/' },
-        ],
-      },
     ] as NavItem[],
   },
 
@@ -166,24 +171,24 @@ export const site = {
      */
     format: 'rendercv' as 'rendercv' | 'jsonresume',
     /** Path to CV PDF for the download button in public/assets/pdf/. */
-    pdfPath: '/assets/pdf/example_pdf.pdf',
+    pdfPath: '',
   },
 
   // ─── Blog ──────────────────────────────────────────────────────────────────
 
   blog: {
     /** Name shown in the blog page heading. */
-    name: 'as-folio',
-    description: 'A simple, clean, and responsive Astro template for academics.',
+    name: 'Blog',
+    description: 'Paper reviews and study notes on systems, operating systems, and Rust.',
     /** Number of posts per page. */
-    postsPerPage: 5,
+    postsPerPage: 10,
     /**
      * Tags shown as badges on the blog listing page header.
      * Users can click them to filter posts by tag.
      */
-    displayTags: ['formatting', 'images', 'links', 'math', 'code', 'blockquotes'],
+    displayTags: ['paper-review', 'interview'],
     /** Categories shown as badges on the blog listing page header. */
-    displayCategories: [] as string[],
+    displayCategories: ['Review', 'Interview Prep'] as string[],
     /**
      * External post sources (fetched at build time).
      * Each entry is either an RSS feed URL or a list of individual post objects.
@@ -205,7 +210,7 @@ export const site = {
 
   announcements: {
     /** Show news/announcements section on the about page. */
-    enabled: true,
+    enabled: false,
     /** Enable vertical scroll if more than 3 items. */
     scrollable: true,
     /** Max news items to show (undefined = show all). */
@@ -221,7 +226,7 @@ export const site = {
 
   selectedPapers: {
     /** Show selected publications section on the about page. */
-    enabled: true,
+    enabled: false,
   },
 
   // ─── Features ─────────────────────────────────────────────────────────────
@@ -291,7 +296,7 @@ export const site = {
 
   analytics: {
     /** Google Analytics 4 measurement ID (format: G-XXXXXXXXXX). */
-    ga4: '' as string,
+    ga4: 'G-TCXZ1MQHX6' as string,
     /** Cronitor RUM analytics site ID. */
     cronitor: '' as string,
     /** Pirsch analytics site ID. */
@@ -307,10 +312,10 @@ export const site = {
   // ─── Open Graph ───────────────────────────────────────────────────────────
 
   og: {
-    /** Include Open Graph meta tags. */
+    /** Emit OG/Twitter meta tags and generate the per-page OG cards. false drops OG. */
     enabled: true,
-    /** Default OG image path (in public/). */
-    image: '' as string,
+    /** Default OG image for non-post pages — the generated home/default card. */
+    image: '/og/default.png' as string,
   },
 
   // ─── Newsletter ───────────────────────────────────────────────────────────
@@ -358,7 +363,7 @@ export const site = {
      * Defaults to the last word of `site.author.name` when not set.
      * Override explicitly if your publications use a different name form.
      */
-    authorLastName: undefined as string | undefined,
+    authorLastName: 'Ha' as string | undefined,
     /** Path prefix (relative to public/) for publication preview images. */
     previewDir: '/assets/img/publication_preview/',
     /** Path prefix (relative to public/) for publication PDFs and supplements. */
@@ -438,7 +443,8 @@ export const site = {
      *   Orange:           { light: '#f29105', dark: '#efcc00' }
      */
     color: {
-      light: 'auto' as string,
+      // Sky-blue accent in light mode (default 'auto' is purple).
+      light: '#0ea5e9' as string,
       dark: 'auto' as string,
     },
   },

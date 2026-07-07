@@ -41,10 +41,10 @@ const lightColor = site.theme.color.light === 'auto' ? null : site.theme.color.l
 const darkColor = site.theme.color.dark === 'auto' ? null : site.theme.color.dark;
 const colorOverrideStyle = [
   lightColor
-    ? `:root,[data-theme='light']{--global-theme-color:${lightColor};--global-hover-color:${lightColor};}`
+    ? `:root,[data-theme='light']{--global-theme-color:${lightColor}!important;--global-hover-color:${lightColor}!important;}`
     : '',
   darkColor
-    ? `[data-theme='dark']{--global-theme-color:${darkColor};--global-hover-color:${darkColor};}`
+    ? `[data-theme='dark']{--global-theme-color:${darkColor}!important;--global-hover-color:${darkColor}!important;}`
     : '',
 ]
   .filter(Boolean)
