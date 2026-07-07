@@ -1,0 +1,13 @@
+# pnpm settings (pnpm 11 reads these from pnpm-workspace.yaml, not .npmrc/package.json)
+nodeLinker: hoisted
+enablePrePostScripts: true
+# Don't auto-run `pnpm install` before every `pnpm run` (it fails the build over
+# harmless ignored build scripts; sharp/esbuild ship prebuilt binaries).
+verifyDepsBeforeRun: false
+# Allow these native deps to run their (optional) install scripts.
+onlyBuiltDependencies:
+  - esbuild
+  - sharp
+allowBuilds:
+  esbuild: set this to true or false
+  sharp: set this to true or false
