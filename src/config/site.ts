@@ -58,14 +58,14 @@ export const site = {
      */
     subtitle: `M.S. Student, <a href="https://cs.kaist.ac.kr/">KAIST School of Computing</a>
       &nbsp;·&nbsp;
-      CASYS Lab`,
+      <a href="https://casyslab.kaist.ac.kr/">CASYS Lab</a>`,
 
     /**
      * Address block below profile photo.
      * HTML is supported.
      */
-    moreInfo: `<p>KAIST School of Computing</p>
-      <p>CASYS Lab</p>
+    moreInfo: `<p><a href="https://casyslab.kaist.ac.kr/">CASYS Lab</a>, KAIST School of Computing</p>
+      <p>Advised by <a href="https://sites.google.com/view/yjkwon/home">Youngjin Kwon</a></p>
       <p>Daejeon, South Korea</p>`,
   },
 
