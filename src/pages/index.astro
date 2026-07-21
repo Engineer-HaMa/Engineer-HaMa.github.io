@@ -32,6 +32,21 @@ const allPosts = site.latestPosts.enabled
 const formatDate = (d: Date) =>
   d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 
+// Experience — research positions, rendered as its own listing section.
+const experience: Array<{
+  period: string;
+  role: string;
+  org: string;
+  href?: string;
+}> = [
+  {
+    period: '2026 – present',
+    role: 'Graduate Research Assistant',
+    org: 'CASYS Lab, KAIST',
+    href: 'https://casyslab.kaist.ac.kr/',
+  },
+];
+
 // Education timeline — rendered as its own listing section (like latest posts).
 const education: Array<{
   period: string;
@@ -120,6 +135,56 @@ const renderedAnnouncements = await Promise.all(
 
       <!-- Clear the floated photo so the listing sections sit full-width below it -->
       <div style="clear: both;"></div>
+
+      <!-- Publications -->
+      <section class="mt-8">
+        <h2
+          style="color: var(--global-text-color); border-bottom: 1px solid var(--global-divider-color); padding-bottom: 0.3rem;"
+        >
+          publications
+        </h2>
+        <p style="color: var(--global-text-color-light); font-size: 0.9rem; margin-top: 0.75rem;">
+          Coming soon.
+        </p>
+      </section>
+
+      <!-- Experience -->
+      {
+        experience.length > 0 && (
+          <section class="mt-8">
+            <h2 style="color: var(--global-text-color); border-bottom: 1px solid var(--global-divider-color); padding-bottom: 0.3rem;">
+              experience
+            </h2>
+            <table class="listing-table" style="width: 100%; border-collapse: collapse;">
+              <tbody>
+                {experience.map((e) => (
+                  <tr style="border-bottom: 1px solid var(--global-divider-color);">
+                    <td style="padding: 0.5rem 1rem 0.5rem 0; white-space: nowrap; vertical-align: top; color: var(--global-text-color-light); font-size: 0.8rem;">
+                      {e.period}
+                    </td>
+                    <td style="padding: 0.5rem 0; font-size: 0.9rem; color: var(--global-text-color);">
+                      {e.role}
+                      {' · '}
+                      {e.href ? (
+                        <a
+                          href={e.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style="color: var(--global-theme-color); text-decoration: none;"
+                        >
+                          {e.org}
+                        </a>
+                      ) : (
+                        e.org
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </section>
+        )
+      }
 
       <!-- Education -->
       {
@@ -328,7 +393,7 @@ const renderedAnnouncements = await Promise.all(
     margin-bottom: 1rem;
   }
   /* Fix the date/period column to a shared width so the body-text column
-     lines up across the education and latest-posts listings. */
+     lines up across the experience and education listings. */
   .listing-table td:first-child {
     width: 8rem;
   }
