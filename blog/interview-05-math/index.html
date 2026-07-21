@@ -1,0 +1,320 @@
+<!DOCTYPE html><html lang="en" data-theme="light"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="SeungJong Ha — M.S. student at KAIST School of Computing (CASYS Lab). Systems, operating systems, and Rust."><link rel="canonical" href="https://seungjong-ha.github.io/blog/interview-05-math/"><title>5. Math | SeungJong Ha</title><!-- Favicon --><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="alternate icon" href="/favicon.ico"><!-- Fonts are self-hosted via Fontsource (imported in global.css) — no FOUT --><!-- KaTeX CSS is bundled via global.css (@import 'katex/dist/katex.min.css') --><!-- Theme color override (from site.theme.color — 'auto' means use _colors.css defaults) --><style>:root,[data-theme='light']{--global-theme-color:#0ea5e9!important;--global-hover-color:#0ea5e9!important;}</style><!-- Open Graph + Twitter Card --><meta property="og:title" content="5. Math | SeungJong Ha"><meta property="og:description" content="SeungJong Ha — M.S. student at KAIST School of Computing (CASYS Lab). Systems, operating systems, and Rust."><meta property="og:url" content="https://seungjong-ha.github.io/blog/interview-05-math/"><meta property="og:type" content="website"><meta property="og:image" content="https://seungjong-ha.github.io/og/blog/interview-05-math.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="5. Math | SeungJong Ha"><meta name="twitter:description" content="SeungJong Ha — M.S. student at KAIST School of Computing (CASYS Lab). Systems, operating systems, and Rust."><meta name="twitter:image" content="https://seungjong-ha.github.io/og/blog/interview-05-math.png"><!-- Analytics verification tags --><!-- GA4 via Partytown (production only) --><script type="text/partytown" src="https://www.googletagmanager.com/gtag/js?id=G-TCXZ1MQHX6"></script><script type="text/partytown">(function(){const ga4 = "G-TCXZ1MQHX6";
+
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+              dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+            gtag('config', ga4);
+          })();</script><!-- Cronitor RUM --><!-- Pirsch analytics --><!-- OpenPanel analytics --><!-- Person JSON-LD (homepage only) --><!-- View Transitions (smooth page-to-page navigation) --><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.BAAUdx5Y.js"></script><!-- Named slot for page-specific head content (e.g. JSON-LD from Post.astro) --> <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"5. Math","datePublished":"2025-08-11T00:00:00.000Z","url":"https://seungjong-ha.github.io/blog/interview-05-math/","author":{"@type":"Person","name":"SeungJong Ha","url":"https://seungjong-ha.github.io"},"image":"https://seungjong-ha.github.io/og/blog/interview-05-math.png"}</script> <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Blog","item":"https://seungjong-ha.github.io/blog/"},{"@type":"ListItem","position":2,"name":"5. Math","item":"https://seungjong-ha.github.io/blog/interview-05-math/"}]}</script> <!--
+      Dark mode: must run BEFORE any CSS to prevent FOUC.
+      Reads stored preference, falls back to system preference, then site default.
+      Re-applies after each View Transition swap to keep the theme consistent.
+    --><script>(function(){const defaultTheme = "system";
+
+      function applyTheme() {
+        const stored = localStorage.getItem('theme');
+        let theme;
+        if (stored === 'light' || stored === 'dark') {
+          theme = stored;
+        } else if (defaultTheme === 'system') {
+          theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        } else {
+          theme = defaultTheme;
+        }
+        document.documentElement.setAttribute('data-theme', theme);
+        document.documentElement.setAttribute('data-theme-setting', stored || 'system');
+      }
+      applyTheme();
+      document.addEventListener('astro:after-swap', applyTheme);
+    })();</script><link rel="stylesheet" href="/_s/CuShRENE.css"><style>.giscus-notice[data-astro-cid-an2nl7ar]{font-size:.85rem;color:var(--global-text-color-light);margin-bottom:.75rem}.giscus-notice[data-astro-cid-an2nl7ar] a[data-astro-cid-an2nl7ar]{color:var(--global-theme-color);text-decoration:none}.giscus-notice[data-astro-cid-an2nl7ar] a[data-astro-cid-an2nl7ar]:hover{text-decoration:underline}.giscus-btn[data-astro-cid-an2nl7ar]{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1.1rem;border-radius:4px;border:1px solid var(--global-divider-color);background:transparent;color:var(--global-text-color);font-size:.875rem;font-family:var(--font-sans);cursor:pointer;transition:border-color .15s ease,color .15s ease}.giscus-btn[data-astro-cid-an2nl7ar]:hover{border-color:var(--global-theme-color);color:var(--global-theme-color)}
+</style><link rel="stylesheet" href="/_s/B-FGpDiK.css"><script type="module" src="/_astro/page.52P97FCf.js"></script><script>!(function(w,p,f,c){if(!window.crossOriginIsolated && !navigator.serviceWorker) return;c=w[p]=Object.assign(w[p]||{},{"lib":"/~partytown/","debug":false});c[f]=(c[f]||[]).concat(["dataLayer.push"])})(window,'partytown','forward');/* Partytown 0.13.2 - MIT QwikDev */
+const t={preserveBehavior:!1},e=e=>{if("string"==typeof e)return[e,t];const[n,r=t]=e;return[n,{...t,...r}]},n=Object.freeze((t=>{const e=new Set;let n=[];do{Object.getOwnPropertyNames(n).forEach((t=>{"function"==typeof n[t]&&e.add(t)}))}while((n=Object.getPrototypeOf(n))!==Object.prototype);return Array.from(e)})());!function(t,r,o,i,a,s,c,l,d,p,u=t,f){function h(){f||(f=1,"/"==(c=(s.lib||"/~partytown/")+(s.debug?"debug/":""))[0]&&(d=r.querySelectorAll('script[type="text/partytown"]'),i!=t?i.dispatchEvent(new CustomEvent("pt1",{detail:t})):(l=setTimeout(v,(null==s?void 0:s.fallbackTimeout)||1e4),r.addEventListener("pt0",w),a?y(1):o.serviceWorker?o.serviceWorker.register(c+(s.swPath||"partytown-sw.js"),{scope:c}).then((function(t){t.active?y():t.installing&&t.installing.addEventListener("statechange",(function(t){"activated"==t.target.state&&y()}))}),console.error):v())))}function y(e){p=r.createElement(e?"script":"iframe"),t._pttab=Date.now(),e||(p.style.display="block",p.style.width="0",p.style.height="0",p.style.border="0",p.style.visibility="hidden",p.setAttribute("aria-hidden",!0)),p.src=c+"partytown-"+(e?"atomics.js?v=0.13.2":"sandbox-sw.html?"+t._pttab),r.querySelector(s.sandboxParent||"body").appendChild(p)}function v(n,o){for(w(),i==t&&(s.forward||[]).map((function(n){const[r]=e(n);delete t[r.split(".")[0]]})),n=0;n<d.length;n++)(o=r.createElement("script")).innerHTML=d[n].innerHTML,o.nonce=s.nonce,r.head.appendChild(o);p&&p.parentNode.removeChild(p)}function w(){clearTimeout(l)}s=t.partytown||{},i==t&&(s.forward||[]).map((function(r){const[o,{preserveBehavior:i}]=e(r);u=t,o.split(".").map((function(e,r,o){var a;u=u[o[r]]=r+1<o.length?u[o[r]]||(a=o[r+1],n.includes(a)?[]:{}):(()=>{let e=null;if(i){const{methodOrProperty:n,thisObject:r}=((t,e)=>{let n=t;for(let t=0;t<e.length-1;t+=1)n=n[e[t]];return{thisObject:n,methodOrProperty:e.length>0?n[e[e.length-1]]:void 0}})(t,o);"function"==typeof n&&(e=(...t)=>n.apply(r,...t))}return function(){let n;return e&&(n=e(arguments)),(t._ptf=t._ptf||[]).push(o,arguments),n}})()}))})),"complete"==r.readyState?h():(t.addEventListener("DOMContentLoaded",h),t.addEventListener("load",h))}(window,document,navigator,top,window.crossOriginIsolated);;(e=>{e.addEventListener("astro:before-swap",e=>{let r=document.body.querySelector("iframe[src*='/~partytown/']");if(r)e.newDocument.body.append(r)})})(document);</script></head> <body class="min-h-screen flex flex-col" style="padding-top: var(--navbar-height);" data-footer-position="sticky"> <!-- Skip to main content (accessibility) --> <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 px-4 py-2 rounded" style="background-color: var(--global-theme-color); color: var(--global-hover-text-color);">
+Skip to main content
+</a> <nav class="navbar fixed top-0 right-0 left-0 z-40" style="background-color: var(--global-bg-color); border-bottom: 1px solid var(--global-divider-color); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); height: 57px;" data-astro-cid-5blmo7yk> <div class="page-container flex h-full items-center justify-between" style="max-width: 930px; margin: 0 auto; padding: 0 1rem;" data-astro-cid-5blmo7yk> <!-- Brand --> <a href="/" class="text-lg font-bold" style="color: var(--global-text-color); text-decoration: none;" data-astro-cid-5blmo7yk> SeungJong Ha </a> <!-- Desktop nav --> <div class="hidden items-center gap-1 md:flex" data-astro-cid-5blmo7yk> <a href="/" class="px-3 py-1 text-sm transition-colors " style="color: var(--global-text-color); text-decoration: none;" data-astro-cid-5blmo7yk> about </a><a href="/blog/" class="px-3 py-1 text-sm transition-colors font-bold" style="color: var(--global-theme-color); text-decoration: none;" data-astro-cid-5blmo7yk> blog </a> <!-- Search pill (desktop) --> <button id="search-toggle" class="search-pill" aria-label="Search" title="Search" type="button" data-astro-cid-5blmo7yk> <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-5blmo7yk> <circle cx="11" cy="11" r="8" data-astro-cid-5blmo7yk></circle> <line x1="21" y1="21" x2="16.65" y2="16.65" data-astro-cid-5blmo7yk></line> </svg> <span class="search-pill-text" data-astro-cid-5blmo7yk>Search…</span> <kbd class="search-kbd" data-astro-cid-5blmo7yk>⌘K</kbd> </button> <button data-light-toggle title="Toggle theme" aria-label="Toggle theme" style="padding: 0; border: 0; background-color: inherit; color: var(--global-text-color); width: 2rem; height: 2rem; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;"> <!-- Moon icon: shown in light mode (click to go dark) --> <span data-light-toggle-icon="moon"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </span> <!-- Sun icon: shown in dark mode (click to go light) --> <span data-light-toggle-icon="sun" style="display: none;"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <circle cx="12" cy="12" r="5"></circle> <line x1="12" y1="1" x2="12" y2="3"></line> <line x1="12" y1="21" x2="12" y2="23"></line> <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line> <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line> <line x1="1" y1="12" x2="3" y2="12"></line> <line x1="21" y1="12" x2="23" y2="12"></line> <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line> <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line> </svg> </span> </button> <script type="module">function e(t){document.querySelectorAll("[data-light-toggle-icon]").forEach(n=>{const c=t==="dark"&&n.getAttribute("data-light-toggle-icon")==="sun"||t==="light"&&n.getAttribute("data-light-toggle-icon")==="moon";n.style.display=c?"inline-block":"none"})}function d(t){document.documentElement.setAttribute("data-theme",t),localStorage.setItem("theme",t),e(t)}function o(){const t=document.documentElement.getAttribute("data-theme")??"light";d(t==="dark"?"light":"dark")}function a(){document.querySelectorAll("[data-light-toggle]").forEach(t=>{t.removeEventListener("click",o),t.addEventListener("click",o)})}a();e(document.documentElement.getAttribute("data-theme")??"light");document.addEventListener("astro:after-swap",()=>{a(),e(document.documentElement.getAttribute("data-theme")??"light")});window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",t=>{localStorage.getItem("theme")||(document.documentElement.setAttribute("data-theme",t.matches?"dark":"light"),e(t.matches?"dark":"light"))});</script> </div> <!-- Mobile controls (icon-only search + theme + hamburger) --> <div class="flex items-center gap-2 md:hidden" data-astro-cid-5blmo7yk> <button id="search-toggle" aria-label="Search" type="button" style="padding: 0; border: 0; background: inherit; color: var(--global-text-color); cursor: pointer;" data-astro-cid-5blmo7yk> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-5blmo7yk> <circle cx="11" cy="11" r="8" data-astro-cid-5blmo7yk></circle> <line x1="21" y1="21" x2="16.65" y2="16.65" data-astro-cid-5blmo7yk></line> </svg> </button> <button data-light-toggle title="Toggle theme" aria-label="Toggle theme" style="padding: 0; border: 0; background-color: inherit; color: var(--global-text-color); width: 2rem; height: 2rem; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;"> <!-- Moon icon: shown in light mode (click to go dark) --> <span data-light-toggle-icon="moon"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </span> <!-- Sun icon: shown in dark mode (click to go light) --> <span data-light-toggle-icon="sun" style="display: none;"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <circle cx="12" cy="12" r="5"></circle> <line x1="12" y1="1" x2="12" y2="3"></line> <line x1="12" y1="21" x2="12" y2="23"></line> <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line> <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line> <line x1="1" y1="12" x2="3" y2="12"></line> <line x1="21" y1="12" x2="23" y2="12"></line> <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line> <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line> </svg> </span> </button>  <button id="navbar-toggler" class="navbar-toggler collapsed" aria-label="Toggle navigation" aria-expanded="false" type="button" style="padding: 0.25rem; border: 0; background: inherit; cursor: pointer;" data-astro-cid-5blmo7yk> <span class="icon-bar top-bar" style="display: block; width: 22px; height: 2px; background-color: var(--global-text-color); border-radius: 1px; margin-bottom: 4px;" data-astro-cid-5blmo7yk></span> <span class="icon-bar middle-bar" style="display: block; width: 22px; height: 2px; background-color: var(--global-text-color); border-radius: 1px; margin-bottom: 4px;" data-astro-cid-5blmo7yk></span> <span class="icon-bar bottom-bar" style="display: block; width: 22px; height: 2px; background-color: var(--global-text-color); border-radius: 1px;" data-astro-cid-5blmo7yk></span> </button> </div> </div> <!-- Mobile nav collapse --> <div id="navbar-collapse" class="hidden md:hidden" style="background-color: var(--global-bg-color); border-top: 1px solid var(--global-divider-color); padding: 0.5rem 0;" data-astro-cid-5blmo7yk> <a href="/" class="block px-4 py-2 text-sm" style="color: var(--global-text-color); font-weight: 400; text-decoration: none;" data-astro-cid-5blmo7yk> about </a><a href="/blog/" class="block px-4 py-2 text-sm" style="color: var(--global-theme-color); font-weight: 700; text-decoration: none;" data-astro-cid-5blmo7yk> blog </a> </div> </nav> <!-- Platform detection: update ⌘K / Ctrl K label before first paint --> <script>
+  (function () {
+    var isMac = /Mac|iPhone|iPad|iPod/.test(navigator.platform);
+    document.querySelectorAll('.search-kbd').forEach(function (el) {
+      el.textContent = isMac ? '⌘K' : 'Ctrl K';
+    });
+  })();
+</script>  <script type="module">let c=null;function f(){c?.abort(),c=new AbortController;const{signal:a}=c,o=document.getElementById("navbar-toggler"),d=document.getElementById("navbar-collapse");o?.addEventListener("click",()=>{!d?.classList.contains("hidden")?(d?.classList.add("hidden"),o.setAttribute("aria-expanded","false"),o.classList.add("collapsed"),document.body.style.overflow=""):(d?.classList.remove("hidden"),o.setAttribute("aria-expanded","true"),o.classList.remove("collapsed"),document.body.style.overflow="hidden")},{signal:a}),document.querySelectorAll("#navbar-collapse a").forEach(e=>{e.addEventListener("click",()=>{d?.classList.add("hidden"),o?.setAttribute("aria-expanded","false"),o?.classList.add("collapsed"),document.body.style.overflow=""},{signal:a})}),document.querySelectorAll(".mobile-dropdown-trigger").forEach(e=>{e.addEventListener("click",()=>{const t=e.closest(".mobile-dropdown")?.querySelector(".mobile-dropdown-children"),r=e.querySelector(".mobile-dropdown-chevron");!t?.classList.contains("hidden")?(t?.classList.add("hidden"),e.setAttribute("aria-expanded","false"),r&&(r.style.transform="")):(t?.classList.remove("hidden"),e.setAttribute("aria-expanded","true"),r&&(r.style.transform="rotate(180deg)"))},{signal:a})}),document.querySelectorAll(".nav-dropdown").forEach(e=>{const l=e.querySelector(".nav-dropdown-trigger"),t=[...e.querySelectorAll('[role="menuitem"]')];function r(){e.classList.add("is-open"),l?.setAttribute("aria-expanded","true"),t[0]?.focus()}function i(){e.classList.remove("is-open"),l?.setAttribute("aria-expanded","false")}l?.addEventListener("keydown",n=>{n.key==="Enter"||n.key===" "||n.key==="ArrowDown"?(n.preventDefault(),r()):n.key==="ArrowUp"&&(n.preventDefault(),r(),t[t.length-1]?.focus())},{signal:a}),t.forEach((n,u)=>{n.setAttribute("tabindex","-1"),n.addEventListener("keydown",s=>{s.key==="ArrowDown"?(s.preventDefault(),t[(u+1)%t.length]?.focus()):s.key==="ArrowUp"?(s.preventDefault(),t[(u-1+t.length)%t.length]?.focus()):(s.key==="Escape"||s.key==="Tab")&&(i(),s.key==="Escape"&&(s.preventDefault(),l?.focus()))},{signal:a})}),document.addEventListener("click",n=>{e.contains(n.target)||i()},{signal:a})})}f();document.addEventListener("astro:after-swap",f);document.addEventListener("astro:before-swap",()=>{document.body.style.overflow=""});</script> <!-- ⌘K Search (ninja-keys + Pagefind) — persisted across View Transitions --> <!-- ninja-keys web component --><ninja-keys id="ninja-search" placeholder="Search or jump to…" hideBreadcrumbs="true" data-nav-items="[{&quot;id&quot;:&quot;nav-about&quot;,&quot;title&quot;:&quot;About&quot;,&quot;section&quot;:&quot;Navigation&quot;,&quot;href&quot;:&quot;/&quot;},{&quot;id&quot;:&quot;nav-blog&quot;,&quot;title&quot;:&quot;Blog&quot;,&quot;section&quot;:&quot;Navigation&quot;,&quot;href&quot;:&quot;/blog/&quot;}]" data-content-items="[{&quot;id&quot;:&quot;post-interview-01-pl&quot;,&quot;title&quot;:&quot;1. PL&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-01-pl/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-02-architecture&quot;,&quot;title&quot;:&quot;2. Architecture&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-02-architecture/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-03-os&quot;,&quot;title&quot;:&quot;3. OS&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-03-os/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-04-db&quot;,&quot;title&quot;:&quot;4. DB&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-04-db/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-05-math&quot;,&quot;title&quot;:&quot;5. Math&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-05-math/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-06-network&quot;,&quot;title&quot;:&quot;6. Network&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-06-network/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-08-ml&quot;,&quot;title&quot;:&quot;8. AI/ML&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-08-ml/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-09-algorithm&quot;,&quot;title&quot;:&quot;9. Algorithm&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-09-algorithm/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-11-security&quot;,&quot;title&quot;:&quot;11. Security&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-11-security/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-review-asterinas&quot;,&quot;title&quot;:&quot;논문 리뷰: Asterinas: A Linux ABI-Compatible, Rust-Based Framekernel OS with a Small and Sound TCB&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/review-asterinas/&quot;,&quot;keywords&quot;:&quot;paper-review Review&quot;},{&quot;id&quot;:&quot;post-review-mkernel&quot;,&quot;title&quot;:&quot;논문 리뷰: On µ-Kernel Construction&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/review-mkernel/&quot;,&quot;keywords&quot;:&quot;paper-review Review&quot;},{&quot;id&quot;:&quot;post-review-omniglot&quot;,&quot;title&quot;:&quot;논문 리뷰: Building Bridges: Safe Interactions with Foreign Languages through Omniglot&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/review-omniglot/&quot;,&quot;keywords&quot;:&quot;paper-review Review&quot;},{&quot;id&quot;:&quot;post-review-rust-lwn-post&quot;,&quot;title&quot;:&quot;How to write Rust in the kernel: 한국어 요약본&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/review-rust-lwn-post/&quot;,&quot;keywords&quot;:&quot;paper-review Review&quot;}]" data-pagefind-base></ninja-keys> <script type="module" src="/_astro/SearchTrigger.astro_astro_type_script_index_0_lang.CLmTwsfW.js"></script> <main id="main-content" class="flex-1" data-pagefind-body>   <div id="reading-progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background-color: var(--global-theme-color);
+    z-index: 9999;
+    transition: width 0.1s linear;
+  "></div> <script type="module">const t=document.getElementById("reading-progress");function o(){const i=window.scrollY,e=document.documentElement.scrollHeight-window.innerHeight,n=e>0?Math.min(100,Math.round(i/e*100)):0;t&&(t.style.width=`${n}%`,t.setAttribute("aria-valuenow",String(n)))}window.addEventListener("scroll",o,{passive:!0});o();</script><div class="page-container py-8"> <div class="flex gap-8"> <!-- TOC sidebar (desktop only) --> <aside class="hidden lg:block w-52 flex-shrink-0"> <nav aria-label="Table of contents" class="toc sticky top-20" style="font-size: 0.8rem; max-height: calc(100vh - 6rem); overflow-y: auto;" data-astro-cid-obewoz47> <p class="mb-2 font-semibold tracking-wide uppercase" style="font-size: 0.7rem; color: var(--global-text-color-light);" data-astro-cid-obewoz47>
+Table of Contents
+</p> <ul class="space-y-1" style="list-style: none; padding: 0; margin: 0;" data-astro-cid-obewoz47> <li style data-astro-cid-obewoz47> <a href="#program-verification" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Program Verification </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#loop-invariant란-무엇인가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Loop Invariant란 무엇인가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#partial-correctness와-total-correctness의-차이는-무엇인가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Partial correctness와 Total correctness의 차이는 무엇인가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#precondition과-postcondition은-무엇인가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Precondition과 Postcondition은 무엇인가? </a> </li><li style data-astro-cid-obewoz47> <a href="#relation" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Relation </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#relation의-정의는" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Relation의 정의는? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#a--a-b--b-일-때-arb---a-b--r-이-뭔-뜻인지-설명하시오-여기서-왼쪽-r와-오른쪽의-r이-같은-것인가-다른-것인가-다르다면-어떻게-다른가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> ∀a ∈ A, ∀b ∈ B 일 때 aRb &lt;-&gt; (a, b) ∈ R 이 뭔 뜻인지 설명하시오. 여기서 왼쪽 R와 오른쪽의 R이 같은 것인가, 다른 것인가? 다르다면 어떻게 다른가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#equivalence-relation이란" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Equivalence relation이란? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#partial-order-relation이란-total-order-relation이란" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Partial order relation이란? Total order relation이란? </a> </li><li style data-astro-cid-obewoz47> <a href="#function" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Function </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#bijection의-정의는" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Bijection의 정의는? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#bijective-function은-반드시-total-function인가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Bijective function은 반드시 total function인가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#partial-function과-total-function의-정의를-말하고-그-예를-드시오" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Partial function과 total function의 정의를 말하고 그 예를 드시오. </a> </li><li style data-astro-cid-obewoz47> <a href="#mathematical-induction" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Mathematical Induction </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#mathematical-induction이란" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Mathematical induction이란? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#mathematical-induction의-한-종류로서-strong-induction은-무엇인가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Mathematical induction의 한 종류로서 Strong induction은 무엇인가? </a> </li><li style data-astro-cid-obewoz47> <a href="#recursive-definition" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Recursive Definition </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#structural-induction이란" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Structural induction이란? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#binary-tree의-recursive-정의를-제시하시오" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Binary tree의 recursive 정의를 제시하시오. </a> </li><li style data-astro-cid-obewoz47> <a href="#counting" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Counting </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#f-a-b-함수이며-a-n-이고-b-m일때-몇개의-onto-function-을-정의-할-수-있는가-inclusion-exclusion-원리를-이용해-공역의-모든-원소가-정의역에-대응되는-경우의-수를-계산하면-𝑚𝑛--𝑚𝐶1-𝑚--1𝑛--𝑚𝐶2-𝑚--2𝑛---𝑘0𝑚-𝑚𝐶𝑘--1𝑘𝑚--𝑘𝑛" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> f: A-&gt;B 함수이며, |A| =n 이고 |B| =m일때, 몇개의 onto function 을 정의 할 수 있는가? Inclusion-Exclusion 원리를 이용해 공역의 모든 원소가 정의역에 대응되는 경우의 수를 계산하면, 𝑚𝑛 − 𝑚𝐶1 (𝑚 − 1)𝑛 + 𝑚𝐶2 (𝑚 − 2)𝑛 −… = 𝑘=0𝑚∑ 𝑚𝐶𝑘 (− 1)𝑘(𝑚 − 𝑘)𝑛 </a> </li><li style data-astro-cid-obewoz47> <a href="#discrete-probability" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Discrete Probability </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#random-variable이-무엇인가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Random variable이 무엇인가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#sample-space란-무엇인가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Sample space란 무엇인가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#sample-space가-갖는-조건이-무엇인가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Sample space가 갖는 조건이 무엇인가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#exponential-distribution이-무엇인가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Exponential distribution이 무엇인가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#poisson-distribution이-무엇인가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Poisson distribution이 무엇인가? </a> </li><li style data-astro-cid-obewoz47> <a href="#graph-trees" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Graph, Trees </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#dijkstra의-shortest-path-algorithm의-전제조건은" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Dijkstra의 Shortest path algorithm의 전제조건은? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#mst가-의미하는-것은" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> MST가 의미하는 것은? </a> </li> </ul> </nav> <script type="module">const r=document.querySelectorAll(".toc-link"),n=Array.from(r).map(t=>t.getAttribute("href")?.slice(1)??"");function c(t){r.forEach(e=>{const o=e.getAttribute("href")===`#${t}`;e.style.color=o?"var(--global-theme-color)":"var(--global-text-color-light)",e.style.fontWeight=o?"600":"400"})}const s=parseInt(getComputedStyle(document.documentElement).getPropertyValue("--navbar-height"))||57,i=new IntersectionObserver(t=>{for(const e of t)if(e.isIntersecting){c(e.target.id);break}},{rootMargin:`-${s}px 0px -80% 0px`,threshold:0});n.forEach(t=>{const e=document.getElementById(t);e&&i.observe(e)});</script> </aside> <!-- Post content --> <article class="flex-1 min-w-0"> <!-- Hidden metadata for pagefind structured search --> <span data-pagefind-meta="date" style="display:none">2025-08-11</span> <!-- Breadcrumb --> <nav aria-label="Breadcrumb" class="breadcrumb-nav"> <a href="/blog/" class="breadcrumb-link">← Blog</a> </nav> <!-- Header --> <header class="post-header"> <h1 class="post-title" style="margin-bottom: 0.75rem;" data-pagefind-weight="10"> 5. Math </h1> <div class="post-meta mt-1 flex flex-wrap items-center gap-2 text-xs" style="color: var(--global-text-color-light);"> <time datetime="2025-08-11T00:00:00.000Z">August 11, 2025</time>  <span aria-hidden="true">·</span> <span>10 min read</span>   <span aria-hidden="true">·</span> <div class="flex flex-wrap gap-1"> <a href="/blog/category/Interview Prep/" class="badge-abbr text-xs" style="background-color: var(--global-text-color-light); color: var(--global-hover-text-color);"> Interview Prep </a> </div>   <span aria-hidden="true">·</span> <div class="flex flex-wrap gap-1"> <a href="/blog/tag/interview/" class="badge-abbr text-xs" style="background-color: var(--global-theme-color); color: var(--global-hover-text-color);"> interview </a> </div>  </div>  </header> <!-- Body --> <div class="prose max-w-none" id="post-content"> <h1 id="tldr">TL;DR</h1>
+<p>이 글은 2025년도 봄학기 KAIST 전산학부 대학원 면접을 준비하며, 면접 참고자료(이산수학, 확률, 통계)에 대한 대답을 정리한 글입니다.</p>
+<p>문제에 대한 정답이 아니며, 제가 공부하며 생각한 바들을 정리한 것입니다.</p>
+<p>후에 같은 목표로 면접을 준비하는 학우분들께 도움이 되기를 바랍니다.</p>
+<p>이 풀이노트는 질문만 본 상태에서 답변한 내용에 대한 채점, 그리고 이 면접을 준비하며 이전에 한번 LLM과 함께 작성해본 답안이 이어져 있습니다.</p>
+<h1 id="문제">문제</h1>
+<h2 id="program-verification">Program Verification</h2>
+<h3 id="loop-invariant란-무엇인가">Loop Invariant란 무엇인가?</h3>
+<blockquote>
+<p>루프 불변성이란 반복문이 실행되는 동안 변하지 않는 조건들을 의미합니다.</p>
+</blockquote>
+<p>루프 불변식(Loop Invariant)은 반복문이 실행되는 동안 항상 참인 조건을 의미합니다.
+알고리즘을 증명하기 위해 사용되며, 반복문이 시작되기 전, 반복문이 실행되는 동안, 반복문이 종료된 후에도 항상 참이어야 합니다.</p>
+<hr>
+<h3 id="partial-correctness와-total-correctness의-차이는-무엇인가">Partial correctness와 Total correctness의 차이는 무엇인가?</h3>
+<blockquote>
+<p>Partial correctness는 호어 논리에서 주어진 프로그램이 조건에 맞는 입력이 들어가고
+정상적으로 종료할 때 조건에 맞는 출력이 나오는 것을 의미합니다.
+Total correctness는 이에 더해 프로그램이 항상 정상적으로 종료해야 합니다.</p>
+</blockquote>
+<p><a href="https://ko.wikipedia.org/wiki/%ED%98%B8%EC%96%B4_%EB%85%BC%EB%A6%AC" rel="noopener noreferrer" target="_blank">https://ko.wikipedia.org/wiki/%ED%98%B8%EC%96%B4_%EB%85%BC%EB%A6%AC</a>
+부분적 정확성(Partial Correctness)은 프로그램이 주어진 입력에 대해 올바른 출력을 생성하는 것을 의미합니다.
+즉, 프로그램이 종료되면 올바른 결과를 반환해야 합니다.
+전체적 정확성(Total Correctness)은 프로그램이 주어진 입력에 대해 올바른 출력을 생성하고, 프로그램이 반드시 종료되어야 한다는 것을 의미합니다.</p>
+<hr>
+<h3 id="precondition과-postcondition은-무엇인가">Precondition과 Postcondition은 무엇인가?</h3>
+<blockquote>
+<p>호어 논리에선 correctness를 정의할 때 이용하는 것으로 알고 있습니다.
+Precondition에서 프로그램을 실행하면 Postcondition이 되는지 검증하곤 합니다.</p>
+</blockquote>
+<p>전제 조건(Precondition)은 함수나 알고리즘이 실행되기 전에 만족해야 하는 조건을 의미합니다.
+즉, 함수나 알고리즘이 올바르게 동작 하기 위해 필요한 입력 조건입니다.
+후조건(Postcondition)은 함수나 알고리즘이 실행된 후에 만족해야 하는 조건을 의미합니다.
+즉, 함수나 알고리즘이 올바르게 동작한 후 반환해야 하는 결과 조건입니다.</p>
+<hr>
+<h2 id="relation">Relation</h2>
+<h3 id="relation의-정의는">Relation의 정의는?</h3>
+<blockquote>
+<p>Relation은 두 집합의 원소의 순서쌍으로 정의됩니다.
+정확히는 집합 A의 원소와 집합 B의 원소의 순서쌍 집합이 relation 입니다.</p>
+</blockquote>
+<p>두 집합 A, B가 있을 때, A와 B의 관계를 정의하는 것을 의미합니다.
+관계는 A의 원소와 B의 원소를 연결하는 순서쌍의 집합으로 표현됩니다.</p>
+<hr>
+<h3 id="a--a-b--b-일-때-arb---a-b--r-이-뭔-뜻인지-설명하시오-여기서-왼쪽-r와-오른쪽의-r이-같은-것인가-다른-것인가-다르다면-어떻게-다른가">∀a ∈ A, ∀b ∈ B 일 때 aRb &#x3C;-> (a, b) ∈ R 이 뭔 뜻인지 설명하시오. 여기서 왼쪽 R와 오른쪽의 R이 같은 것인가, 다른 것인가? 다르다면 어떻게 다른가?</h3>
+<blockquote>
+<p>두 집합 A, B 간의 관계 R을 정의한 것입니다.
+두 R은 동일합니다.</p>
+</blockquote>
+<p>∀a ∈ A, ∀b ∈ B 일 때 aRb는 A의 모든 원소 a와 B의 모든 원소 b에 대해 a와 b 사이에 관계 R이 성립한다는 것을 의미합니다.
+즉, A의 모든 원소와 B의 모든 원소 사이에 관계 R이 존재한다는 것입니다.
+(a, b) ∈ R는 순서쌍 (a, b)가 관계 R에 속한다는 것을 의미합니다
+왼쪽의 R과 오른쪽의 R은 같은 관계를 나타냅니다.
+즉, 왼쪽의 R은 A와 B 사이의 관계를 나타내고 오른쪽의 R은 A와 B의 원소들 사이의 관계를 나타냅니다.</p>
+<hr>
+<h3 id="equivalence-relation이란">Equivalence relation이란?</h3>
+<blockquote>
+<p>다음과 같은 조건을 만족하는 relation을 의미합니다.
+reflexitiy, stmmertry, transivity</p>
+</blockquote>
+<p>집합 S가 있을 때, S의 binary relation R이 다음 세 가지 성질을 만족할 때, R은 S의 동치 관계(Equivalence Relation)라고 합니다:</p>
+<ol>
+<li><strong>반사성(Reflexivity)</strong>: 모든 원소 a ∈ S  에 대해 aRa가 성립해야 합니다.</li>
+<li><strong>대칭성(Symmetry)</strong>: 모든 원소 a, b ∈ S에 대해 aRb가 성립하면 bRa도 성립해야 합니다.</li>
+<li><strong>추이성(Transitivity)</strong>: 모든 원소 a, b, c ∈ S에 대해 aRb와 bRc가 성립하면 aRc도 성립해야 합니다.</li>
+</ol>
+<hr>
+<h3 id="partial-order-relation이란-total-order-relation이란">Partial order relation이란? Total order relation이란?</h3>
+<blockquote>
+<p>Partial order relation은 reflextiy, antisymmetricity, transivity를 만족해야 합니다.
+Total order relationd은 여기서 추가로 임의의 원소 쌍에 대해서도 relation이 정의되어야 합니다.</p>
+</blockquote>
+<p>부분 순서 관계(Partial Order Relation)는 집합 S의 원소들 사이에 정의 된 관계로, 다음 세 가지 성질을 만족합니다:</p>
+<ol>
+<li><strong>반사성(Reflexivity)</strong>: 모든 원소 a ∈ S 에 대해 aRa가 성립해야 합니다.</li>
+<li><strong>반대칭성(Antisymmetry)</strong>: 모든 원소 a, b ∈ S에 대해 aRb와 bRa가 성립하면 a = b가 되어야 합니다.</li>
+<li><strong>추이성(Transitivity)</strong>: 모든 원소 a, b, c ∈ S에 대해 aRb와 bRc가 성립하면 aRc도 성립해야 합니다.</li>
+</ol>
+<p>전체 순서 관계(Total Order Relation)는 부분 순서 관계의 특수한 경우로, 집합 S의 모든 원소들 사이에 정의된 관계로, 다음 세 가지 성질을 만족합니다:</p>
+<ol>
+<li><strong>반사성(Reflexivity)</strong>: 모든 원소 a ∈ S 에 대해 aRa가 성립해야 합니다.</li>
+<li><strong>반대칭성(Antisymmetry)</strong>: 모든 원소 a, b ∈ S에 대해 aRb와 bRa가 성립하면 a = b가 되어야 합니다.</li>
+<li><strong>추이성(Transitivity)</strong>: 모든 원소 a, b, c ∈ S에 대해 aRb와 bRc가 성립하면 aRc도 성립해야 합니다.</li>
+<li><strong>비교 가능성(Comparability)</strong>: 모든 원소 a, b ∈ S에 대해 aRb 또는 bRa가 성립해야 합니다.
+즉, 전체 순서 관계는 집합 S의 모든 원소들 사이에 비교 가능성이 있어야 합니다</li>
+</ol>
+<hr>
+<h2 id="function">Function</h2>
+<h3 id="bijection의-정의는">Bijection의 정의는?</h3>
+<blockquote>
+<p>전단사 함수는 두가지 조건을 만족해야 합니다.
+먼저 전사함수로서 공역과 치역이 같아야 합니다.
+그리고 단사함수로서 모든 정의역에 대해 서로 다른 인수에 대해 함숫값이 달라야 합니다.</p>
+</blockquote>
+<p>전단사(Bijection)는 두 집합 A와 B 사이의 관계로, 다음 두 가지 조건을 만족하는 함수입니다:</p>
+<ol>
+<li><strong>전사(Surjective)</strong>: A의 모든 원소가 B의 원소에 대응되어야 합니다. 즉, B의 모든 원소가 A의 원소에 의해 매핑되어야 합니다.</li>
+<li><strong>단사(Injective)</strong>: A의 서로 다른 원소가 B의 서로 다른 원소에 대응되어야 합니다. 즉, A의 서로 다른 원소가 B의 서로 다른 원소에 매핑되어야 합니다.
+즉, 정의역과 공역의 원소가 일대일 대응 관계를 이루는 함수입니다.</li>
+</ol>
+<hr>
+<h3 id="bijective-function은-반드시-total-function인가">Bijective function은 반드시 total function인가?</h3>
+<blockquote>
+<p>네 맞습니다. 단사함수의 정의에 total function의 정의가 포함되어 있기 때문입니다.</p>
+</blockquote>
+<p>먼저 total function의 정의를 살펴보면, total function은 정의역의 모든 원소가 공역의 원소에 대응되는 함수입니다.
+즉, 정의역의 모든 원소가 공역의 원소에 매핑되어 있어야 합니다.
+따라서, 전단사(Bijection)는 정의역의 모든 원소가 공역의 원소에 대응되므로, 전단사 함수는 반드시 전체 함수(Total Function)입니다.</p>
+<hr>
+<h3 id="partial-function과-total-function의-정의를-말하고-그-예를-드시오">Partial function과 total function의 정의를 말하고 그 예를 드시오.</h3>
+<blockquote>
+<p>Partial function은 정의역에 대응되는 함숫값이 전부 있지 않은 함수입니다.
+Total function은 모든 입력에 대응되는 함숫값이 있는 함수입니다.
+예를들어 나눗셈은 partial funtion입니다. 덧셈은 total functio입니다.</p>
+</blockquote>
+<p>부분 함수(Partial Function)는 정의역의 일부 원소만이 공역의 원소에 대응되는 함수입니다.
+즉, 정의역의 모든 원소가 공역의 원소에 매핑되지 않을 수 있습니다.
+예를 들어, f(x) = 1/x는 x가 0이 아닐 때 정의되는 부분 함수입니다. x = 0일 때는 정의되지 않으므로 부분 함수입니다.
+전체 함수(Total Function)는 정의역의 모든 원소가 공역의 원소에 대응되는 함수입니다.
+즉, 정의역의 모든 원소가 공역의 원소에 매핑되어 있어야 합니다.
+예를 들어, f(x) = x + 1은 모든 실수 x에 대해 정의되므로 전체 함수입니다.</p>
+<hr>
+<h2 id="mathematical-induction">Mathematical Induction</h2>
+<h3 id="mathematical-induction이란">Mathematical induction이란?</h3>
+<blockquote>
+<p>수학적 귀납법이란 초기 조건을 두고, 재귀적인 조건을 증명하여 명제가 성립함을 보이는 증명방법입니다.
+보통 n=k일 때 참이라면 k+1에서도 성립함을 보입니다.</p>
+</blockquote>
+<p>수학적 귀납법(Mathematical Induction)은 자연수에 대한 명제를 증명하는 방법입니다.
+수학적 귀납법은 두 단계로 이루어집니다:</p>
+<ol>
+<li><strong>기초 단계(Base Case)</strong>: 명제가 n = 1일 때 참임을 증명합니다.</li>
+<li><strong>귀납 단계(Inductive Step)</strong>: 명제가 n = k일 때 참이라고 가정하고, 명제가 n = k + 1일 때도 참임을 증명합니다.
+이 두 단계를 통해 명제가 모든 자연수에 대해 참임을 증명할 수 있습니다.</li>
+</ol>
+<hr>
+<h3 id="mathematical-induction의-한-종류로서-strong-induction은-무엇인가">Mathematical induction의 한 종류로서 Strong induction은 무엇인가?</h3>
+<blockquote>
+<p>강한 수학적 귀납법은 n=1 ~ k가 성립할 때 n=k+1 에서도 귀납 조건이 성립함을 보입니다.</p>
+</blockquote>
+<p>강한 귀납법(Strong Induction)은 수학적 귀납법의 변형으로, 명제가 n = k일 때 참이라고 가정하고, 명제가 n = k + 1일 때도 참임을 증명하는 방법입니다.
+강한 귀납법은 기초 단계에서 n = 1부터 n = k까지의 모든 경우에 대해 명제가 참임을 증명합니다.
+즉, 강한 귀납법은 n = k일 때 참이라고 가정하는 대신, n = 1부터 n = k까지의 모든 경우에 대해 참이라고 가정합니다.
+이 방법은 명제가 더 복잡한 구조를 가질 때 유용합니다.</p>
+<hr>
+<h2 id="recursive-definition">Recursive Definition</h2>
+<h3 id="structural-induction이란">Structural induction이란?</h3>
+<blockquote>
+<p>구조적 귀납법은 자료구조를 정의할 때 수학적 귀납법처럼 기본조건과 귀납조건으로 정의하는것을 의미합니다.
+리스트, 트리 등을 정의할 때 이용합니다.</p>
+</blockquote>
+<p>구조적 귀납법(Structural Induction)은 수학적 귀납법의 변형으로, 재귀적으로 정의된 구조에 대한 명제를 증명하는 방법입니다.
+구조적 귀납법은 다음 두 단계로 이루어집니다:</p>
+<ol>
+<li><strong>기초 단계(Base Case)</strong>: 구조의 가장 간단한 경우(예: 빈 리스트, 단일 노드 등)에 대해 명제가 참임을 증명합니다.</li>
+<li><strong>귀납 단계(Inductive Step)</strong>: 구조가 더 복잡한 경우(예: 리스트의 길이가 k + 1인 경우 등)에 대해 명제가 참이라고 가정하고, 구조가 k + 1인 경우에도 명제가 참임을 증명합니다.
+이 두 단계를 통해 명제가 재귀적으로 정의된 구조에 대해 참임을 증명할 수 있습니다.
+예를 들어, 이진 트리의 노드 수에 대한 명제를 증명할 때 구조적 귀납법을 사용할 수 있습니다.</li>
+</ol>
+<hr>
+<h3 id="binary-tree의-recursive-정의를-제시하시오">Binary tree의 recursive 정의를 제시하시오.</h3>
+<blockquote>
+<p>먼저, 빈 트리는 이진 트리입니다.
+재귀조건은 각 노드의 자식 노드는 최대 2개입니다.</p>
+</blockquote>
+<p>이진 트리(Binary Tree)는 다음과 같이 재귀적으로 정의할 수 있습니다:</p>
+<ol>
+<li><strong>기초 단계(Base Case)</strong>: 빈 트리는 이진 트리입니다.</li>
+<li><strong>귀납 단계(Inductive Step)</strong>: 만약 T1과 T2가 이진 트리라면, T1의 루트 노드와 T2의 루트 노드를 연결하여 새로운 이진 트리 T를 만들 수 있습니다. 이때 T의 왼쪽 서브트리는 T1이고, 오른쪽 서브트리는 T2입니다</li>
+</ol>
+<hr>
+<h2 id="counting">Counting</h2>
+<h3 id="f-a-b-함수이며-a-n-이고-b-m일때-몇개의-onto-function-을-정의-할-수-있는가-inclusion-exclusion-원리를-이용해-공역의-모든-원소가-정의역에-대응되는-경우의-수를-계산하면-𝑚𝑛--𝑚𝐶1-𝑚--1𝑛--𝑚𝐶2-𝑚--2𝑛---𝑘0𝑚-𝑚𝐶𝑘--1𝑘𝑚--𝑘𝑛">f: A->B 함수이며, |A| =n 이고 |B| =m일때, 몇개의 onto function 을 정의 할 수 있는가? Inclusion-Exclusion 원리를 이용해 공역의 모든 원소가 정의역에 대응되는 경우의 수를 계산하면, 𝑚𝑛 − 𝑚𝐶1 (𝑚 − 1)𝑛 + 𝑚𝐶2 (𝑚 − 2)𝑛 −… = 𝑘=0𝑚∑ 𝑚𝐶𝑘 (− 1)𝑘(𝑚 − 𝑘)𝑛</h3>
+<blockquote>
+<p>전사함수는 공역과 치역이 같아야 하기 때문에 B의 원소를 전부 사용해야 합니다.
+포함배제 원리를 이용하면 m개의 인수를 임의의 n개 함수값에 매칭하면 m^n
+여기서 1개의 함수값이 선택되지 않는 경우를 빼면 m^n - mC1 * m^(n-1) + ..
+이런식으로 계산할 수 있습니다.</p>
+</blockquote>
+<hr>
+<h2 id="discrete-probability">Discrete Probability</h2>
+<h3 id="random-variable이-무엇인가">Random variable이 무엇인가?</h3>
+<blockquote>
+<p>확률변수란 확률공간에서 사건을 적절한 변수로 변환한 것입니다.
+확률변수가 되지 위해선 중복된 사건이 매핑되면 안되고, 모든 사건을 커버해야 합니다.</p>
+</blockquote>
+<p>확률 변수(Random Variable)는 확률 공간에서 정의된 함수로, 실수 값을 가지는 변수입니다.</p>
+<hr>
+<h3 id="sample-space란-무엇인가">Sample space란 무엇인가?</h3>
+<blockquote>
+<p>표본공간은 사건의 집합입니다.</p>
+</blockquote>
+<p>표본 공간(Sample Space)은 확률 실험에서 가능한 모든 결과의 집합을 의미합니다.
+즉, 확률 실험에서 발생할 수 있는 모든 결과를 포함하는 집합입니다.
+예를 들어, 동전을 던지는 실험의 표본 공간은 {앞면, 뒷면}입니다.</p>
+<hr>
+<h3 id="sample-space가-갖는-조건이-무엇인가">Sample space가 갖는 조건이 무엇인가?</h3>
+<blockquote>
+<p>표본 공간은 모든 사건을 구분할 수 있어야 하고,
+모든 사건이 포함되어 있어야 합니다.
+그리고 충분히 세분화되어야 합니다.</p>
+</blockquote>
+<p>표본 공간은 다음과 같은 조건을 만족해야 합니다:</p>
+<ol>
+<li><strong>상호 배타성(Mutually Exclusive)</strong>: 표본 공간의 원소들은 서로 겹치지 않아야 합니다. 즉, 표본 공간의 두 원소가 동시에 발생할 수 없어야 합니다.</li>
+<li>collectively exhaustive: 표본 공간의 원소들은 모든 가능한 결과를 포함해야 합니다. 즉, 표본 공간의 모든 원소를 합치면 전체 확률 공간을 구성해야 합니다.</li>
+<li>right granularity: 표본 공간의 원소들은 충분히 세분화되어야 합니다. 즉, 표본 공간의 원소들이 너무 크거나 모호하지 않아야 합니다.</li>
+</ol>
+<hr>
+<h3 id="exponential-distribution이-무엇인가">Exponential distribution이 무엇인가?</h3>
+<blockquote>
+<p>지수분포는 lambda * exp(-lambda) 꼴의 확률밀도함수를 가지는 연속확률분포입니다.
+푸아송 분포에서 k값을 1로 두고 적분하여 얻을 수 있습니다.</p>
+</blockquote>
+<p>지수 확률 분포는 푸아송 분포와 관련된 연속 확률 분포입니다.
+푸아송 분포가 어떤 사건이 단위 시간 동안 k번 발생할 확률을 나타낸다면,
+지수 분포는 처음으로 사건이 발생하는 시간 분포를 나타냅니다.</p>
+<hr>
+<h3 id="poisson-distribution이-무엇인가">Poisson distribution이 무엇인가?</h3>
+<blockquote>
+<p>푸아송 분포는 단위 시간에 어떤 사건이 k번 일어날 확률에 대한 이산확률분포입니다.</p>
+</blockquote>
+<p>포아송 확률 분포는 단위 시간 동안 어떤 사건이 k번 발생할 확률을 나타내는 이산 확률 분포입니다.
+포아송 분포는 사건이 독립적으로 발생하고, 사건의 발생률이 일정할 때 사용됩니다.
+즉, 단위 시간 동안 사건이 발생하는 횟수를 모델링하는 데 사용됩니다.
+포아송 분포는 λ(람다)라는 매개념을 사용하여, λ는 단위 시간 동안 사건이 발생하는 평균 횟수를 나타냅니다.</p>
+<hr>
+<h2 id="graph-trees">Graph, Trees</h2>
+<h3 id="dijkstra의-shortest-path-algorithm의-전제조건은">Dijkstra의 Shortest path algorithm의 전제조건은?</h3>
+<blockquote>
+<p>두가지 조건이 있습니다.
+먼저 그래프가 모두 연결되어 있어야 하고,
+모든 그래프의 가중치가 0 이상이여야 합니다.</p>
+</blockquote>
+<p>다익스트라 알고리즘은 가중치가 있는 그래프에서 최단 경로를 찾는 알고리즘입니다.
+이 알고리즘의 전제 조건은 다음과 같습니다:</p>
+<ol>
+<li><strong>비음수 가중치</strong>: 그래프의 모든 간선의 가중치가 음수가 아니어야 합니다. 즉, 모든 간선의 가중치는 0 이상이어야 합니다.</li>
+<li><strong>연결 그래프</strong>: 그래프가 연결되어 있어야 합니다. 즉, 그래프의 모든 정점이 서로 연결되어 있어야 합니다.</li>
+<li><strong>시작 정점</strong>: 알고리즘은 시작 정점에서부터 최단 경로를 계산합니다. 따라서 시작 정점이 정의되어 있어야 합니다.</li>
+</ol>
+<hr>
+<h3 id="mst가-의미하는-것은">MST가 의미하는 것은?</h3>
+<blockquote>
+<p>MST는 그래프에서 간선을 선택하여 그 가중치의 합이 최소가 되는 트리를 만드는 문제입니다.
+즉 모든 정점을 최소한의 비용으로 연결할 때 비용을 찾을 수 있습니다.</p>
+</blockquote>
+<p>최소 신장 트리(Minimum Spanning Tree, MST)는 가중치가 있는 그래프에서 모든 정점을 포함하면서, 간선의 가중치 합이 최소가 되는 트리를 의미합니다.
+즉, 그래프의 모든 정점을 연결하면서, 간선의 가중치 합이 최소가 되는 트리를 찾는 것입니다.</p>
+<p>대표적인 알고리즘으로는 Kruskal’s algorithm과 Prim’s algorithm이 있습니다.
+Kruskal’s algorithm은 간선을 가중치 순으로 정렬한 후, 사이 클을 형성하지 않도록 간선을 선택하여 MST를 구성합니다.
+Prim’s algorithm은 시작 정점에서부터 인접한 간선 중 가중치가 가장 작은 간선을 선택하여 MST를 구성합니다.
+간선이 많은 경우 Prim’s algorithm이 더 효율적이고, 간선이 적은 경우 Kruskal’s algorithm이 더 효율적입니다.
+왜냐하면, Prim’s algorithm은 인접한 간선을 선택하기 때문에 간선이 많을 때 더 빠르게 동작하고, Kruskal’s algorithm은 간선을 정렬하는 과정이 필요하기 때문에 간선이 적을 때 더 빠르게 동작합니다.</p>
+<hr> </div> <!-- Newsletter CTA (shown after post body when feature is enabled) -->  <!-- Social sharing links --> <div class="social-share" data-astro-cid-vfzijd4d> <p class="share-label" data-astro-cid-vfzijd4d>Share</p> <div class="share-icons" data-astro-cid-vfzijd4d> <a href="https://twitter.com/intent/tweet?text=5.%20Math&amp;url=https%3A%2F%2Fseungjong-ha.github.io%2Fblog%2Finterview-05-math%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X (Twitter)" title="Share on X (Twitter)" class="share-link" data-astro-cid-vfzijd4d> <svg width="1em" height="1em" aria-hidden="true" data-astro-cid-vfzijd4d="true" data-icon="fa-brands:twitter">   <symbol id="ai:fa-brands:twitter" viewBox="0 0 512 512"><path fill="currentColor" d="M459.37 151.716c.325 4.548.325 9.097.325 13.645c0 138.72-105.583 298.558-298.558 298.558c-59.452 0-114.68-17.219-161.137-47.106c8.447.974 16.568 1.299 25.34 1.299c49.055 0 94.213-16.568 130.274-44.832c-46.132-.975-84.792-31.188-98.112-72.772c6.498.974 12.995 1.624 19.818 1.624c9.421 0 18.843-1.3 27.614-3.573c-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319c-28.264-18.843-46.781-51.005-46.781-87.391c0-19.492 5.197-37.36 14.294-52.954c51.655 63.675 129.3 105.258 216.365 109.807c-1.624-7.797-2.599-15.918-2.599-24.04c0-57.828 46.782-104.934 104.934-104.934c30.213 0 57.502 12.67 76.67 33.137c23.715-4.548 46.456-13.32 66.599-25.34c-7.798 24.366-24.366 44.833-46.132 57.827c21.117-2.273 41.584-8.122 60.426-16.243c-14.292 20.791-32.161 39.308-52.628 54.253"/></symbol><use href="#ai:fa-brands:twitter"></use>  </svg> </a><a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Fseungjong-ha.github.io%2Fblog%2Finterview-05-math%2F&amp;title=5.%20Math" target="_blank" rel="noopener noreferrer" aria-label="Share on LinkedIn" title="Share on LinkedIn" class="share-link" data-astro-cid-vfzijd4d> <svg width="0.88em" height="1em" aria-hidden="true" data-astro-cid-vfzijd4d="true" data-icon="fa-brands:linkedin">   <symbol id="ai:fa-brands:linkedin" viewBox="0 0 448 512"><path fill="currentColor" d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5c0 21.3-17.2 38.5-38.5 38.5m282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7c-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5c67.2 0 79.7 44.3 79.7 101.9z"/></symbol><use href="#ai:fa-brands:linkedin"></use>  </svg> </a><a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fseungjong-ha.github.io%2Fblog%2Finterview-05-math%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook" title="Share on Facebook" class="share-link" data-astro-cid-vfzijd4d> <svg width="1em" height="1em" aria-hidden="true" data-astro-cid-vfzijd4d="true" data-icon="fa-brands:facebook">   <symbol id="ai:fa-brands:facebook" viewBox="0 0 512 512"><path fill="currentColor" d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48c27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256"/></symbol><use href="#ai:fa-brands:facebook"></use>  </svg> </a><a href="mailto:?subject=5.%20Math&amp;body=%0A%0Ahttps%3A%2F%2Fseungjong-ha.github.io%2Fblog%2Finterview-05-math%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on Email" title="Share on Email" class="share-link" data-astro-cid-vfzijd4d> <svg width="1em" height="1em" aria-hidden="true" data-astro-cid-vfzijd4d="true" data-icon="fa-solid:envelope">   <symbol id="ai:fa-solid:envelope" viewBox="0 0 512 512"><path fill="currentColor" d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7c22.4 17.4 52.1 39.5 154.1 113.6c21.1 15.4 56.7 47.8 92.2 47.6c35.7.3 72-32.8 92.3-47.6c102-74.1 131.6-96.3 154-113.7M256 320c23.2.4 56.6-29.2 73.4-41.4c132.7-96.3 142.8-104.7 173.4-128.7c5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9c30.6 23.9 40.7 32.4 173.4 128.7c16.8 12.2 50.2 41.8 73.4 41.4"/></symbol><use href="#ai:fa-solid:envelope"></use>  </svg> </a> <button id="native-share-btn" aria-label="Share via device" title="Share via device" class="share-link share-native" hidden data-astro-cid-vfzijd4d> <svg width="0.88em" height="1em" aria-hidden="true" data-astro-cid-vfzijd4d="true" data-icon="fa-solid:share-alt">   <symbol id="ai:fa-solid:share-alt" viewBox="0 0 448 512"><path fill="currentColor" d="M352 320c-22.608 0-43.387 7.819-59.79 20.895l-102.486-64.054a96.55 96.55 0 0 0 0-41.683l102.486-64.054C308.613 184.181 329.392 192 352 192c53.019 0 96-42.981 96-96S405.019 0 352 0s-96 42.981-96 96c0 7.158.79 14.13 2.276 20.841L155.79 180.895C139.387 167.819 118.608 160 96 160c-53.019 0-96 42.981-96 96s42.981 96 96 96c22.608 0 43.387-7.819 59.79-20.895l102.486 64.054A96.3 96.3 0 0 0 256 416c0 53.019 42.981 96 96 96s96-42.981 96-96s-42.981-96-96-96"/></symbol><use href="#ai:fa-solid:share-alt"></use>  </svg> </button> </div> </div> <script>(function(){const shareTitle = "5. Math";
+const shareUrl = "https://seungjong-ha.github.io/blog/interview-05-math/";
+const shareText = "";
+
+  const btn = document.getElementById('native-share-btn');
+  if (navigator.share && btn) {
+    btn.hidden = false;
+    btn.addEventListener('click', () => {
+      navigator.share({ title: shareTitle, url: shareUrl, text: shareText }).catch(() => {});
+    });
+  }
+})();</script> <!-- Related posts -->  <!-- Comments -->  </article> </div> </div>  </main> <!-- Newsletter (shown in footer area if enabled) -->  <footer style="background-color: var(--global-footer-bg-color); color: var(--global-footer-text-color); padding: 1rem 0; position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;" data-astro-cid-sz7xmlte> <div class="page-container text-center text-sm" data-astro-cid-sz7xmlte> <p data-astro-cid-sz7xmlte>
+&copy; 2026 SeungJong Ha.
+<span data-astro-cid-sz7xmlte>Powered by <a href="https://github.com/dadangnh/as-folio" target="_blank" rel="noopener noreferrer">as-folio</a>.
+      Hosted by <a href="https://pages.github.com/" target="_blank" rel="noopener noreferrer">GitHub Pages</a>.</span>  </p>  </div> </footer> <!-- Cookie consent (vanilla-cookieconsent via CDN) -->  <!-- Back to top button --> <button id="back-to-top" aria-label="Back to top" title="Back to top"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="m18 15-6-6-6 6"></path> </svg> </button> <script type="module">let t=document.getElementById("back-to-top");function e(){t?.classList.toggle("visible",window.scrollY>300)}function o(){t?.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}))}window.addEventListener("scroll",e,{passive:!0});o();document.addEventListener("astro:after-swap",()=>{t=document.getElementById("back-to-top"),o(),e()});</script> </body> </html> <!-- Code copy button (text-label approach, no innerHTML) --> <script type="module">function n(){document.querySelectorAll("#post-content pre").forEach(e=>{if(e.querySelector(".copy-btn"))return;const t=document.createElement("button");t.className="copy-btn",t.setAttribute("aria-label","Copy code"),t.textContent="copy",t.addEventListener("click",async()=>{const o=e.querySelector("code");o&&(await navigator.clipboard.writeText(o.innerText),t.textContent="copied!",setTimeout(()=>{t.textContent="copy"},2e3))}),e.style.position="relative",e.appendChild(t)})}document.addEventListener("astro:page-load",n);</script> <!-- Medium zoom for post images --> <script type="module" src="/_astro/Post.astro_astro_type_script_index_1_lang.Czjq4-dD.js"></script> <!-- ── Per-post CDN widgets ──────────────────────────────────────────────── -->             

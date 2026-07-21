@@ -1,0 +1,325 @@
+<!DOCTYPE html><html lang="en" data-theme="light"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="SeungJong Ha — M.S. student at KAIST School of Computing (CASYS Lab). Systems, operating systems, and Rust."><link rel="canonical" href="https://seungjong-ha.github.io/blog/interview-03-os/"><title>3. OS | SeungJong Ha</title><!-- Favicon --><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="alternate icon" href="/favicon.ico"><!-- Fonts are self-hosted via Fontsource (imported in global.css) — no FOUT --><!-- KaTeX CSS is bundled via global.css (@import 'katex/dist/katex.min.css') --><!-- Theme color override (from site.theme.color — 'auto' means use _colors.css defaults) --><style>:root,[data-theme='light']{--global-theme-color:#0ea5e9!important;--global-hover-color:#0ea5e9!important;}</style><!-- Open Graph + Twitter Card --><meta property="og:title" content="3. OS | SeungJong Ha"><meta property="og:description" content="SeungJong Ha — M.S. student at KAIST School of Computing (CASYS Lab). Systems, operating systems, and Rust."><meta property="og:url" content="https://seungjong-ha.github.io/blog/interview-03-os/"><meta property="og:type" content="website"><meta property="og:image" content="https://seungjong-ha.github.io/og/blog/interview-03-os.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="3. OS | SeungJong Ha"><meta name="twitter:description" content="SeungJong Ha — M.S. student at KAIST School of Computing (CASYS Lab). Systems, operating systems, and Rust."><meta name="twitter:image" content="https://seungjong-ha.github.io/og/blog/interview-03-os.png"><!-- Analytics verification tags --><!-- GA4 via Partytown (production only) --><script type="text/partytown" src="https://www.googletagmanager.com/gtag/js?id=G-TCXZ1MQHX6"></script><script type="text/partytown">(function(){const ga4 = "G-TCXZ1MQHX6";
+
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+              dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+            gtag('config', ga4);
+          })();</script><!-- Cronitor RUM --><!-- Pirsch analytics --><!-- OpenPanel analytics --><!-- Person JSON-LD (homepage only) --><!-- View Transitions (smooth page-to-page navigation) --><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.BAAUdx5Y.js"></script><!-- Named slot for page-specific head content (e.g. JSON-LD from Post.astro) --> <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"3. OS","datePublished":"2025-08-08T00:00:00.000Z","url":"https://seungjong-ha.github.io/blog/interview-03-os/","author":{"@type":"Person","name":"SeungJong Ha","url":"https://seungjong-ha.github.io"},"image":"https://seungjong-ha.github.io/og/blog/interview-03-os.png"}</script> <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Blog","item":"https://seungjong-ha.github.io/blog/"},{"@type":"ListItem","position":2,"name":"3. OS","item":"https://seungjong-ha.github.io/blog/interview-03-os/"}]}</script> <!--
+      Dark mode: must run BEFORE any CSS to prevent FOUC.
+      Reads stored preference, falls back to system preference, then site default.
+      Re-applies after each View Transition swap to keep the theme consistent.
+    --><script>(function(){const defaultTheme = "system";
+
+      function applyTheme() {
+        const stored = localStorage.getItem('theme');
+        let theme;
+        if (stored === 'light' || stored === 'dark') {
+          theme = stored;
+        } else if (defaultTheme === 'system') {
+          theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        } else {
+          theme = defaultTheme;
+        }
+        document.documentElement.setAttribute('data-theme', theme);
+        document.documentElement.setAttribute('data-theme-setting', stored || 'system');
+      }
+      applyTheme();
+      document.addEventListener('astro:after-swap', applyTheme);
+    })();</script><link rel="stylesheet" href="/_s/CuShRENE.css"><style>.giscus-notice[data-astro-cid-an2nl7ar]{font-size:.85rem;color:var(--global-text-color-light);margin-bottom:.75rem}.giscus-notice[data-astro-cid-an2nl7ar] a[data-astro-cid-an2nl7ar]{color:var(--global-theme-color);text-decoration:none}.giscus-notice[data-astro-cid-an2nl7ar] a[data-astro-cid-an2nl7ar]:hover{text-decoration:underline}.giscus-btn[data-astro-cid-an2nl7ar]{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1.1rem;border-radius:4px;border:1px solid var(--global-divider-color);background:transparent;color:var(--global-text-color);font-size:.875rem;font-family:var(--font-sans);cursor:pointer;transition:border-color .15s ease,color .15s ease}.giscus-btn[data-astro-cid-an2nl7ar]:hover{border-color:var(--global-theme-color);color:var(--global-theme-color)}
+</style><link rel="stylesheet" href="/_s/B-FGpDiK.css"><script type="module" src="/_astro/page.52P97FCf.js"></script><script>!(function(w,p,f,c){if(!window.crossOriginIsolated && !navigator.serviceWorker) return;c=w[p]=Object.assign(w[p]||{},{"lib":"/~partytown/","debug":false});c[f]=(c[f]||[]).concat(["dataLayer.push"])})(window,'partytown','forward');/* Partytown 0.13.2 - MIT QwikDev */
+const t={preserveBehavior:!1},e=e=>{if("string"==typeof e)return[e,t];const[n,r=t]=e;return[n,{...t,...r}]},n=Object.freeze((t=>{const e=new Set;let n=[];do{Object.getOwnPropertyNames(n).forEach((t=>{"function"==typeof n[t]&&e.add(t)}))}while((n=Object.getPrototypeOf(n))!==Object.prototype);return Array.from(e)})());!function(t,r,o,i,a,s,c,l,d,p,u=t,f){function h(){f||(f=1,"/"==(c=(s.lib||"/~partytown/")+(s.debug?"debug/":""))[0]&&(d=r.querySelectorAll('script[type="text/partytown"]'),i!=t?i.dispatchEvent(new CustomEvent("pt1",{detail:t})):(l=setTimeout(v,(null==s?void 0:s.fallbackTimeout)||1e4),r.addEventListener("pt0",w),a?y(1):o.serviceWorker?o.serviceWorker.register(c+(s.swPath||"partytown-sw.js"),{scope:c}).then((function(t){t.active?y():t.installing&&t.installing.addEventListener("statechange",(function(t){"activated"==t.target.state&&y()}))}),console.error):v())))}function y(e){p=r.createElement(e?"script":"iframe"),t._pttab=Date.now(),e||(p.style.display="block",p.style.width="0",p.style.height="0",p.style.border="0",p.style.visibility="hidden",p.setAttribute("aria-hidden",!0)),p.src=c+"partytown-"+(e?"atomics.js?v=0.13.2":"sandbox-sw.html?"+t._pttab),r.querySelector(s.sandboxParent||"body").appendChild(p)}function v(n,o){for(w(),i==t&&(s.forward||[]).map((function(n){const[r]=e(n);delete t[r.split(".")[0]]})),n=0;n<d.length;n++)(o=r.createElement("script")).innerHTML=d[n].innerHTML,o.nonce=s.nonce,r.head.appendChild(o);p&&p.parentNode.removeChild(p)}function w(){clearTimeout(l)}s=t.partytown||{},i==t&&(s.forward||[]).map((function(r){const[o,{preserveBehavior:i}]=e(r);u=t,o.split(".").map((function(e,r,o){var a;u=u[o[r]]=r+1<o.length?u[o[r]]||(a=o[r+1],n.includes(a)?[]:{}):(()=>{let e=null;if(i){const{methodOrProperty:n,thisObject:r}=((t,e)=>{let n=t;for(let t=0;t<e.length-1;t+=1)n=n[e[t]];return{thisObject:n,methodOrProperty:e.length>0?n[e[e.length-1]]:void 0}})(t,o);"function"==typeof n&&(e=(...t)=>n.apply(r,...t))}return function(){let n;return e&&(n=e(arguments)),(t._ptf=t._ptf||[]).push(o,arguments),n}})()}))})),"complete"==r.readyState?h():(t.addEventListener("DOMContentLoaded",h),t.addEventListener("load",h))}(window,document,navigator,top,window.crossOriginIsolated);;(e=>{e.addEventListener("astro:before-swap",e=>{let r=document.body.querySelector("iframe[src*='/~partytown/']");if(r)e.newDocument.body.append(r)})})(document);</script></head> <body class="min-h-screen flex flex-col" style="padding-top: var(--navbar-height);" data-footer-position="sticky"> <!-- Skip to main content (accessibility) --> <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 px-4 py-2 rounded" style="background-color: var(--global-theme-color); color: var(--global-hover-text-color);">
+Skip to main content
+</a> <nav class="navbar fixed top-0 right-0 left-0 z-40" style="background-color: var(--global-bg-color); border-bottom: 1px solid var(--global-divider-color); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); height: 57px;" data-astro-cid-5blmo7yk> <div class="page-container flex h-full items-center justify-between" style="max-width: 930px; margin: 0 auto; padding: 0 1rem;" data-astro-cid-5blmo7yk> <!-- Brand --> <a href="/" class="text-lg font-bold" style="color: var(--global-text-color); text-decoration: none;" data-astro-cid-5blmo7yk> SeungJong Ha </a> <!-- Desktop nav --> <div class="hidden items-center gap-1 md:flex" data-astro-cid-5blmo7yk> <a href="/" class="px-3 py-1 text-sm transition-colors " style="color: var(--global-text-color); text-decoration: none;" data-astro-cid-5blmo7yk> about </a><a href="/blog/" class="px-3 py-1 text-sm transition-colors font-bold" style="color: var(--global-theme-color); text-decoration: none;" data-astro-cid-5blmo7yk> blog </a> <!-- Search pill (desktop) --> <button id="search-toggle" class="search-pill" aria-label="Search" title="Search" type="button" data-astro-cid-5blmo7yk> <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-5blmo7yk> <circle cx="11" cy="11" r="8" data-astro-cid-5blmo7yk></circle> <line x1="21" y1="21" x2="16.65" y2="16.65" data-astro-cid-5blmo7yk></line> </svg> <span class="search-pill-text" data-astro-cid-5blmo7yk>Search…</span> <kbd class="search-kbd" data-astro-cid-5blmo7yk>⌘K</kbd> </button> <button data-light-toggle title="Toggle theme" aria-label="Toggle theme" style="padding: 0; border: 0; background-color: inherit; color: var(--global-text-color); width: 2rem; height: 2rem; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;"> <!-- Moon icon: shown in light mode (click to go dark) --> <span data-light-toggle-icon="moon"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </span> <!-- Sun icon: shown in dark mode (click to go light) --> <span data-light-toggle-icon="sun" style="display: none;"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <circle cx="12" cy="12" r="5"></circle> <line x1="12" y1="1" x2="12" y2="3"></line> <line x1="12" y1="21" x2="12" y2="23"></line> <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line> <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line> <line x1="1" y1="12" x2="3" y2="12"></line> <line x1="21" y1="12" x2="23" y2="12"></line> <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line> <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line> </svg> </span> </button> <script type="module">function e(t){document.querySelectorAll("[data-light-toggle-icon]").forEach(n=>{const c=t==="dark"&&n.getAttribute("data-light-toggle-icon")==="sun"||t==="light"&&n.getAttribute("data-light-toggle-icon")==="moon";n.style.display=c?"inline-block":"none"})}function d(t){document.documentElement.setAttribute("data-theme",t),localStorage.setItem("theme",t),e(t)}function o(){const t=document.documentElement.getAttribute("data-theme")??"light";d(t==="dark"?"light":"dark")}function a(){document.querySelectorAll("[data-light-toggle]").forEach(t=>{t.removeEventListener("click",o),t.addEventListener("click",o)})}a();e(document.documentElement.getAttribute("data-theme")??"light");document.addEventListener("astro:after-swap",()=>{a(),e(document.documentElement.getAttribute("data-theme")??"light")});window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",t=>{localStorage.getItem("theme")||(document.documentElement.setAttribute("data-theme",t.matches?"dark":"light"),e(t.matches?"dark":"light"))});</script> </div> <!-- Mobile controls (icon-only search + theme + hamburger) --> <div class="flex items-center gap-2 md:hidden" data-astro-cid-5blmo7yk> <button id="search-toggle" aria-label="Search" type="button" style="padding: 0; border: 0; background: inherit; color: var(--global-text-color); cursor: pointer;" data-astro-cid-5blmo7yk> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-5blmo7yk> <circle cx="11" cy="11" r="8" data-astro-cid-5blmo7yk></circle> <line x1="21" y1="21" x2="16.65" y2="16.65" data-astro-cid-5blmo7yk></line> </svg> </button> <button data-light-toggle title="Toggle theme" aria-label="Toggle theme" style="padding: 0; border: 0; background-color: inherit; color: var(--global-text-color); width: 2rem; height: 2rem; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;"> <!-- Moon icon: shown in light mode (click to go dark) --> <span data-light-toggle-icon="moon"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </span> <!-- Sun icon: shown in dark mode (click to go light) --> <span data-light-toggle-icon="sun" style="display: none;"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <circle cx="12" cy="12" r="5"></circle> <line x1="12" y1="1" x2="12" y2="3"></line> <line x1="12" y1="21" x2="12" y2="23"></line> <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line> <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line> <line x1="1" y1="12" x2="3" y2="12"></line> <line x1="21" y1="12" x2="23" y2="12"></line> <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line> <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line> </svg> </span> </button>  <button id="navbar-toggler" class="navbar-toggler collapsed" aria-label="Toggle navigation" aria-expanded="false" type="button" style="padding: 0.25rem; border: 0; background: inherit; cursor: pointer;" data-astro-cid-5blmo7yk> <span class="icon-bar top-bar" style="display: block; width: 22px; height: 2px; background-color: var(--global-text-color); border-radius: 1px; margin-bottom: 4px;" data-astro-cid-5blmo7yk></span> <span class="icon-bar middle-bar" style="display: block; width: 22px; height: 2px; background-color: var(--global-text-color); border-radius: 1px; margin-bottom: 4px;" data-astro-cid-5blmo7yk></span> <span class="icon-bar bottom-bar" style="display: block; width: 22px; height: 2px; background-color: var(--global-text-color); border-radius: 1px;" data-astro-cid-5blmo7yk></span> </button> </div> </div> <!-- Mobile nav collapse --> <div id="navbar-collapse" class="hidden md:hidden" style="background-color: var(--global-bg-color); border-top: 1px solid var(--global-divider-color); padding: 0.5rem 0;" data-astro-cid-5blmo7yk> <a href="/" class="block px-4 py-2 text-sm" style="color: var(--global-text-color); font-weight: 400; text-decoration: none;" data-astro-cid-5blmo7yk> about </a><a href="/blog/" class="block px-4 py-2 text-sm" style="color: var(--global-theme-color); font-weight: 700; text-decoration: none;" data-astro-cid-5blmo7yk> blog </a> </div> </nav> <!-- Platform detection: update ⌘K / Ctrl K label before first paint --> <script>
+  (function () {
+    var isMac = /Mac|iPhone|iPad|iPod/.test(navigator.platform);
+    document.querySelectorAll('.search-kbd').forEach(function (el) {
+      el.textContent = isMac ? '⌘K' : 'Ctrl K';
+    });
+  })();
+</script>  <script type="module">let c=null;function f(){c?.abort(),c=new AbortController;const{signal:a}=c,o=document.getElementById("navbar-toggler"),d=document.getElementById("navbar-collapse");o?.addEventListener("click",()=>{!d?.classList.contains("hidden")?(d?.classList.add("hidden"),o.setAttribute("aria-expanded","false"),o.classList.add("collapsed"),document.body.style.overflow=""):(d?.classList.remove("hidden"),o.setAttribute("aria-expanded","true"),o.classList.remove("collapsed"),document.body.style.overflow="hidden")},{signal:a}),document.querySelectorAll("#navbar-collapse a").forEach(e=>{e.addEventListener("click",()=>{d?.classList.add("hidden"),o?.setAttribute("aria-expanded","false"),o?.classList.add("collapsed"),document.body.style.overflow=""},{signal:a})}),document.querySelectorAll(".mobile-dropdown-trigger").forEach(e=>{e.addEventListener("click",()=>{const t=e.closest(".mobile-dropdown")?.querySelector(".mobile-dropdown-children"),r=e.querySelector(".mobile-dropdown-chevron");!t?.classList.contains("hidden")?(t?.classList.add("hidden"),e.setAttribute("aria-expanded","false"),r&&(r.style.transform="")):(t?.classList.remove("hidden"),e.setAttribute("aria-expanded","true"),r&&(r.style.transform="rotate(180deg)"))},{signal:a})}),document.querySelectorAll(".nav-dropdown").forEach(e=>{const l=e.querySelector(".nav-dropdown-trigger"),t=[...e.querySelectorAll('[role="menuitem"]')];function r(){e.classList.add("is-open"),l?.setAttribute("aria-expanded","true"),t[0]?.focus()}function i(){e.classList.remove("is-open"),l?.setAttribute("aria-expanded","false")}l?.addEventListener("keydown",n=>{n.key==="Enter"||n.key===" "||n.key==="ArrowDown"?(n.preventDefault(),r()):n.key==="ArrowUp"&&(n.preventDefault(),r(),t[t.length-1]?.focus())},{signal:a}),t.forEach((n,u)=>{n.setAttribute("tabindex","-1"),n.addEventListener("keydown",s=>{s.key==="ArrowDown"?(s.preventDefault(),t[(u+1)%t.length]?.focus()):s.key==="ArrowUp"?(s.preventDefault(),t[(u-1+t.length)%t.length]?.focus()):(s.key==="Escape"||s.key==="Tab")&&(i(),s.key==="Escape"&&(s.preventDefault(),l?.focus()))},{signal:a})}),document.addEventListener("click",n=>{e.contains(n.target)||i()},{signal:a})})}f();document.addEventListener("astro:after-swap",f);document.addEventListener("astro:before-swap",()=>{document.body.style.overflow=""});</script> <!-- ⌘K Search (ninja-keys + Pagefind) — persisted across View Transitions --> <!-- ninja-keys web component --><ninja-keys id="ninja-search" placeholder="Search or jump to…" hideBreadcrumbs="true" data-nav-items="[{&quot;id&quot;:&quot;nav-about&quot;,&quot;title&quot;:&quot;About&quot;,&quot;section&quot;:&quot;Navigation&quot;,&quot;href&quot;:&quot;/&quot;},{&quot;id&quot;:&quot;nav-blog&quot;,&quot;title&quot;:&quot;Blog&quot;,&quot;section&quot;:&quot;Navigation&quot;,&quot;href&quot;:&quot;/blog/&quot;}]" data-content-items="[{&quot;id&quot;:&quot;post-interview-01-pl&quot;,&quot;title&quot;:&quot;1. PL&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-01-pl/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-02-architecture&quot;,&quot;title&quot;:&quot;2. Architecture&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-02-architecture/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-03-os&quot;,&quot;title&quot;:&quot;3. OS&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-03-os/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-04-db&quot;,&quot;title&quot;:&quot;4. DB&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-04-db/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-05-math&quot;,&quot;title&quot;:&quot;5. Math&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-05-math/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-06-network&quot;,&quot;title&quot;:&quot;6. Network&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-06-network/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-08-ml&quot;,&quot;title&quot;:&quot;8. AI/ML&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-08-ml/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-09-algorithm&quot;,&quot;title&quot;:&quot;9. Algorithm&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-09-algorithm/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-11-security&quot;,&quot;title&quot;:&quot;11. Security&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-11-security/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-review-asterinas&quot;,&quot;title&quot;:&quot;논문 리뷰: Asterinas: A Linux ABI-Compatible, Rust-Based Framekernel OS with a Small and Sound TCB&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/review-asterinas/&quot;,&quot;keywords&quot;:&quot;paper-review Review&quot;},{&quot;id&quot;:&quot;post-review-mkernel&quot;,&quot;title&quot;:&quot;논문 리뷰: On µ-Kernel Construction&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/review-mkernel/&quot;,&quot;keywords&quot;:&quot;paper-review Review&quot;},{&quot;id&quot;:&quot;post-review-omniglot&quot;,&quot;title&quot;:&quot;논문 리뷰: Building Bridges: Safe Interactions with Foreign Languages through Omniglot&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/review-omniglot/&quot;,&quot;keywords&quot;:&quot;paper-review Review&quot;},{&quot;id&quot;:&quot;post-review-rust-lwn-post&quot;,&quot;title&quot;:&quot;How to write Rust in the kernel: 한국어 요약본&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/review-rust-lwn-post/&quot;,&quot;keywords&quot;:&quot;paper-review Review&quot;}]" data-pagefind-base></ninja-keys> <script type="module" src="/_astro/SearchTrigger.astro_astro_type_script_index_0_lang.CLmTwsfW.js"></script> <main id="main-content" class="flex-1" data-pagefind-body>   <div id="reading-progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background-color: var(--global-theme-color);
+    z-index: 9999;
+    transition: width 0.1s linear;
+  "></div> <script type="module">const t=document.getElementById("reading-progress");function o(){const i=window.scrollY,e=document.documentElement.scrollHeight-window.innerHeight,n=e>0?Math.min(100,Math.round(i/e*100)):0;t&&(t.style.width=`${n}%`,t.setAttribute("aria-valuenow",String(n)))}window.addEventListener("scroll",o,{passive:!0});o();</script><div class="page-container py-8"> <div class="flex gap-8"> <!-- TOC sidebar (desktop only) --> <aside class="hidden lg:block w-52 flex-shrink-0"> <nav aria-label="Table of contents" class="toc sticky top-20" style="font-size: 0.8rem; max-height: calc(100vh - 6rem); overflow-y: auto;" data-astro-cid-obewoz47> <p class="mb-2 font-semibold tracking-wide uppercase" style="font-size: 0.7rem; color: var(--global-text-color-light);" data-astro-cid-obewoz47>
+Table of Contents
+</p> <ul class="space-y-1" style="list-style: none; padding: 0; margin: 0;" data-astro-cid-obewoz47> <li style data-astro-cid-obewoz47> <a href="#kernel" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Kernel </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#kernel을-필요에-의해-어느정도-수정했다고-하자-이-kernel이-제대로-작동하는지를-알기-위해서-어떤-test를-해야-하나" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Kernel을 필요에 의해 어느정도 수정했다고 하자. 이 kernel이 제대로 작동하는지를 알기 위해서 어떤 test를 해야 하나? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#interrupt란-무엇인가-interrupt를-두-종류로-나눈다면-어떻게-되는가-software-interrupthardware-interrupt-두-interrupt의-차이는-무엇인가-두-interrupt의-handler-를-서로-구분해서-구현해야-하는-것이-좋은가-아니어도-상관-없는가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Interrupt란 무엇인가? interrupt를 두 종류로 나눈다면 어떻게 되는가? (software interrupt/hardware interrupt) 두 interrupt의 차이는 무엇인가? 두 interrupt의 handler 를 서로 구분해서 구현해야 하는 것이 좋은가, 아니어도 상관 없는가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#시스템-콜과-인터럽트의-차이는-인터럽트가-걸리면-어떤-일이-일어나고-처리-후에-어떻게-이전-상태로-돌아가는가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> 시스템 콜과 인터럽트의 차이는? 인터럽트가 걸리면 어떤 일이 일어나고 처리 후에 어떻게 이전 상태로 돌아가는가 </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#thread와-process의-차이는-무엇인가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Thread와 process의 차이는 무엇인가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#ipc가-무엇인가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> IPC가 무엇인가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#thread끼리-context-switching-하는-과정에-대해-설명하시오-같은-프로세스-내부의-thread들끼리-전환되는-것과-다른-프로세스간의-thread-까리-전환되는-것이-어떻게-다른가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Thread끼리 context switching 하는 과정에 대해 설명하시오. 같은 프로세스 내부의 thread들끼리 전환되는 것과 다른 프로세스간의 thread 까리 전환되는 것이 어떻게 다른가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#non-preemptive-scheduling이란" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Non-preemptive scheduling이란? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#요즘-많은-사람들이-각각-자신만의-스마트폰을-사용하고-있다-이처럼-각-개인-스마트폰을-위하여-process-system을-design하려고-한다-스마트폰에서-각-application이-하나의-process로-독립해서-실행하는-것이-나을까-아니면-하나의-thread로-만들어져서-실행하는-것이-나을까-어느-쪽이-나을지-결정하고-그-이유-를-설명하라" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> 요즘 많은 사람들이 각각 자신만의 스마트폰을 사용하고 있다. 이처럼 각 개인 스마트폰을 위하여 process system을 design하려고 한다. 스마트폰에서 각 application이 하나의 process로 독립해서 실행하는 것이 나을까? 아니면, 하나의 thread로 만들어져서 실행하는 것이 나을까? 어느 쪽이 나을지 결정하고, 그 이유 를 설명하라 </a> </li><li style data-astro-cid-obewoz47> <a href="#concurrency" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Concurrency </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#sequential-program과-multithread-program에서-error-detection에-대한-차이점에는-어떤-것이-있나" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Sequential program과 multithread program에서 error detection에 대한 차이점에는 어떤 것이 있나? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#critical-section이란" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Critical section이란? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#세마포어의-개념은-주요-연산-2가지는-어떻게-구현해야-하는가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> 세마포어의 개념은? 주요 연산 2가지는? 어떻게 구현해야 하는가? </a> </li><li style data-astro-cid-obewoz47> <a href="#virtual-memory" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Virtual Memory </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#virtual-address와-virtual-memory에-대해-설명하시오" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Virtual Address와 Virtual memory에 대해 설명하시오 </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#어떤-c-program으로-작성되어-수행중인-process가-있다고-가정하자-c언어에서는-직접적으로-주소를-변수에게-지정해-줄-수-있다-만약-주소-1-2-3-4에-변수를-잡아서-어떤-일을-수행하는-process라고-하자-이-process를-한-시스템에-동시에-두번-수행-시켰다-그랬을-때-한-프로세스가-1-2-3-4-주소에-있는-변수를-바꿨을-때-다른-프로세스의-변수들에도-영향을-끼치는가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> 어떤 C program으로 작성되어 수행중인 process가 있다고 가정하자. C언어에서는 직접적으로 주소를 변수에게 지정해 줄 수 있다. 만약 주소 1, 2, 3, 4에 변수를 잡아서 어떤 일을 수행하는 process라고 하자. 이 process를 한 시스템에 동시에 두번 수행 시켰다. 그랬을 때 한 프로세스가 1, 2, 3, 4 주소에 있는 변수를 바꿨을 때 다른 프로세스의 변수들에도 영향을 끼치는가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#c로-숫자로-직접-입력된-주소를-참조하는-프로그램을-짜서-컴파일한-후-두-개를-실행시켰다고-하자-그러면-이-두-프로세스는-물리적으로-같은-곳을-참조하나-만약-아니라면-어떻게-서로-다른-물리적-공간을-참조할-수-있나" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> C로 숫자로 직접 입력된 주소를 참조하는 프로그램을 짜서 컴파일한 후, 두 개를 실행시켰다고 하자. 그러면 이 두 프로세스는 물리적으로 같은 곳을 참조하나? 만약 아니라면, 어떻게 서로 다른 물리적 공간을 참조할 수 있나? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#logical-address와-physical-address의-차이는-무엇인가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Logical address와 physical address의 차이는 무엇인가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#logical-address를-physical-address로-바꾸어주는-hw가-무엇인가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Logical address를 physical address로 바꾸어주는 hw가 무엇인가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#프로세스는-가상-메모리-주소로-어떻게-실제-메모리-주소를-찾아가는가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> 프로세스는 가상 메모리 주소로 어떻게 실제 메모리 주소를 찾아가는가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#os의-캐시-메모리의-사이즈를-구하기-위한-프로그램을-어떻게-구현하면-되는가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> OS의 캐시 메모리의 사이즈를 구하기 위한 프로그램을 어떻게 구현하면 되는가? </a> </li><li style data-astro-cid-obewoz47> <a href="#paging" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Paging </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#paging이-무엇인가-paging을-할-때-어떻게-실제-메모리-주소에-데이터를-전송하는가-page-table에는-어떤-항목이-저장되는가-page-table은-어디에-저장되는가-page-table이-메모리에-저장되면-paging을-할-때-메모리를-두-번-참조해야-되는데-좀-더-빠르게-하는-방법은-없는가-tlb에는-어떤-항목이-저장되는가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Paging이 무엇인가? paging을 할 때 어떻게 실제 메모리 주소에 데이터를 전송하는가? page table에는 어떤 항목이 저장되는가? page table은 어디에 저장되는가? page table이 메모리에 저장되면, paging을 할 때 메모리를 두 번 참조해야 되는데, 좀 더 빠르게 하는 방법은 없는가? TLB에는 어떤 항목이 저장되는가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#virtual-memory에서-page-replacement-policy에는-어떤-것이-있는가-lru의-단점은" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Virtual memory에서 page replacement policy에는 어떤 것이 있는가? LRU의 단점은? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#운영-체제에서-memory-management-기법중-하나로-paging이-많이-사용되고-있다-paging-기법의-장단점으로는-무엇이-있으며-hierarchical-paging-혹은-inverted-page-table은-어떤-환경에서-유리한가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> 운영 체제에서 memory management 기법중 하나로 paging이 많이 사용되고 있다. Paging 기법의 장⋅단점으로는 무엇이 있으며, hierarchical paging 혹은 inverted page table은 어떤 환경에서 유리한가? </a> </li> </ul> </nav> <script type="module">const r=document.querySelectorAll(".toc-link"),n=Array.from(r).map(t=>t.getAttribute("href")?.slice(1)??"");function c(t){r.forEach(e=>{const o=e.getAttribute("href")===`#${t}`;e.style.color=o?"var(--global-theme-color)":"var(--global-text-color-light)",e.style.fontWeight=o?"600":"400"})}const s=parseInt(getComputedStyle(document.documentElement).getPropertyValue("--navbar-height"))||57,i=new IntersectionObserver(t=>{for(const e of t)if(e.isIntersecting){c(e.target.id);break}},{rootMargin:`-${s}px 0px -80% 0px`,threshold:0});n.forEach(t=>{const e=document.getElementById(t);e&&i.observe(e)});</script> </aside> <!-- Post content --> <article class="flex-1 min-w-0"> <!-- Hidden metadata for pagefind structured search --> <span data-pagefind-meta="date" style="display:none">2025-08-08</span> <!-- Breadcrumb --> <nav aria-label="Breadcrumb" class="breadcrumb-nav"> <a href="/blog/" class="breadcrumb-link">← Blog</a> </nav> <!-- Header --> <header class="post-header"> <h1 class="post-title" style="margin-bottom: 0.75rem;" data-pagefind-weight="10"> 3. OS </h1> <div class="post-meta mt-1 flex flex-wrap items-center gap-2 text-xs" style="color: var(--global-text-color-light);"> <time datetime="2025-08-08T00:00:00.000Z">August 8, 2025</time>  <span aria-hidden="true">·</span> <span>13 min read</span>   <span aria-hidden="true">·</span> <div class="flex flex-wrap gap-1"> <a href="/blog/category/Interview Prep/" class="badge-abbr text-xs" style="background-color: var(--global-text-color-light); color: var(--global-hover-text-color);"> Interview Prep </a> </div>   <span aria-hidden="true">·</span> <div class="flex flex-wrap gap-1"> <a href="/blog/tag/interview/" class="badge-abbr text-xs" style="background-color: var(--global-theme-color); color: var(--global-hover-text-color);"> interview </a> </div>  </div>  </header> <!-- Body --> <div class="prose max-w-none" id="post-content"> <h1 id="tldr">TL;DR</h1>
+<p>이 글은 2025년도 봄학기 KAIST 전산학부 대학원 면접을 준비하며, 면접 참고자료(OS)에 대한 대답을 정리한 글입니다.</p>
+<p>문제에 대한 정답이 아니며, 제가 공부하며 생각한 바들을 정리한 것입니다.</p>
+<p>후에 같은 목표로 면접을 준비하는 학우분들께 도움이 되기를 바랍니다.</p>
+<p>이 풀이노트는 질문만 본 상태에서 답변한 내용에 대한 채점, 그리고 이 면접을 준비하며 이전에 한번 LLM과 함께 작성해본 답안이 이어져 있습니다.</p>
+<h1 id="문제">문제</h1>
+<h2 id="kernel">Kernel</h2>
+<h3 id="kernel을-필요에-의해-어느정도-수정했다고-하자-이-kernel이-제대로-작동하는지를-알기-위해서-어떤-test를-해야-하나">Kernel을 필요에 의해 어느정도 수정했다고 하자. 이 kernel이 제대로 작동하는지를 알기 위해서 어떤 test를 해야 하나?</h3>
+<blockquote>
+<p>먼저 정적 분석을 가장 먼저 이용합니다. 타입 체커 등 다양한 정적분석기가 이용됩니다.
+그 뒤 단위 테스트, 통합 테스트, 회귀 테스트 등 수정 부분으로부터 점차 범위를 늘려가며 테스트가 필요합니다.</p>
+</blockquote>
+<p>정확히 질문의 의도를 모르겠어서 일단 gemini 답변을 메모해둡니다
+수정된 커널이 제대로 작동하는지 확인하려면 여러 단계에 걸친 체계적인 테스트가 필요합니다. 테스트는 크게 <strong>기본 기능 검증</strong>, <strong>안정성 및 부하 테스트</strong>, 그리고 <strong>성능 평가</strong>로 나눌 수 있습니다.</p>
+<hr>
+<h3 id="interrupt란-무엇인가-interrupt를-두-종류로-나눈다면-어떻게-되는가-software-interrupthardware-interrupt-두-interrupt의-차이는-무엇인가-두-interrupt의-handler-를-서로-구분해서-구현해야-하는-것이-좋은가-아니어도-상관-없는가">Interrupt란 무엇인가? interrupt를 두 종류로 나눈다면 어떻게 되는가? (software interrupt/hardware interrupt) 두 interrupt의 차이는 무엇인가? 두 interrupt의 handler 를 서로 구분해서 구현해야 하는 것이 좋은가, 아니어도 상관 없는가?</h3>
+<blockquote>
+<p>인터럽트란 특정 신호에 의해 프로그램의 흐름에서 벗어나 추가적인 코드를 실행하는 것입니다.</p>
+<p>인터럽트는 크게 소프트웨어 인터럽트와 하드웨어 인터럽트로 나눌 수 있습니다.
+소프트웨어 인터럽트와 하드웨어 인터럽트의 가장 큰 차이는 호출의 주체와 동기성입니다.
+소프트웨어 인터럽트는 프로그램의 실행에 의해 호출되며 동기적입니다.
+하드웨어 인터럽트는 외부 디바이스에 의해 발생하며 비동기적입니다.</p>
+<p>두 인터럽트는 상황에 따라 우선순위에 차이가 있기 때문에 구현에 차이가 있습니다.
+보통 하드웨어 인터럽트는 디바이스 전체에 영향을 미치기 때문에 우선적으로 해결되야 합니다.
+소프트웨어 인터럽트는 단일 프로세스로 발생 범위가 제한되어 우선순위가 밀립니다.</p>
+</blockquote>
+<p>인터럽트란 제어 흐름에서 일시적으로 벗어난 이벤트와 이를 처리하는 메커니즘을 의미합니다.
+인터럽트는 크게 하드웨어 인터럽트와 소프트웨어 인터럽트로 나눌 수 있습니다.
+하드웨어 인터럽트는 프로세서 외부 장치에서 비동기적으로 발생하는 이벤트입니다. 예를 들어, 키보드 입력, 마우스 클릭, 네트워크 패킷 수신 등이 있습니다.
+소프트웨어 인터럽트는 프로그램 내부에서 발생하는 이벤트입니다. 예를 들어, 시스템 콜, 예외 처리 등이 있습니다.
+<a href="https://www.geeksforgeeks.org/operating-systems/difference-between-hardware-interrupt-and-software-interrupt/" rel="noopener noreferrer" target="_blank">https://www.geeksforgeeks.org/operating-systems/difference-between-hardware-interrupt-and-software-interrupt/</a>
+두 인터럽트의 핸들러를 구분해서 구현하는 것이 좋습니다.
+먼저 둘은 발생 맥락이 다릅니다. 하드웨어 인터럽트는 외부 장치에서 발생하는 이벤트이고, 소프트웨어 인터럽트는 프로그램 내부에서 발생하는 이벤트입니다.
+하드웨어 인터럽트는 코드와 상관없이 외부 장치에서 발생하는 이벤트이므로, 프로그램의 흐름과 무관하게 발생할 수 있고, 최대한 빠르게 처리해야 합니다.
+소프트웨어 인터럽트는 프로그램 내부에서 발생하는 이벤트이므로, 프로그램의 흐름에 따라 발생할 수 있고, 상대적으로 느리게 처리해도 됩니다.
+이러한 우선순위의 차이로 구분하여 구현하는 것이 좋습니다.</p>
+<hr>
+<h3 id="시스템-콜과-인터럽트의-차이는-인터럽트가-걸리면-어떤-일이-일어나고-처리-후에-어떻게-이전-상태로-돌아가는가">시스템 콜과 인터럽트의 차이는? 인터럽트가 걸리면 어떤 일이 일어나고 처리 후에 어떻게 이전 상태로 돌아가는가</h3>
+<blockquote>
+<p>인터럽트는 시스템 콜을 포함하는 개념입니다.
+사용자가 의도적으로 약속한 인수를 채우고 특정 인터럽트를 발생시켜(트랩) 시스템 콜을 실행할 수 있습니다.</p>
+<p>인터럽트가 걸리면 프로세서는 인터럽트 서비스 루틴으로 진입합니다.
+ISR에서 기본적으로 현재 프로그램의 상태를 저장하고, 나머지 루틴을 실행한 뒤, 프로그램의 상태를 복구합니다.
+이를 통해 인터럽트 처리 후 이전 상태로 돌아갈 수 있습니다.</p>
+</blockquote>
+<p>시스템 콜은 사용자 프로그램이 운영체제의 서비스를 요청하는 메커니즘으로, 소프트웨어 인터럽트의 일종입니다.
+인터럽트는 프로그램 흐름에서 동기, 비동기적으로 발생하는 이벤트로, 하드웨어 인터럽트와 소프트웨어 인터럽트로 나눌 수 있습니다.
+인터럽트가 발생하면 프로세서는 운영체제가 등록한 핸들러를 호출하고, 해당 이벤트를 처리합니다.
+처리 후에 프로세서는 이전 상태로 돌아가기 위해, 인터럽트 발생 전의 레지스터 상태를 저장하고, 해당 상태로 복원합니다. (운영체제 + 프로세서의 역할)</p>
+<hr>
+<h3 id="thread와-process의-차이는-무엇인가">Thread와 process의 차이는 무엇인가?</h3>
+<blockquote>
+<p>둘의 차이는 주소 공간의 공유 여부입니다.
+스레드간에는 주소 공간을 공유할 수 있지만,
+프로세스간에는 shared memory 같은 특정 IPC 매커니즘을 이용하지 않는다면 주소공간을 공유할 수 없습니다.</p>
+<p>외에도 TCB, PCB의 구성 요소에 차이가 있고, 일반적으로 프로세스 간에 고립된 자원은 스레드간에 공유됩니다.</p>
+</blockquote>
+<p>프로세스와 스레드의 가장 큰 차이는 주소 공간의 공유 여부입니다.
+프로세스는 독립적인 주소 공간을 가지며, 서로 다른 프로세스 간에 메모리를 공유하지 않습니다.
+스레드는 같은 프로세스 내에서 실행되는 실행의 단위로, 같은 주소 공간을 공유합니다.
+때문에 IPC에 의한 비용이 발생하지 않습니다.</p>
+<hr>
+<h3 id="ipc가-무엇인가">IPC가 무엇인가?</h3>
+<blockquote>
+<p>Inter Process Communication의 약자로, 프로세스간에 데이터를 주고받는 방식입니다.
+대표적으로 메세지 큐, shared memory 등이 있습니다.</p>
+</blockquote>
+<p>Inter Process Communication의 약자로, 프로세스 간 통신을 의미합니다.
+프로세스 간의 데이터를 주고받기 위한 메커니즘으로, 파이프(파일 시스템), 소켓, 메시지 큐, 공유 메모리 등이 있습니다.</p>
+<hr>
+<h3 id="thread끼리-context-switching-하는-과정에-대해-설명하시오-같은-프로세스-내부의-thread들끼리-전환되는-것과-다른-프로세스간의-thread-까리-전환되는-것이-어떻게-다른가">Thread끼리 context switching 하는 과정에 대해 설명하시오. 같은 프로세스 내부의 thread들끼리 전환되는 것과 다른 프로세스간의 thread 까리 전환되는 것이 어떻게 다른가?</h3>
+<blockquote>
+<p>같은 프로세스 내에서의 컨텍스트 스위치일 경우, TCB만 교체하면 되고,
+다른 프로세스 간의 스레드 컨텍스트 스위치일 경우 PCB도 교체해야 합니다.
+다른 프로세스간의 컨텍스트 스위치에서 PCB가 교체될 땐 페이지 테이블, 파일 테이블 등이 바뀌어 시간이 더 걸립니다.</p>
+</blockquote>
+<p>스레드 간의 컨텍스트 스위치는 레지스터 상태를 저장하고 복원하는 과정으로 이루어집니다. 이는 스택 포인터의 전환을 포함합니다.
+같은 프로세스 간의 스레드 간 전환은 주소 공간을 공유하므로, 메모리 맵을 변경할 필요가 없습니다. 따라서 빠르게 전환할 수 있습니다.
+다른 프로세스 간의 스레드 간 전환은 주소 공간이 다르므로, 메모리 맵을 변경해야 합니다. 따라서 더 많은 오버헤드가 발생합니다.
+이 오버헤드에는 페이지 폴트, 캐시 미스 등이 포함됩니다. 또한, 프로세스 간의 스레드 전환은 더 많은 레지스터 상태를 저장하고 복원해야 하므로, 더 많은 시간이 소요됩니다.
+TLB flush가 가장 큰 시간 차이를 만듭니다.</p>
+<hr>
+<h3 id="non-preemptive-scheduling이란">Non-preemptive scheduling이란?</h3>
+<blockquote>
+<p>비선점형 스케줄링은 프로세스가 코어를 점유중일때 다른 프로세스가 이를 사용하지 못하는 형식의 스케줄링입니다.
+즉, 실행중인 프로세스가 이를 양보하기 전까지 다른 프로세스는 이를 사용하지 못합니다.</p>
+</blockquote>
+<p>비선점 스케줄링은 현재 실행 중인 프로세스가 자발적으로 CPU를 양보할 때까지 기다리는 방식입니다.
+즉, 프로세스가 CPU를 점유하고 있는 동안에는 다른 프로세스이 CPU를 사용할 수 없습니다.
+이 방식은 프로세스가 CPU를 양보하지 않는 한, 다른 프로세스가 CPU를 사용할 수 없으므로, CPU 사용률이 낮아질 수 있습니다.
+비선점 스케줄링은 주로 Real time os로 불리는 실시간 시스템에서 사용됩니다.</p>
+<hr>
+<h3 id="요즘-많은-사람들이-각각-자신만의-스마트폰을-사용하고-있다-이처럼-각-개인-스마트폰을-위하여-process-system을-design하려고-한다-스마트폰에서-각-application이-하나의-process로-독립해서-실행하는-것이-나을까-아니면-하나의-thread로-만들어져서-실행하는-것이-나을까-어느-쪽이-나을지-결정하고-그-이유-를-설명하라">요즘 많은 사람들이 각각 자신만의 스마트폰을 사용하고 있다. 이처럼 각 개인 스마트폰을 위하여 process system을 design하려고 한다. 스마트폰에서 각 application이 하나의 process로 독립해서 실행하는 것이 나을까? 아니면, 하나의 thread로 만들어져서 실행하는 것이 나을까? 어느 쪽이 나을지 결정하고, 그 이유 를 설명하라</h3>
+<blockquote>
+<p>각 애플리케이션을 프로세스로 실행하는 것이 낫습니다.
+프로세스와 스레드간의 트레이드오프는 성능과 고립인데,
+현대 디바이스가 충분히 빠르고 보안 문제가 더 위험하기 때문입니다.</p>
+</blockquote>
+<p>스마트폰에서 각 애플리케이션이 하나의 프로세스로 독립적으로 실행하는 것이 좋습니다.
+각 애플리케이션이 독립적인 프로세스로 실행되면, 애플리케이션 간의 메모리 충돌을 방지할 수 있습니다.
+또한, 애플리케이션이 비정상적으로 종료되더라도 다른 애플리케이션에 영향을 주지 않습니다.
+또한 보안적인 측면에서도 프로세스 간의 메모리 공간이 분리되어 있어, 악성 애플리케이션이 다른 애플리케이션의 데이터를 읽거나 수정하는 것을 방지할 수 있습니다.
+다량의 프로세스가 동시에 실행되면 성능 저하가 발생할 수 있지만, 현대의 스마트폰은 멀티코어 CPU를 사용하고 있어, 여러 프로세스를 동시에 실행하는 데 충분한 성능을 제공합니다.</p>
+<hr>
+<h2 id="concurrency">Concurrency</h2>
+<h3 id="sequential-program과-multithread-program에서-error-detection에-대한-차이점에는-어떤-것이-있나">Sequential program과 multithread program에서 error detection에 대한 차이점에는 어떤 것이 있나?</h3>
+<blockquote>
+<p>Sequential 프로그램에선 발생하지 않지만 multithread로 동작하면서 발생하는 에러가 많아집니다.
+대표적인 예시로 데드락, 레이스 컨디션 등이 있습니다.
+때문에 기존에 사용하던 정적 분석 도구, 테스트 도구들을 통해 검출되지 않는 에러들이 있고, 이를 추가로 검사해야 합니다.</p>
+</blockquote>
+<p>멀티스레드 프로그램에서는 메모리의 공유로 인해 다양한 동기화 문제가 발생할 수 있습니다.
+예를 들어, 레이스 컨디션 데드락 등이 있습니다.
+이러한 문제는 동기화 메커니즘(뮤텍스, 세마포어 등)을 사용하여 해결할 수 있지만, 이로 인해 프로그램의 복잡성이 증가하고
+디버깅이 어려워질 수 있습니다.</p>
+<hr>
+<h3 id="critical-section이란">Critical section이란?</h3>
+<blockquote>
+<p>크리티컬 섹션은 멀티스레드 프로그래밍에서 여러 스레드 중 하나만 동시에 실행해야 하는 코드를 의미합니다.
+뮤텍스, 락, 세마포어 등을 이용하여 여러 스레드의 실행을 방지합니다.</p>
+</blockquote>
+<p>크리티컬 섹션은 여러 스레드가 동시에 접근할 수 없는 공유 자원에 대한 코드 블록을 의미합니다.
+크리티컬 섹션에 접근하는 스레드는 다른 스레드가 해당 섹션에 접근하지 못하도록 mutual exclusion을 보장해야 합니다.
+이를 위해 뮤텍스, 세마포어 등의 동기화 메커니즘을 사용합니다.</p>
+<hr>
+<h3 id="세마포어의-개념은-주요-연산-2가지는-어떻게-구현해야-하는가">세마포어의 개념은? 주요 연산 2가지는? 어떻게 구현해야 하는가?</h3>
+<blockquote>
+<p>세마포어는 시그널과 웨이트 두 연산과 정수 카운터로 이루어져 있습니다.
+웨이트을 통해 정수 카운터를 낮추고, 만약 음수라면 슬립합니다.
+시그널을 통해 정수 카운터를 높이고 만약 0 이상이라면 대기중인 스레드 중 하나를 깨웁니다.
+아키텍처별로 제공하는 atomic 연산 cas를 통해 구현합니다.</p>
+</blockquote>
+<p>세마포어는 공유 자원에 대한 접근을 제어하는 동기화 메커니즘입니다.
+세마포어는 두 가지 주요 연산을 가지고 있습니다: wait(P)와 signal(V)입니다.
+wait(P) 연산은 세마포어의 값을 읽고 감소시키려고 합니다. 만약 읽은 값이 0 이하였다면 대기 상태로 전환합니다.
+signal(V) 연산은 세마포어의 값을 증가시키고, 대기 중인 프로세스가 있다면 그 프로세스를 깨웁니다.
+가장 간단한 구현은 세마포어를 정수로 표현하고, wait와 signal 연산을 원자적으로 수행하는 것입니다. -> 따라서 하드웨어가 원자적 연산을 지원해야 합니다.
+이를 위해 뮤텍스나 spinlock을 사용하여 세마포어의 값을 읽고 쓰는 작업을 보호할 수 있습니다.</p>
+<hr>
+<h2 id="virtual-memory">Virtual Memory</h2>
+<h3 id="virtual-address와-virtual-memory에-대해-설명하시오">Virtual Address와 Virtual memory에 대해 설명하시오</h3>
+<blockquote>
+<p>가상 주소는 프로세스가 메모리에 접근할 때 이용하는 주소입니다.
+가상 메모리 시스템은 이를 바탕으로 물리 메모리를 매핑하고 접근하는 기술힙니다.</p>
+</blockquote>
+<p>가상 주소는 프로세스가 사용하는 주소 공간을 의미합니다. 프로세스는 가상 주소를 사용하여 메모리에 접근합니다.
+가상 메모리는 프로세스가 사용하는 가상 주소 공간을 실제 물리 메모리에 매핑하는 기술입니다.
+가상 메모리를 사용하면 프로세스는 실제 물리 메모리보다 더 큰 주소공간을 독립적으로 사용할 수 있습니다.</p>
+<hr>
+<h3 id="어떤-c-program으로-작성되어-수행중인-process가-있다고-가정하자-c언어에서는-직접적으로-주소를-변수에게-지정해-줄-수-있다-만약-주소-1-2-3-4에-변수를-잡아서-어떤-일을-수행하는-process라고-하자-이-process를-한-시스템에-동시에-두번-수행-시켰다-그랬을-때-한-프로세스가-1-2-3-4-주소에-있는-변수를-바꿨을-때-다른-프로세스의-변수들에도-영향을-끼치는가">어떤 C program으로 작성되어 수행중인 process가 있다고 가정하자. C언어에서는 직접적으로 주소를 변수에게 지정해 줄 수 있다. 만약 주소 1, 2, 3, 4에 변수를 잡아서 어떤 일을 수행하는 process라고 하자. 이 process를 한 시스템에 동시에 두번 수행 시켰다. 그랬을 때 한 프로세스가 1, 2, 3, 4 주소에 있는 변수를 바꿨을 때 다른 프로세스의 변수들에도 영향을 끼치는가?</h3>
+<blockquote>
+<p>영향을 미치지 않습니다. 주소공간이 분리되어 있기 때문입니다.</p>
+</blockquote>
+<p>아니요, 가상 메모리를 사용하기 때문에 각 프로세스는 독립적인 가상 주소 공간을 가지므로,
+두 프로세스의 같은 가상 주소는 서로 다른 물리 주소에 매핑됩니다.
+만약 이 변수들이 커널 상태와 연관된 변수라면, 영향을 미칠 수 있습니다.
+예를 들어 파일 디스크럽터를 생성하고 포크하는 경우 두 프로세스가 같은 파일 디스크럽터를 공유할 수 있습니다. (v-node의 공유) -> 정확하지 않음</p>
+<hr>
+<h3 id="c로-숫자로-직접-입력된-주소를-참조하는-프로그램을-짜서-컴파일한-후-두-개를-실행시켰다고-하자-그러면-이-두-프로세스는-물리적으로-같은-곳을-참조하나-만약-아니라면-어떻게-서로-다른-물리적-공간을-참조할-수-있나">C로 숫자로 직접 입력된 주소를 참조하는 프로그램을 짜서 컴파일한 후, 두 개를 실행시켰다고 하자. 그러면 이 두 프로세스는 물리적으로 같은 곳을 참조하나? 만약 아니라면, 어떻게 서로 다른 물리적 공간을 참조할 수 있나?</h3>
+<blockquote>
+<p>유저 공간 주소를 참조할 경우 가상 메모리에 의해 서로 다른 공간을 참조합니다.
+만약 커널 공간을 참조하거나 포크 이후 같은 주소를 참조했다면 같은 공간일 수 있습니다.</p>
+</blockquote>
+<p>아니요, 두 프로세스는 서로 다른 가상 주소 공간을 가지므로, 같은 가상 주소를 참조하더라도 서로 다른 물리 주소를 참조합니다.
+가상 메모리 시스템은 각 프로세스에 대해 독립적인 가상 주소 공간을 제공합니다. 따라서 두 프로세스가 같은 가상 주소를 참조하더라도, 운영체제는 이를 서로 다른 물리 주소로 매핑합니다.
+다이내믹 링킹이 반례가 될 수 있음</p>
+<hr>
+<h3 id="logical-address와-physical-address의-차이는-무엇인가">Logical address와 physical address의 차이는 무엇인가?</h3>
+<blockquote>
+<p>논리 주소는 가상 주소로, 프로세서가 사용하는 주소입니다.
+이를 물리 주소로 변환하기 위해 페이지 테이블과 mmu가 필요합니다.</p>
+</blockquote>
+<p>논리 주소는 프로세스가 사용하는 가상 주소 공간의 주소입니다. 프로세스는 논리 주소를 사용하여 메모리에 접근합니다.
+물리 주소는 실제 물리 메모리의 주소입니다. 운영체제는 논리 주소를 물리 주소로 매핑하여 프로세스가 메모리에 접근할 수 있도록 합니다.
+일반적으로 페이징 기법을 사용하여 논리 주소를 물리 주소로 변환합니다.
+페이징 기법은 논리 주소 공간을 페이지 단위로 나누고, 물리 주소 공간을 프레임 단위로 나누어, 페이지와 프레임을 매핑하는 방식입니다.</p>
+<hr>
+<h3 id="logical-address를-physical-address로-바꾸어주는-hw가-무엇인가">Logical address를 physical address로 바꾸어주는 hw가 무엇인가?</h3>
+<blockquote>
+<p>mmu로, 현대 마이프로프로세서에 보통 같이 들어 있습니다.</p>
+</blockquote>
+<p>MMU(Memory Management Unit)입니다. MMU는 논리 주소를 물리 주소로 변환하는 하드웨어입니다.
+일반적으로 현대 프로세서에는 MMU가 내장되어 있습니다.
+MMU는 페이지 테이블을 사용하여 논리 주소를 물리 주소로 변환합니다.
+페이지 테이블은 논리 주소와 물리 주소의 매핑 정보를 저장하는 데이터구조입니다.</p>
+<hr>
+<h3 id="프로세스는-가상-메모리-주소로-어떻게-실제-메모리-주소를-찾아가는가">프로세스는 가상 메모리 주소로 어떻게 실제 메모리 주소를 찾아가는가?</h3>
+<blockquote>
+<p>프로세스는 페이지 테이블을 통해 물리 메모리 주소를 찾아갑니다.
+이를 수정하여 페이지 할당을 변환합니다.</p>
+</blockquote>
+<p>프로세스는 페이지 테이블을 사용하여 가상 메모리 주소를 물리 메모리 주소로 변환합니다.
+페이지 테이블은 가상 주소 공간의 각 페이지가 물리 주소 공간의 어떤 프레임에 매핑되는지를 저장합니다.</p>
+<hr>
+<h3 id="os의-캐시-메모리의-사이즈를-구하기-위한-프로그램을-어떻게-구현하면-되는가">OS의 캐시 메모리의 사이즈를 구하기 위한 프로그램을 어떻게 구현하면 되는가?</h3>
+<blockquote>
+<p>LRU 캐시를 가정하고 설명드리겠습니다.
+하나의 배열을 두번 순회하는 코드를 짜고,
+배열크기를 조금씩 늘리다보면 실행시간이 급격히 늘어나는 지점을 찾을 수 있습니다.
+이때 배열의 크기가 캐시 크기와 비슷합니다.</p>
+</blockquote>
+<p>배열의 크기를 늘려가면서, 배열에 값을 넣고, 해당 배열의 주소를 출력하는 프로그램을 작성할 수 있습니다.
+이때, 배열의 크기가 커질수록 선형적으로 실행 시간이 증가하다가 어느 순간 급격히 느려지는 크기를 찾을 수 있고, 캐시 미스가 발생하는 지점을 확인할 수 있습니다.</p>
+<hr>
+<h2 id="paging">Paging</h2>
+<h3 id="paging이-무엇인가-paging을-할-때-어떻게-실제-메모리-주소에-데이터를-전송하는가-page-table에는-어떤-항목이-저장되는가-page-table은-어디에-저장되는가-page-table이-메모리에-저장되면-paging을-할-때-메모리를-두-번-참조해야-되는데-좀-더-빠르게-하는-방법은-없는가-tlb에는-어떤-항목이-저장되는가">Paging이 무엇인가? paging을 할 때 어떻게 실제 메모리 주소에 데이터를 전송하는가? page table에는 어떤 항목이 저장되는가? page table은 어디에 저장되는가? page table이 메모리에 저장되면, paging을 할 때 메모리를 두 번 참조해야 되는데, 좀 더 빠르게 하는 방법은 없는가? TLB에는 어떤 항목이 저장되는가?</h3>
+<blockquote>
+<p>페이징을 가상 메모리를 페이지 단위로 물리 메모리 프레임에 매핑하는 기술입니다.
+페이징을 하면 mmu가 가상 메모리를 물리 메모리로 번역하여 실제 메모리 주소에 데이터를 전송합니다.
+페이지 테이블에는 가상 페이지 넘버, 물리 프레임 넘버, valid 비트, rw 관련 비트 등이 저장됩니다.
+페이지 테이블은 커널 공간에 저장되어, 페이지 포인터 레지스터가 가리키고 있습니다.
+TLB를 이용하는 것이 보통이고, 페이징 구현을 바꾸는 케이스도 있습니다.
+TLB에는 가상 메모리 주소, 물리 메모리 주소 쌍이 저장되고, valid bit가 있습니다.</p>
+</blockquote>
+<p>페이징은 가상 메모리 주소 공간을 고정 크기의 페이지로 나누고, 물리 메모리 주소 공간을 프레임으로 나누어, 페이지와 프레임을 매핑하는 기법입니다.
+페이지 테이블은 가상 주소 공간의 각 페이지가 물리 주소 공간의 어떤 프레임에 매핑되는지를 저장합니다.
+페이지 테이블은 커널 주소 공간에 저장됩니다.
+페이지 테이블이 메모리에 저장되면, 페이지를 참조할 때마다 페이지 테이블을 참조해야 하므로, 메모리를 두 번 참조하게 됩니다.
+이를 해결하기 위해 TLB(Translation Lookaside Buffer)를 사용합니다. TLB는 페이지 테이블의 일부를 캐시하여, 페이지 테이블을 참조하는 횟수를 줄입니다.
+TLB에는 페이지 번호와 해당 페이지가 매핑된 프레임 번호가 저장됩니다. 즉 가상 주소에서 페이지 번호를 추출하면 바로 TLB에서 프레임 번호를 찾을 수 있습니다.</p>
+<h3 id="virtual-memory에서-page-replacement-policy에는-어떤-것이-있는가-lru의-단점은">Virtual memory에서 page replacement policy에는 어떤 것이 있는가? LRU의 단점은?</h3>
+<blockquote>
+<p>LIFO, LRU, LFU 등이 있습니다.
+LRU는 구현이 어렵고, 탐색에 시간이 걸리고, 타임스탬프를 저장해야 합니다.
+이를 개선하기 위해 two-chance clock 등으로 근사하여 구현합니다.</p>
+</blockquote>
+<p>가상 메모리에서 페이지 교체 정책에는 LRU(Least Recently Used), FIFO(First In First Out), LFU(Least Frequently Used), Random 등이 있습니다.
+LRU는 가장 오랫동안 사용되지 않은 페이지를 교체하는 정책입니다.
+LRU의 단점은 구현이 복잡하고, 페이지 교체를 위한 추가적인 메모리 오버헤드가 발생한다는 것입니다.
+LRU를 구현하기 위해서는 페이지의 사용 시간을 추적해야 하므로, 추가적인 데이터 구조가 필요합니다.
+또한, LRU는 페이지 교체가 발생할 때마다 페이지의 사용 시간을 업데이트해야 하므로, 성능 저하가 발생할 수 있습니다.
+linux는 clock-based second chance algorithm을 통해 LRU를 근사적으로 구현합니다.</p>
+<hr>
+<h3 id="운영-체제에서-memory-management-기법중-하나로-paging이-많이-사용되고-있다-paging-기법의-장단점으로는-무엇이-있으며-hierarchical-paging-혹은-inverted-page-table은-어떤-환경에서-유리한가">운영 체제에서 memory management 기법중 하나로 paging이 많이 사용되고 있다. Paging 기법의 장⋅단점으로는 무엇이 있으며, hierarchical paging 혹은 inverted page table은 어떤 환경에서 유리한가?</h3>
+<blockquote>
+<p>페이징 기법은 각 프로세스가 독립된 주소공간을 가질수있고, 물리 메모리보다 큰 주소공간을 사용할 수 있다는 장점이 있습니다.
+하지만 프로세스가 늘어날수록 페이지 테이블의 차지하는 메모리가 증가하고 fault penalty가 크다는 단점이 있습니다.
+게층 페이지는 페이지 테이블 용량을 줄이기 위해 페이지 단위로 페이지 테이블 크기를 줄이는 것입니다.
+32비트에서 2계층, 64비트에서 4계층을 주로 이용합니다.
+inverted page table은 물리 주소 하나에 하나의 가상 페이지 넘버만 매핑시키는 페이지 테이블입니다.
+이를 위해 pid와 같은 추가적인 키가 필욯바니다.</p>
+</blockquote>
+<p>페이징 기법의 장점은 다음과 같습니다:</p>
+<ul>
+<li><strong>메모리 보호:</strong> 각 프로세스는 독립적인 가상 주소 공간을 가지므로, 프로세스 간의 메모리 충돌을 방지할 수 있습니다</li>
+<li><strong>효율적인 메모리 사용:</strong> 가상 메모리를 사용하여 실제 물리 메모리보다 더 큰 주소 공간을 사용할 수 있습니다. 이를 통해 프로세스는 필요한 만큼의 메모리를 동적으로 할당받을 수 있습니다.</li>
+<li><strong>단편화 문제 해결:</strong> 가상 메모리를 사용하여 물리 메모리의 단편화 문제를 해결할 수 있습니다. 페이지 단위로 메모리를 할당하므로, 물리 메모리의 단편화 문제를 최소화할 수 있습니다</li>
+</ul>
+<p>페이징 기법의 단점은 다음과 같습니다:</p>
+<ul>
+<li><strong>오버헤드:</strong> 페이지 테이블을 유지해야 하므로, 추가적인 메모리 오버헤드가 발생합니다. 페이지 테이블이 커질수록 오버헤드가 증가합니다.</li>
+<li><strong>TLB 미스:</strong> 페이지 테이블을 참조할 때마다 TLB를 참조해야 하므로, TLB 미스가 발생할 수 있습니다</li>
+<li><strong>페이지 교체:</strong> 페이지가 메모리에 없을 때 페이지 교체가 발생하므로, 페이지 폴트가 발생할 수 있습니다. 페이지 폴트가 발생하면 디스크 I/O가 발생하므로, 성능 저하가 발생할 수 있습니다</li>
+</ul>
+<p>계층적 페이징(Hierarchical Paging)은 페이지 테이블이 너무 커지는 문제를 해결하기 위해 사용됩니다.
+페이지 테이블을 여러 레벨로 나누어, 각 레벨에서 필요한 페이지만을 메모리에 유지합니다.
+inverted page table은 페이지 테이블의 크기를 줄이기 위해 사용됩니다.
+프레임 번호와 가상 페이지 번호의 매핑을 유지하는 대신, 물리 메모리의 프레임에 대한 단일 테이블을 유지합니다.
+두 기법 모두 페이지 테이블의 크기가 커지는 문제를 해결하기 위해 사용됩니다.</p>
+<hr> </div> <!-- Newsletter CTA (shown after post body when feature is enabled) -->  <!-- Social sharing links --> <div class="social-share" data-astro-cid-vfzijd4d> <p class="share-label" data-astro-cid-vfzijd4d>Share</p> <div class="share-icons" data-astro-cid-vfzijd4d> <a href="https://twitter.com/intent/tweet?text=3.%20OS&amp;url=https%3A%2F%2Fseungjong-ha.github.io%2Fblog%2Finterview-03-os%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X (Twitter)" title="Share on X (Twitter)" class="share-link" data-astro-cid-vfzijd4d> <svg width="1em" height="1em" aria-hidden="true" data-astro-cid-vfzijd4d="true" data-icon="fa-brands:twitter">   <symbol id="ai:fa-brands:twitter" viewBox="0 0 512 512"><path fill="currentColor" d="M459.37 151.716c.325 4.548.325 9.097.325 13.645c0 138.72-105.583 298.558-298.558 298.558c-59.452 0-114.68-17.219-161.137-47.106c8.447.974 16.568 1.299 25.34 1.299c49.055 0 94.213-16.568 130.274-44.832c-46.132-.975-84.792-31.188-98.112-72.772c6.498.974 12.995 1.624 19.818 1.624c9.421 0 18.843-1.3 27.614-3.573c-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319c-28.264-18.843-46.781-51.005-46.781-87.391c0-19.492 5.197-37.36 14.294-52.954c51.655 63.675 129.3 105.258 216.365 109.807c-1.624-7.797-2.599-15.918-2.599-24.04c0-57.828 46.782-104.934 104.934-104.934c30.213 0 57.502 12.67 76.67 33.137c23.715-4.548 46.456-13.32 66.599-25.34c-7.798 24.366-24.366 44.833-46.132 57.827c21.117-2.273 41.584-8.122 60.426-16.243c-14.292 20.791-32.161 39.308-52.628 54.253"/></symbol><use href="#ai:fa-brands:twitter"></use>  </svg> </a><a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Fseungjong-ha.github.io%2Fblog%2Finterview-03-os%2F&amp;title=3.%20OS" target="_blank" rel="noopener noreferrer" aria-label="Share on LinkedIn" title="Share on LinkedIn" class="share-link" data-astro-cid-vfzijd4d> <svg width="0.88em" height="1em" aria-hidden="true" data-astro-cid-vfzijd4d="true" data-icon="fa-brands:linkedin">   <symbol id="ai:fa-brands:linkedin" viewBox="0 0 448 512"><path fill="currentColor" d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5c0 21.3-17.2 38.5-38.5 38.5m282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7c-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5c67.2 0 79.7 44.3 79.7 101.9z"/></symbol><use href="#ai:fa-brands:linkedin"></use>  </svg> </a><a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fseungjong-ha.github.io%2Fblog%2Finterview-03-os%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook" title="Share on Facebook" class="share-link" data-astro-cid-vfzijd4d> <svg width="1em" height="1em" aria-hidden="true" data-astro-cid-vfzijd4d="true" data-icon="fa-brands:facebook">   <symbol id="ai:fa-brands:facebook" viewBox="0 0 512 512"><path fill="currentColor" d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48c27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256"/></symbol><use href="#ai:fa-brands:facebook"></use>  </svg> </a><a href="mailto:?subject=3.%20OS&amp;body=%0A%0Ahttps%3A%2F%2Fseungjong-ha.github.io%2Fblog%2Finterview-03-os%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on Email" title="Share on Email" class="share-link" data-astro-cid-vfzijd4d> <svg width="1em" height="1em" aria-hidden="true" data-astro-cid-vfzijd4d="true" data-icon="fa-solid:envelope">   <symbol id="ai:fa-solid:envelope" viewBox="0 0 512 512"><path fill="currentColor" d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7c22.4 17.4 52.1 39.5 154.1 113.6c21.1 15.4 56.7 47.8 92.2 47.6c35.7.3 72-32.8 92.3-47.6c102-74.1 131.6-96.3 154-113.7M256 320c23.2.4 56.6-29.2 73.4-41.4c132.7-96.3 142.8-104.7 173.4-128.7c5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9c30.6 23.9 40.7 32.4 173.4 128.7c16.8 12.2 50.2 41.8 73.4 41.4"/></symbol><use href="#ai:fa-solid:envelope"></use>  </svg> </a> <button id="native-share-btn" aria-label="Share via device" title="Share via device" class="share-link share-native" hidden data-astro-cid-vfzijd4d> <svg width="0.88em" height="1em" aria-hidden="true" data-astro-cid-vfzijd4d="true" data-icon="fa-solid:share-alt">   <symbol id="ai:fa-solid:share-alt" viewBox="0 0 448 512"><path fill="currentColor" d="M352 320c-22.608 0-43.387 7.819-59.79 20.895l-102.486-64.054a96.55 96.55 0 0 0 0-41.683l102.486-64.054C308.613 184.181 329.392 192 352 192c53.019 0 96-42.981 96-96S405.019 0 352 0s-96 42.981-96 96c0 7.158.79 14.13 2.276 20.841L155.79 180.895C139.387 167.819 118.608 160 96 160c-53.019 0-96 42.981-96 96s42.981 96 96 96c22.608 0 43.387-7.819 59.79-20.895l102.486 64.054A96.3 96.3 0 0 0 256 416c0 53.019 42.981 96 96 96s96-42.981 96-96s-42.981-96-96-96"/></symbol><use href="#ai:fa-solid:share-alt"></use>  </svg> </button> </div> </div> <script>(function(){const shareTitle = "3. OS";
+const shareUrl = "https://seungjong-ha.github.io/blog/interview-03-os/";
+const shareText = "";
+
+  const btn = document.getElementById('native-share-btn');
+  if (navigator.share && btn) {
+    btn.hidden = false;
+    btn.addEventListener('click', () => {
+      navigator.share({ title: shareTitle, url: shareUrl, text: shareText }).catch(() => {});
+    });
+  }
+})();</script> <!-- Related posts -->  <!-- Comments -->  </article> </div> </div>  </main> <!-- Newsletter (shown in footer area if enabled) -->  <footer style="background-color: var(--global-footer-bg-color); color: var(--global-footer-text-color); padding: 1rem 0; position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;" data-astro-cid-sz7xmlte> <div class="page-container text-center text-sm" data-astro-cid-sz7xmlte> <p data-astro-cid-sz7xmlte>
+&copy; 2026 SeungJong Ha.
+<span data-astro-cid-sz7xmlte>Powered by <a href="https://github.com/dadangnh/as-folio" target="_blank" rel="noopener noreferrer">as-folio</a>.
+      Hosted by <a href="https://pages.github.com/" target="_blank" rel="noopener noreferrer">GitHub Pages</a>.</span>  </p>  </div> </footer> <!-- Cookie consent (vanilla-cookieconsent via CDN) -->  <!-- Back to top button --> <button id="back-to-top" aria-label="Back to top" title="Back to top"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="m18 15-6-6-6 6"></path> </svg> </button> <script type="module">let t=document.getElementById("back-to-top");function e(){t?.classList.toggle("visible",window.scrollY>300)}function o(){t?.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}))}window.addEventListener("scroll",e,{passive:!0});o();document.addEventListener("astro:after-swap",()=>{t=document.getElementById("back-to-top"),o(),e()});</script> </body> </html> <!-- Code copy button (text-label approach, no innerHTML) --> <script type="module">function n(){document.querySelectorAll("#post-content pre").forEach(e=>{if(e.querySelector(".copy-btn"))return;const t=document.createElement("button");t.className="copy-btn",t.setAttribute("aria-label","Copy code"),t.textContent="copy",t.addEventListener("click",async()=>{const o=e.querySelector("code");o&&(await navigator.clipboard.writeText(o.innerText),t.textContent="copied!",setTimeout(()=>{t.textContent="copy"},2e3))}),e.style.position="relative",e.appendChild(t)})}document.addEventListener("astro:page-load",n);</script> <!-- Medium zoom for post images --> <script type="module" src="/_astro/Post.astro_astro_type_script_index_1_lang.Czjq4-dD.js"></script> <!-- ── Per-post CDN widgets ──────────────────────────────────────────────── -->             

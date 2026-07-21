@@ -1,0 +1,360 @@
+<!DOCTYPE html><html lang="en" data-theme="light"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="SeungJong Ha — M.S. student at KAIST School of Computing (CASYS Lab). Systems, operating systems, and Rust."><link rel="canonical" href="https://seungjong-ha.github.io/blog/interview-06-network/"><title>6. Network | SeungJong Ha</title><!-- Favicon --><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="alternate icon" href="/favicon.ico"><!-- Fonts are self-hosted via Fontsource (imported in global.css) — no FOUT --><!-- KaTeX CSS is bundled via global.css (@import 'katex/dist/katex.min.css') --><!-- Theme color override (from site.theme.color — 'auto' means use _colors.css defaults) --><style>:root,[data-theme='light']{--global-theme-color:#0ea5e9!important;--global-hover-color:#0ea5e9!important;}</style><!-- Open Graph + Twitter Card --><meta property="og:title" content="6. Network | SeungJong Ha"><meta property="og:description" content="SeungJong Ha — M.S. student at KAIST School of Computing (CASYS Lab). Systems, operating systems, and Rust."><meta property="og:url" content="https://seungjong-ha.github.io/blog/interview-06-network/"><meta property="og:type" content="website"><meta property="og:image" content="https://seungjong-ha.github.io/og/blog/interview-06-network.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="6. Network | SeungJong Ha"><meta name="twitter:description" content="SeungJong Ha — M.S. student at KAIST School of Computing (CASYS Lab). Systems, operating systems, and Rust."><meta name="twitter:image" content="https://seungjong-ha.github.io/og/blog/interview-06-network.png"><!-- Analytics verification tags --><!-- GA4 via Partytown (production only) --><script type="text/partytown" src="https://www.googletagmanager.com/gtag/js?id=G-TCXZ1MQHX6"></script><script type="text/partytown">(function(){const ga4 = "G-TCXZ1MQHX6";
+
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+              dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+            gtag('config', ga4);
+          })();</script><!-- Cronitor RUM --><!-- Pirsch analytics --><!-- OpenPanel analytics --><!-- Person JSON-LD (homepage only) --><!-- View Transitions (smooth page-to-page navigation) --><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.BAAUdx5Y.js"></script><!-- Named slot for page-specific head content (e.g. JSON-LD from Post.astro) --> <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"6. Network","datePublished":"2025-08-11T00:00:00.000Z","url":"https://seungjong-ha.github.io/blog/interview-06-network/","author":{"@type":"Person","name":"SeungJong Ha","url":"https://seungjong-ha.github.io"},"image":"https://seungjong-ha.github.io/og/blog/interview-06-network.png"}</script> <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Blog","item":"https://seungjong-ha.github.io/blog/"},{"@type":"ListItem","position":2,"name":"6. Network","item":"https://seungjong-ha.github.io/blog/interview-06-network/"}]}</script> <!--
+      Dark mode: must run BEFORE any CSS to prevent FOUC.
+      Reads stored preference, falls back to system preference, then site default.
+      Re-applies after each View Transition swap to keep the theme consistent.
+    --><script>(function(){const defaultTheme = "system";
+
+      function applyTheme() {
+        const stored = localStorage.getItem('theme');
+        let theme;
+        if (stored === 'light' || stored === 'dark') {
+          theme = stored;
+        } else if (defaultTheme === 'system') {
+          theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        } else {
+          theme = defaultTheme;
+        }
+        document.documentElement.setAttribute('data-theme', theme);
+        document.documentElement.setAttribute('data-theme-setting', stored || 'system');
+      }
+      applyTheme();
+      document.addEventListener('astro:after-swap', applyTheme);
+    })();</script><link rel="stylesheet" href="/_s/CuShRENE.css"><style>.giscus-notice[data-astro-cid-an2nl7ar]{font-size:.85rem;color:var(--global-text-color-light);margin-bottom:.75rem}.giscus-notice[data-astro-cid-an2nl7ar] a[data-astro-cid-an2nl7ar]{color:var(--global-theme-color);text-decoration:none}.giscus-notice[data-astro-cid-an2nl7ar] a[data-astro-cid-an2nl7ar]:hover{text-decoration:underline}.giscus-btn[data-astro-cid-an2nl7ar]{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1.1rem;border-radius:4px;border:1px solid var(--global-divider-color);background:transparent;color:var(--global-text-color);font-size:.875rem;font-family:var(--font-sans);cursor:pointer;transition:border-color .15s ease,color .15s ease}.giscus-btn[data-astro-cid-an2nl7ar]:hover{border-color:var(--global-theme-color);color:var(--global-theme-color)}
+</style><link rel="stylesheet" href="/_s/B-FGpDiK.css"><script type="module" src="/_astro/page.52P97FCf.js"></script><script>!(function(w,p,f,c){if(!window.crossOriginIsolated && !navigator.serviceWorker) return;c=w[p]=Object.assign(w[p]||{},{"lib":"/~partytown/","debug":false});c[f]=(c[f]||[]).concat(["dataLayer.push"])})(window,'partytown','forward');/* Partytown 0.13.2 - MIT QwikDev */
+const t={preserveBehavior:!1},e=e=>{if("string"==typeof e)return[e,t];const[n,r=t]=e;return[n,{...t,...r}]},n=Object.freeze((t=>{const e=new Set;let n=[];do{Object.getOwnPropertyNames(n).forEach((t=>{"function"==typeof n[t]&&e.add(t)}))}while((n=Object.getPrototypeOf(n))!==Object.prototype);return Array.from(e)})());!function(t,r,o,i,a,s,c,l,d,p,u=t,f){function h(){f||(f=1,"/"==(c=(s.lib||"/~partytown/")+(s.debug?"debug/":""))[0]&&(d=r.querySelectorAll('script[type="text/partytown"]'),i!=t?i.dispatchEvent(new CustomEvent("pt1",{detail:t})):(l=setTimeout(v,(null==s?void 0:s.fallbackTimeout)||1e4),r.addEventListener("pt0",w),a?y(1):o.serviceWorker?o.serviceWorker.register(c+(s.swPath||"partytown-sw.js"),{scope:c}).then((function(t){t.active?y():t.installing&&t.installing.addEventListener("statechange",(function(t){"activated"==t.target.state&&y()}))}),console.error):v())))}function y(e){p=r.createElement(e?"script":"iframe"),t._pttab=Date.now(),e||(p.style.display="block",p.style.width="0",p.style.height="0",p.style.border="0",p.style.visibility="hidden",p.setAttribute("aria-hidden",!0)),p.src=c+"partytown-"+(e?"atomics.js?v=0.13.2":"sandbox-sw.html?"+t._pttab),r.querySelector(s.sandboxParent||"body").appendChild(p)}function v(n,o){for(w(),i==t&&(s.forward||[]).map((function(n){const[r]=e(n);delete t[r.split(".")[0]]})),n=0;n<d.length;n++)(o=r.createElement("script")).innerHTML=d[n].innerHTML,o.nonce=s.nonce,r.head.appendChild(o);p&&p.parentNode.removeChild(p)}function w(){clearTimeout(l)}s=t.partytown||{},i==t&&(s.forward||[]).map((function(r){const[o,{preserveBehavior:i}]=e(r);u=t,o.split(".").map((function(e,r,o){var a;u=u[o[r]]=r+1<o.length?u[o[r]]||(a=o[r+1],n.includes(a)?[]:{}):(()=>{let e=null;if(i){const{methodOrProperty:n,thisObject:r}=((t,e)=>{let n=t;for(let t=0;t<e.length-1;t+=1)n=n[e[t]];return{thisObject:n,methodOrProperty:e.length>0?n[e[e.length-1]]:void 0}})(t,o);"function"==typeof n&&(e=(...t)=>n.apply(r,...t))}return function(){let n;return e&&(n=e(arguments)),(t._ptf=t._ptf||[]).push(o,arguments),n}})()}))})),"complete"==r.readyState?h():(t.addEventListener("DOMContentLoaded",h),t.addEventListener("load",h))}(window,document,navigator,top,window.crossOriginIsolated);;(e=>{e.addEventListener("astro:before-swap",e=>{let r=document.body.querySelector("iframe[src*='/~partytown/']");if(r)e.newDocument.body.append(r)})})(document);</script></head> <body class="min-h-screen flex flex-col" style="padding-top: var(--navbar-height);" data-footer-position="sticky"> <!-- Skip to main content (accessibility) --> <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 px-4 py-2 rounded" style="background-color: var(--global-theme-color); color: var(--global-hover-text-color);">
+Skip to main content
+</a> <nav class="navbar fixed top-0 right-0 left-0 z-40" style="background-color: var(--global-bg-color); border-bottom: 1px solid var(--global-divider-color); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); height: 57px;" data-astro-cid-5blmo7yk> <div class="page-container flex h-full items-center justify-between" style="max-width: 930px; margin: 0 auto; padding: 0 1rem;" data-astro-cid-5blmo7yk> <!-- Brand --> <a href="/" class="text-lg font-bold" style="color: var(--global-text-color); text-decoration: none;" data-astro-cid-5blmo7yk> SeungJong Ha </a> <!-- Desktop nav --> <div class="hidden items-center gap-1 md:flex" data-astro-cid-5blmo7yk> <a href="/" class="px-3 py-1 text-sm transition-colors " style="color: var(--global-text-color); text-decoration: none;" data-astro-cid-5blmo7yk> about </a><a href="/blog/" class="px-3 py-1 text-sm transition-colors font-bold" style="color: var(--global-theme-color); text-decoration: none;" data-astro-cid-5blmo7yk> blog </a> <!-- Search pill (desktop) --> <button id="search-toggle" class="search-pill" aria-label="Search" title="Search" type="button" data-astro-cid-5blmo7yk> <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-5blmo7yk> <circle cx="11" cy="11" r="8" data-astro-cid-5blmo7yk></circle> <line x1="21" y1="21" x2="16.65" y2="16.65" data-astro-cid-5blmo7yk></line> </svg> <span class="search-pill-text" data-astro-cid-5blmo7yk>Search…</span> <kbd class="search-kbd" data-astro-cid-5blmo7yk>⌘K</kbd> </button> <button data-light-toggle title="Toggle theme" aria-label="Toggle theme" style="padding: 0; border: 0; background-color: inherit; color: var(--global-text-color); width: 2rem; height: 2rem; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;"> <!-- Moon icon: shown in light mode (click to go dark) --> <span data-light-toggle-icon="moon"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </span> <!-- Sun icon: shown in dark mode (click to go light) --> <span data-light-toggle-icon="sun" style="display: none;"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <circle cx="12" cy="12" r="5"></circle> <line x1="12" y1="1" x2="12" y2="3"></line> <line x1="12" y1="21" x2="12" y2="23"></line> <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line> <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line> <line x1="1" y1="12" x2="3" y2="12"></line> <line x1="21" y1="12" x2="23" y2="12"></line> <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line> <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line> </svg> </span> </button> <script type="module">function e(t){document.querySelectorAll("[data-light-toggle-icon]").forEach(n=>{const c=t==="dark"&&n.getAttribute("data-light-toggle-icon")==="sun"||t==="light"&&n.getAttribute("data-light-toggle-icon")==="moon";n.style.display=c?"inline-block":"none"})}function d(t){document.documentElement.setAttribute("data-theme",t),localStorage.setItem("theme",t),e(t)}function o(){const t=document.documentElement.getAttribute("data-theme")??"light";d(t==="dark"?"light":"dark")}function a(){document.querySelectorAll("[data-light-toggle]").forEach(t=>{t.removeEventListener("click",o),t.addEventListener("click",o)})}a();e(document.documentElement.getAttribute("data-theme")??"light");document.addEventListener("astro:after-swap",()=>{a(),e(document.documentElement.getAttribute("data-theme")??"light")});window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",t=>{localStorage.getItem("theme")||(document.documentElement.setAttribute("data-theme",t.matches?"dark":"light"),e(t.matches?"dark":"light"))});</script> </div> <!-- Mobile controls (icon-only search + theme + hamburger) --> <div class="flex items-center gap-2 md:hidden" data-astro-cid-5blmo7yk> <button id="search-toggle" aria-label="Search" type="button" style="padding: 0; border: 0; background: inherit; color: var(--global-text-color); cursor: pointer;" data-astro-cid-5blmo7yk> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-5blmo7yk> <circle cx="11" cy="11" r="8" data-astro-cid-5blmo7yk></circle> <line x1="21" y1="21" x2="16.65" y2="16.65" data-astro-cid-5blmo7yk></line> </svg> </button> <button data-light-toggle title="Toggle theme" aria-label="Toggle theme" style="padding: 0; border: 0; background-color: inherit; color: var(--global-text-color); width: 2rem; height: 2rem; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;"> <!-- Moon icon: shown in light mode (click to go dark) --> <span data-light-toggle-icon="moon"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </span> <!-- Sun icon: shown in dark mode (click to go light) --> <span data-light-toggle-icon="sun" style="display: none;"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <circle cx="12" cy="12" r="5"></circle> <line x1="12" y1="1" x2="12" y2="3"></line> <line x1="12" y1="21" x2="12" y2="23"></line> <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line> <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line> <line x1="1" y1="12" x2="3" y2="12"></line> <line x1="21" y1="12" x2="23" y2="12"></line> <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line> <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line> </svg> </span> </button>  <button id="navbar-toggler" class="navbar-toggler collapsed" aria-label="Toggle navigation" aria-expanded="false" type="button" style="padding: 0.25rem; border: 0; background: inherit; cursor: pointer;" data-astro-cid-5blmo7yk> <span class="icon-bar top-bar" style="display: block; width: 22px; height: 2px; background-color: var(--global-text-color); border-radius: 1px; margin-bottom: 4px;" data-astro-cid-5blmo7yk></span> <span class="icon-bar middle-bar" style="display: block; width: 22px; height: 2px; background-color: var(--global-text-color); border-radius: 1px; margin-bottom: 4px;" data-astro-cid-5blmo7yk></span> <span class="icon-bar bottom-bar" style="display: block; width: 22px; height: 2px; background-color: var(--global-text-color); border-radius: 1px;" data-astro-cid-5blmo7yk></span> </button> </div> </div> <!-- Mobile nav collapse --> <div id="navbar-collapse" class="hidden md:hidden" style="background-color: var(--global-bg-color); border-top: 1px solid var(--global-divider-color); padding: 0.5rem 0;" data-astro-cid-5blmo7yk> <a href="/" class="block px-4 py-2 text-sm" style="color: var(--global-text-color); font-weight: 400; text-decoration: none;" data-astro-cid-5blmo7yk> about </a><a href="/blog/" class="block px-4 py-2 text-sm" style="color: var(--global-theme-color); font-weight: 700; text-decoration: none;" data-astro-cid-5blmo7yk> blog </a> </div> </nav> <!-- Platform detection: update ⌘K / Ctrl K label before first paint --> <script>
+  (function () {
+    var isMac = /Mac|iPhone|iPad|iPod/.test(navigator.platform);
+    document.querySelectorAll('.search-kbd').forEach(function (el) {
+      el.textContent = isMac ? '⌘K' : 'Ctrl K';
+    });
+  })();
+</script>  <script type="module">let c=null;function f(){c?.abort(),c=new AbortController;const{signal:a}=c,o=document.getElementById("navbar-toggler"),d=document.getElementById("navbar-collapse");o?.addEventListener("click",()=>{!d?.classList.contains("hidden")?(d?.classList.add("hidden"),o.setAttribute("aria-expanded","false"),o.classList.add("collapsed"),document.body.style.overflow=""):(d?.classList.remove("hidden"),o.setAttribute("aria-expanded","true"),o.classList.remove("collapsed"),document.body.style.overflow="hidden")},{signal:a}),document.querySelectorAll("#navbar-collapse a").forEach(e=>{e.addEventListener("click",()=>{d?.classList.add("hidden"),o?.setAttribute("aria-expanded","false"),o?.classList.add("collapsed"),document.body.style.overflow=""},{signal:a})}),document.querySelectorAll(".mobile-dropdown-trigger").forEach(e=>{e.addEventListener("click",()=>{const t=e.closest(".mobile-dropdown")?.querySelector(".mobile-dropdown-children"),r=e.querySelector(".mobile-dropdown-chevron");!t?.classList.contains("hidden")?(t?.classList.add("hidden"),e.setAttribute("aria-expanded","false"),r&&(r.style.transform="")):(t?.classList.remove("hidden"),e.setAttribute("aria-expanded","true"),r&&(r.style.transform="rotate(180deg)"))},{signal:a})}),document.querySelectorAll(".nav-dropdown").forEach(e=>{const l=e.querySelector(".nav-dropdown-trigger"),t=[...e.querySelectorAll('[role="menuitem"]')];function r(){e.classList.add("is-open"),l?.setAttribute("aria-expanded","true"),t[0]?.focus()}function i(){e.classList.remove("is-open"),l?.setAttribute("aria-expanded","false")}l?.addEventListener("keydown",n=>{n.key==="Enter"||n.key===" "||n.key==="ArrowDown"?(n.preventDefault(),r()):n.key==="ArrowUp"&&(n.preventDefault(),r(),t[t.length-1]?.focus())},{signal:a}),t.forEach((n,u)=>{n.setAttribute("tabindex","-1"),n.addEventListener("keydown",s=>{s.key==="ArrowDown"?(s.preventDefault(),t[(u+1)%t.length]?.focus()):s.key==="ArrowUp"?(s.preventDefault(),t[(u-1+t.length)%t.length]?.focus()):(s.key==="Escape"||s.key==="Tab")&&(i(),s.key==="Escape"&&(s.preventDefault(),l?.focus()))},{signal:a})}),document.addEventListener("click",n=>{e.contains(n.target)||i()},{signal:a})})}f();document.addEventListener("astro:after-swap",f);document.addEventListener("astro:before-swap",()=>{document.body.style.overflow=""});</script> <!-- ⌘K Search (ninja-keys + Pagefind) — persisted across View Transitions --> <!-- ninja-keys web component --><ninja-keys id="ninja-search" placeholder="Search or jump to…" hideBreadcrumbs="true" data-nav-items="[{&quot;id&quot;:&quot;nav-about&quot;,&quot;title&quot;:&quot;About&quot;,&quot;section&quot;:&quot;Navigation&quot;,&quot;href&quot;:&quot;/&quot;},{&quot;id&quot;:&quot;nav-blog&quot;,&quot;title&quot;:&quot;Blog&quot;,&quot;section&quot;:&quot;Navigation&quot;,&quot;href&quot;:&quot;/blog/&quot;}]" data-content-items="[{&quot;id&quot;:&quot;post-interview-01-pl&quot;,&quot;title&quot;:&quot;1. PL&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-01-pl/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-02-architecture&quot;,&quot;title&quot;:&quot;2. Architecture&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-02-architecture/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-03-os&quot;,&quot;title&quot;:&quot;3. OS&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-03-os/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-04-db&quot;,&quot;title&quot;:&quot;4. DB&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-04-db/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-05-math&quot;,&quot;title&quot;:&quot;5. Math&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-05-math/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-06-network&quot;,&quot;title&quot;:&quot;6. Network&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-06-network/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-08-ml&quot;,&quot;title&quot;:&quot;8. AI/ML&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-08-ml/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-09-algorithm&quot;,&quot;title&quot;:&quot;9. Algorithm&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-09-algorithm/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-11-security&quot;,&quot;title&quot;:&quot;11. Security&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-11-security/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-review-asterinas&quot;,&quot;title&quot;:&quot;논문 리뷰: Asterinas: A Linux ABI-Compatible, Rust-Based Framekernel OS with a Small and Sound TCB&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/review-asterinas/&quot;,&quot;keywords&quot;:&quot;paper-review Review&quot;},{&quot;id&quot;:&quot;post-review-mkernel&quot;,&quot;title&quot;:&quot;논문 리뷰: On µ-Kernel Construction&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/review-mkernel/&quot;,&quot;keywords&quot;:&quot;paper-review Review&quot;},{&quot;id&quot;:&quot;post-review-omniglot&quot;,&quot;title&quot;:&quot;논문 리뷰: Building Bridges: Safe Interactions with Foreign Languages through Omniglot&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/review-omniglot/&quot;,&quot;keywords&quot;:&quot;paper-review Review&quot;},{&quot;id&quot;:&quot;post-review-rust-lwn-post&quot;,&quot;title&quot;:&quot;How to write Rust in the kernel: 한국어 요약본&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/review-rust-lwn-post/&quot;,&quot;keywords&quot;:&quot;paper-review Review&quot;}]" data-pagefind-base></ninja-keys> <script type="module" src="/_astro/SearchTrigger.astro_astro_type_script_index_0_lang.CLmTwsfW.js"></script> <main id="main-content" class="flex-1" data-pagefind-body>   <div id="reading-progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background-color: var(--global-theme-color);
+    z-index: 9999;
+    transition: width 0.1s linear;
+  "></div> <script type="module">const t=document.getElementById("reading-progress");function o(){const i=window.scrollY,e=document.documentElement.scrollHeight-window.innerHeight,n=e>0?Math.min(100,Math.round(i/e*100)):0;t&&(t.style.width=`${n}%`,t.setAttribute("aria-valuenow",String(n)))}window.addEventListener("scroll",o,{passive:!0});o();</script><div class="page-container py-8"> <div class="flex gap-8"> <!-- TOC sidebar (desktop only) --> <aside class="hidden lg:block w-52 flex-shrink-0"> <nav aria-label="Table of contents" class="toc sticky top-20" style="font-size: 0.8rem; max-height: calc(100vh - 6rem); overflow-y: auto;" data-astro-cid-obewoz47> <p class="mb-2 font-semibold tracking-wide uppercase" style="font-size: 0.7rem; color: var(--global-text-color-light);" data-astro-cid-obewoz47>
+Table of Contents
+</p> <ul class="space-y-1" style="list-style: none; padding: 0; margin: 0;" data-astro-cid-obewoz47> <li style data-astro-cid-obewoz47> <a href="#osi-7계층에-대해-설명하시오" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> OSI 7계층에 대해 설명하시오 </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#transport-network-link-계층이-모두-연결에-관한-것인데-어떤-특징과-차이가-있는가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Transport, network, link 계층이 모두 연결에 관한 것인데, 어떤 특징과 차이가 있는가? </a> </li><li style data-astro-cid-obewoz47> <a href="#http-dns-video-stream" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> HTTP, DNS, Video Stream </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#http2에서-persistent-connection이란" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> HTTP/2에서 persistent connection이란? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#http3가-http2에-비해-바뀐-점은" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> HTTP/3가 HTTP/2에 비해 바뀐 점은? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#dns에서-주소에-대응되는-entry는-어떻게-찾아지는가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> DNS에서 주소에 대응되는 entry는 어떻게 찾아지는가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#video-streaming에-쓰이는-프로토콜-중-하나를-설명하시오" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Video streaming에 쓰이는 프로토콜 중 하나를 설명하시오. </a> </li><li style data-astro-cid-obewoz47> <a href="#tcp" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> TCP </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#tcp와-같이-protocol을-reliable하게-설계-하려면-무엇이-필요한가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> TCP와 같이 protocol을 reliable하게 설계 하려면 무엇이 필요한가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#flow-control이란-무엇인가-congestion-control과-flow-control의-차이점은" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Flow control이란 무엇인가? Congestion control과 flow control의 차이점은? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#tcp와-udp의-차이점은" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> TCP와 UDP의 차이점은? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#congestion이-발생했다는-것을-어떻게-알-수-있는가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Congestion이 발생했다는 것을 어떻게 알 수 있는가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#3-way-handshaking이란" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> 3-way handshaking이란? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#tcp-congestion-control은-어떤-원리로-동작하는가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> TCP congestion control은 어떤 원리로 동작하는가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#tcp는-어떻게-발전하였는가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> TCP는 어떻게 발전하였는가? </a> </li><li style data-astro-cid-obewoz47> <a href="#generalized-forwarding에-대해-설명하라" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Generalized forwarding에 대해 설명하라. </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#internet-routing은-어떻게-일어나는가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Internet routing은 어떻게 일어나는가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#bgp가-어떻게-작동하는지-설명하여라" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> BGP가 어떻게 작동하는지 설명하여라. </a> </li><li style data-astro-cid-obewoz47> <a href="#link-layer" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Link Layer </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#csmacd란" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> CSMA/CD란? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#mac-address란-ip-address가-mac-address에-비해-갖는-장점은" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> MAC address란? IP address가 MAC address에 비해 갖는 장점은? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#wireless-network에서는-왜-collision-avoidance를-채택하는가-어떻게-하면-효율성을-증가시킬-수-있는가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Wireless network에서는 왜 Collision avoidance를 채택하는가? 어떻게 하면 효율성을 증가시킬 수 있는가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#80211-프로토콜의-특징을-설명하여라" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> 802.11 프로토콜의 특징을 설명하여라. </a> </li><li style data-astro-cid-obewoz47> <a href="#security-in-network" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Security in Network </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#network-security의-4개-구성요소는-무엇인가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Network security의 4개 구성요소는 무엇인가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#tls에-대해-설명하여라" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> TLS에 대해 설명하여라 </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#network에서-checksum을-위해-사용하는-hash-function과-security에서-data-integrity를-위해-사용하는-hash-function이-서로-interchangeable한가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Network에서 checksum을 위해 사용하는 hash function과 security에서 data integrity를 위해 사용하는 hash function이 서로 interchangeable한가? </a> </li> </ul> </nav> <script type="module">const r=document.querySelectorAll(".toc-link"),n=Array.from(r).map(t=>t.getAttribute("href")?.slice(1)??"");function c(t){r.forEach(e=>{const o=e.getAttribute("href")===`#${t}`;e.style.color=o?"var(--global-theme-color)":"var(--global-text-color-light)",e.style.fontWeight=o?"600":"400"})}const s=parseInt(getComputedStyle(document.documentElement).getPropertyValue("--navbar-height"))||57,i=new IntersectionObserver(t=>{for(const e of t)if(e.isIntersecting){c(e.target.id);break}},{rootMargin:`-${s}px 0px -80% 0px`,threshold:0});n.forEach(t=>{const e=document.getElementById(t);e&&i.observe(e)});</script> </aside> <!-- Post content --> <article class="flex-1 min-w-0"> <!-- Hidden metadata for pagefind structured search --> <span data-pagefind-meta="date" style="display:none">2025-08-11</span> <!-- Breadcrumb --> <nav aria-label="Breadcrumb" class="breadcrumb-nav"> <a href="/blog/" class="breadcrumb-link">← Blog</a> </nav> <!-- Header --> <header class="post-header"> <h1 class="post-title" style="margin-bottom: 0.75rem;" data-pagefind-weight="10"> 6. Network </h1> <div class="post-meta mt-1 flex flex-wrap items-center gap-2 text-xs" style="color: var(--global-text-color-light);"> <time datetime="2025-08-11T00:00:00.000Z">August 11, 2025</time>  <span aria-hidden="true">·</span> <span>13 min read</span>   <span aria-hidden="true">·</span> <div class="flex flex-wrap gap-1"> <a href="/blog/category/Interview Prep/" class="badge-abbr text-xs" style="background-color: var(--global-text-color-light); color: var(--global-hover-text-color);"> Interview Prep </a> </div>   <span aria-hidden="true">·</span> <div class="flex flex-wrap gap-1"> <a href="/blog/tag/interview/" class="badge-abbr text-xs" style="background-color: var(--global-theme-color); color: var(--global-hover-text-color);"> interview </a> </div>  </div>  </header> <!-- Body --> <div class="prose max-w-none" id="post-content"> <h1 id="tldr">TL;DR</h1>
+<p>이 글은 2025년도 봄학기 KAIST 전산학부 대학원 면접을 준비하며, 면접 참고자료(Network)에 대한 대답을 정리한 글입니다.</p>
+<p>문제에 대한 정답이 아니며, 제가 공부하며 생각한 바들을 정리한 것입니다.</p>
+<p>후에 같은 목표로 면접을 준비하는 학우분들께 도움이 되기를 바랍니다.</p>
+<p>이 풀이노트는 질문만 본 상태에서 답변한 내용에 대한 채점, 그리고 이 면접을 준비하며 이전에 한번 LLM과 함께 작성해본 답안이 이어져 있습니다.</p>
+<h1 id="문제">문제</h1>
+<h2 id="osi-7계층에-대해-설명하시오">OSI 7계층에 대해 설명하시오</h2>
+<blockquote>
+<p>네트워크 스택을 7개 계층으로 역할을 분리한 것입니다.
+물리 계층, 데이터 링크, 네트워크, 전송, 세션, 표현, 응용 계층으로 이루어져 있습니다.
+tcp/ip의 물리 계층은 layer 1 ~ 2, 애플리케이션 계층은 5~7에 대응됩니다.</p>
+</blockquote>
+<p>네트워크 통신을 위한 표준 모델로, 물리, 데이터 링크, 네트워크, 전송, 세션, 표현, 앱 7개의 계층으로 구성되어 있습니다.
+물리 계층은 전기적 신호를 전송하는 계층으로, 케이블, 허브, 리피터 등이 포함됩니다.
+데이터 링크 계층은 물리 계층 위에서 데이터 프레임을 전송하는 계층으로, MAC 주소를 사용하여 장치 간의 통신을 관리합니다. 에러 검출과 흐름 제어도 이 계층에서 수행됩니다.
+네트워크 계층은 패킷을 목적지로 라우팅하는 계층으로, 대표적으로 IP 프로토콜이 사용됩니다.
+전송 계층은 데이터의 전송을 관리하는 계층으로, TCP와 UDP 프로토콜이 사용됩니다. TCP는 신뢰성 있는 연결을 제공하고, UDP는 비연결형 서비스를 제공합니다.
+세션 계층은 통신 세션을 관리하는 계층으로, 세션의 설정, 유지, 종료를 담당합니다.
+표현 계층은 데이터의 표현 형식을 정의하는 계층으로, 데이터의 인코딩, 압축, 암호화 등을 수행합니다
+앱 계층은 사용자와 네트워크 간의 인터페이스를 제공하는 계층으로, HTTP, FTP, SMTP 등의 프로토콜이 사용됩니다.</p>
+<hr>
+<h3 id="transport-network-link-계층이-모두-연결에-관한-것인데-어떤-특징과-차이가-있는가">Transport, network, link 계층이 모두 연결에 관한 것인데, 어떤 특징과 차이가 있는가?</h3>
+<blockquote>
+<p>아래 계층부터 설명하면 편할 것 같습니다.
+데이터링크 계층은 두 하드웨어 간의 연결을 관리합니다.
+스위치에서 라우터로 잘 패킷이 넘어갔는지 확인합니다.
+네트워크 계층은 호스트 간의 연결을 관리합니다.
+라우터는 적절한 호스트에게 패킷을 전달하려고 합니다.
+전송 계층은 호스트가 어떤 프로세스에게 패킷을 전달할지 결정하는 계층입니다
+포트번호를 동해 프로세스를 구분합니다.</p>
+</blockquote>
+<p>데이터 링크 계층은 하드웨어 주소(MAC 주소)를 사용하여 동일 네트워크 내의 장치 간의 통신을 관리합니다.
+예를들어 실제로 연결된 장치 간의 데이터 전송을 담당합니다.
+네트워크 계층은 IP 주소를 사용하여 목적지까지의 경로를 결정하고, 패킷을 라우팅합니다.
+데이터 링크 계층은 다음 하드웨어로 패킷을 전달하는 책임이 있고, 네트워크 계층은 패킷이 목적지에 도달할 수 있도록 경로를 결정합니다.
+전송 계층은 프로세스 간의 통신을 관리하며, 신뢰성 있는 데이터 전송을 보장합니다. 흐름제어, 오류제어 등의 기능을 제공합니다.</p>
+<hr>
+<h2 id="http-dns-video-stream">HTTP, DNS, Video Stream</h2>
+<h3 id="http2에서-persistent-connection이란">HTTP/2에서 persistent connection이란?</h3>
+<blockquote>
+<p>HTTP/2에서 동일 호스트 간의 tcp 연결을 반복해서 수행하기 않기 위해 연결을 유지하는 것입니다.
+HTTP1.1에 도입되어 HTTP2부터 기본값으로 이용되고 있습니다.</p>
+</blockquote>
+<p>HTTP2는 TCP 상에서 이용되고, 1번의 요청, 응답 이후 연결이 종료됩니다.
+Persistent connection은 HTTP/1.1에서 도입된 기능으로, 하나의 TCP 연결을 통해 여러 개의 HTTP 요청과 응답을 처리할 수 있는 기능입니다.
+즉, 클라이언트와 서버 간의 연결을 유지하여, 매번 새로운 연결을 생성하지 않고도 여러 요청을 처리할 수 있습니다.
+이로 인해 연결 설정과 해제에 소요되는 시간을 줄이고, 성능을 향상시킬 수 있습니다.</p>
+<p>HTTP1.1에서는 기본적으로 persistent connection을 지원하지만, HTTP2에서는 이를 더욱 개선하여 멀티플렉싱(multiplexing) 기능을 추가했습니다.
+멀티플렉싱은 하나의 연결에서 여러 개의 요청과 응답을 동시에 처리할 수 있는 기능으로, HTTP2의 주요 특징 중 하나입니다.
+이를 통해 HTTP2는 성능을 더욱 향상시킬 수 있습니다.</p>
+<hr>
+<h3 id="http3가-http2에-비해-바뀐-점은">HTTP/3가 HTTP/2에 비해 바뀐 점은?</h3>
+<blockquote>
+<p>HTTP3는 전송계층에 tcp 대신 udp를 사용합니다.
+따라서 흐름제어, 순서 보장 등 tcp에서 제공하는 기능을 프로세스별로 최적화하여 구현할 수 있습니다.
+보통 QUIC 라이브러리를 이용하는것으로 알고 있습니다.</p>
+</blockquote>
+<p>가장 큰 차이는 전송 프로토콜이 TCP에서 UDP(QUIC)로 변경되었다는 점입니다.
+QUIC(Quick UDP Internet Connections)는 UDP를 기반으로 하여, 연결 설정 시간을 단축시키고, 패킷 손실에 대한 복구를 개선한 프로토콜입니다.
+HTTP/3는 QUIC를 사용하여 다음과 같은 개선점을 제공합니다:</p>
+<ol>
+<li><strong>연결 설정 시간 단축</strong>: QUIC는 0-RTT(Zero Round Trip Time) 연결 설정을 지원하여, 클라이언트와 서버 간의 연결 설정 시간을 단축시킵니다.</li>
+<li><strong>패킷 손실 복구</strong>: QUIC는 패킷 손실에 대한 복구를 개선하여, 데이터 전송의 신뢰성을 높입니다.</li>
+<li><strong>멀티플렉싱</strong>: HTTP/3는 멀티플렉싱을 지원하여, 하나의 연결에서 여러 개의 요청과 응답을 동시에 처리할 수 있습니다. 이는 HTTP/2의 멀티플렉싱 기능을 더욱 개선한 것입니다.</li>
+<li><strong>헤더 압축</strong>: HTTP/3는 HPACK 헤더 압축 방식을 사용하여, HTTP 헤더의 크기를 줄이고, 데이터 전송의 효율성을 높입니다.</li>
+<li><strong>보안</strong>: QUIC는 TLS 1.3을 기본적으로 사용하여, 보안성을 강화합니다.</li>
+</ol>
+<hr>
+<h3 id="dns에서-주소에-대응되는-entry는-어떻게-찾아지는가">DNS에서 주소에 대응되는 entry는 어떻게 찾아지는가?</h3>
+<blockquote>
+<p>먼저 루트 도메인 서버에서 도메인 주소의 뒷부분부터 차례대로 알맞은 DNS 서버를 찾아가며 entry를 검색하빈다.</p>
+</blockquote>
+<p>DNS(도메인 네임 시스템)는 도메인 이름을 IP 주소로 변환하는 시스템입니다.
+DNS는 계층 구조로 구성되어 있으며, 도메인 이름을 해결하기 위해 다음과 같은 과정을 거칩니다:</p>
+<ol>
+<li><strong>도메인 이름 해석 요청</strong>: 클라이언트가 도메인 이름을 IP 주소로 변환하기 위해 DNS 서버에 요청을 보냅니다.</li>
+<li><strong>로컬 DNS 서버</strong>: 클라이언트의 로컬 DNS 서버가 요청을 처리합니다. 로컬 DNS 서버는 캐시된 정보를 사용하여 빠르게 응답할 수 있습니다.</li>
+<li><strong>루트 DNS 서버</strong>: 로컬 DNS 서버가 도메인 이름을 해결할 수 없는 경우, 루트 DNS 서버에 요청을 보냅니다. 루트 DNS 서버는 최상위 도메인(TLD) 서버의 IP 주소를 반환합니다.</li>
+<li><strong>TLD DNS 서버</strong>: 루트 DNS 서버가 반환한 TLD 서버에 요청을 보냅니다. TLD 서버는 도메인 이름의 최상위 부분(예: .com, .org 등)에 대한 정보를 가지고 있습니다.</li>
+<li><strong>권한 있는 DNS 서버</strong>: TLD 서버가 반환한 권한 있는 DNS 서버에 요청을 보냅니다. 권한 있는 DNS 서버는 도메인 이름에 대한 최종적인 IP 주소 정보를 가지고 있습니다.</li>
+<li><strong>IP 주소 반환</strong>: 권한 있는 DNS 서버가 도메인 이름에 대한 IP 주소를 반환합니다. 이 IP 주소는 클라이언트의 로컬 DNS 서버로 전달되고, 최종적으로 클라이언트에게 전달됩니다.</li>
+</ol>
+<hr>
+<h3 id="video-streaming에-쓰이는-프로토콜-중-하나를-설명하시오">Video streaming에 쓰이는 프로토콜 중 하나를 설명하시오.</h3>
+<blockquote>
+<p>수업떄 패킷을 분석할 땐 QUIC를 썼던 기억이 납니다. 다른 프로토콜은 잘 모르겠습니다.</p>
+</blockquote>
+<p>앱 계층에서의 프로토콜은 잘 모르겠지만,
+전송 계층에선 주로 UDP 프로토콜이 사용됩니다.
+UDP는 비연결형 프로토콜로, 데이터그램을 전송할 때 연결 설정이 필요하지 않습니다.
+이로 인해 데이터 전송 속도가 빠르고, 지연 시간이 짧아 실시간 스트리밍에 적합합니다.
+하지만 UDP는 신뢰성 있는 데이터 전송을 보장하지 않기 때문에, 패킷 손실이 발생할 수 있습니다.
+이러한 패킷 손실은 비디오 스트리밍의 품질에 영향을 미칠 수 있습니다.</p>
+<hr>
+<h2 id="tcp">TCP</h2>
+<h3 id="tcp와-같이-protocol을-reliable하게-설계-하려면-무엇이-필요한가">TCP와 같이 protocol을 reliable하게 설계 하려면 무엇이 필요한가?</h3>
+<blockquote>
+<p>오류 검증, 혼잡 제어, 흐름 제어가 필요합니다.</p>
+</blockquote>
+<p>신뢰성 있는 프로토콜을 설계하기 위해서는 다음과 같은 요소가 필요합니다:</p>
+<ol>
+<li><strong>연결 설정</strong>: 클라이언트와 서버 간의 연결을 설정하는 과정이 필요합니다. TCP는 3-way handshake를 사용하여 연결을 설정합니다</li>
+<li><strong>데이터 전송</strong>: 데이터를 전송할 때, 데이터의 순서를 보장하고, 중복된 데이터가 전송되지 않도록 해야 합니다. TCP는 시퀀스 번호를 사용하여 데이터의 순서를 보장합니다.</li>
+<li><strong>오류 검출 및 복구</strong>: 데이터 전송 중 오류가 발생할 수 있으므로, 오류를 검출하고 복구하는 메커니즘이 필요합니다. TCP는 체크섬을 사용하여 데이터의 오류를 검출하고, 재전송을 통해 오류를 복구합니다.</li>
+<li><strong>흐름 제어</strong>: 데이터 전송 속도를 조절하여, 수신 측이 데이터를 처리할 수 있는 속도로 전송해야 합니다. TCP는 슬라이딩 윈도우 기법을 사용하여 흐름 제어를 구현합니다.</li>
+<li><strong>혼잡 제어</strong>: 네트워크의 혼잡 상태를 감지하고, 데이터 전송 속도를 조절하여 네트워크의 혼잡을 완화해야 합니다. TCP는 혼잡 제어 알고리즘(예: AIMD, Slow Start 등)을 사용하여 혼잡 제어를 구현합니다.</li>
+<li><strong>연결 종료</strong>: 데이터 전송이 완료되면 연결을 종료하는 과정이 필요합니다. TCP는 4-way handshake를 사용하여 연결을 종료합니다.
+이러한 요소들을 통해 TCP는 신뢰성 있는 데이터 전송을 보장합니다.</li>
+</ol>
+<hr>
+<h3 id="flow-control이란-무엇인가-congestion-control과-flow-control의-차이점은">Flow control이란 무엇인가? Congestion control과 flow control의 차이점은?</h3>
+<blockquote>
+<p>흐름 제어란 상대방이 수용 가능한 속도로 전송을 수행하는 기술입니다.
+수신 측에서 sliding window 기법을 통해 조절할 수 있습니다.
+혼잡 제어는 송신 츶에서 네트워크 혼잡을 감지하여 대역폭을 조절하는 기술입니다.
+즉 조절의 주체에서 차이가 있스빈다.</p>
+</blockquote>
+<p>흐름 제어(Flow Control)는 송신 측과 수신 측 간의 데이터 전송 속도를 조절하여, 수신 측이 데이터를 처리할 수 있는 속도로 전송하는 메커니즘입니다.
+즉, 수신 측이 버퍼를 초과하여 데이터를 처리하지 못하는 상황을 방지하기 위해 송신 측의 데이터 전송 속도를 조절합니다.
+TCP에서는 슬라이딩 윈도우 기법을 사용하여 흐름 제어를 구현합니다.
+슬라이딩 윈도우는 송신 측이 보낼 수 있는 데이터의 양을 제한하고, 수신 측이 처리할 수 있는 데이터의 양을 조절합니다.</p>
+<hr>
+<h3 id="tcp와-udp의-차이점은">TCP와 UDP의 차이점은?</h3>
+<blockquote>
+<p>reliablity에서 차이가 있습니다.
+tcp는 연결 설정/종료, 오류 검출, 흐름 제어, 혼잡 제어 등을 통해 안정적인 연결을 제공하빈다.
+이에반해 UDP는 데이터그램을 전송 및 오류 검출만 하여, 간단함과 낮는 레이턴시에 장점이 있습니다.</p>
+</blockquote>
+<p>TCP(Transmission Control Protocol)와 UDP(User Datagram Protocol)는 전송 계층에서 사용되는 두 가지 주요 프로토콜입니다.
+이들의 차이점은 다음과 같습니다:</p>
+<ol>
+<li><strong>연결 지향성</strong>: TCP는 연결 지향 프로토콜로, 데이터 전송 전에 클라이언트와 서버 간의 연결을 설정해야 합니다.
+반면 UDP는 비연결형 프로토콜로, 연결 설정 없이 데이터를 전송할 수 있습니다.</li>
+<li><strong>신뢰성</strong>: TCP는 신뢰성 있는 데이터 전송을 보장합니다. 데이터의 순서를 보장하고, 오류 검출 및 복구 메커즘을 제공합니다.
+반면 UDP는 신뢰성 있는 데이터 전송을 보장하지 않습니다. 데이터의 순서가 보장되지 않으며, 오류 검출 및 복구 메커니즘이 없습니다.</li>
+</ol>
+<hr>
+<h3 id="congestion이-발생했다는-것을-어떻게-알-수-있는가">Congestion이 발생했다는 것을 어떻게 알 수 있는가?</h3>
+<blockquote>
+<p>혼잡은 패킷 로스를 통해 감지할 수 있습니다.
+전송자 입장에서 ACK이 제대로 오지 않는것을 통해 감지할 것 같습니다.</p>
+</blockquote>
+<p>네트워크 혼잡(Congestion)은 네트워크의 대역폭이 초과되어 데이터 전송 속도가 느려지거나 패킷 손실이 발생하는 상태를 의미합니다.
+TCP에서는 다음과 같은 방법으로 네트워크 혼잡을 감지할 수 있습니다:</p>
+<ol>
+<li><strong>패킷 손실</strong>: TCP는 패킷 손실을 감지하여 네트워크 혼잡을 판단합니다. 패킷 손실은 ACK(Acknowledgment) 패킷이 수신되지 않을 때 발생합니다.</li>
+<li><strong>RTT(Round Trip Time)</strong>: TCP는 RTT를 측정하여 네트워크 혼잡을 감지합니다. RTT가 증가하면 네트워크 혼잡이 발생했을 가능성이 높습니다.</li>
+<li><strong>중복 ACK</strong>: TCP는 중복 ACK 패킷을 수신하면 네트워크 혼잡을 감지합니다. 중복 ACK는 송신 측에서 패킷이 손실되었음을 나타내며, 이는 네트워크 혼잡의 징후일 수 있습니다.</li>
+</ol>
+<hr>
+<h3 id="3-way-handshaking이란">3-way handshaking이란?</h3>
+<blockquote>
+<p>tcp에서 연결을 설정하는 매커니즘입니다.
+먼저 연결 요청이 오고, SYN이 같이 옵니다.
+서버는 이에대해 수락하고 SYN-ACK을 보냅니다.
+클라이언트도 다시 ACK을 보내면 연결이 성립합니다.</p>
+</blockquote>
+<p>TCP 연결을 설정하기 위한 과정으로, 클라이언트와 서버 간의 연결을 설정하는 데 사용됩니다.
+3-way handshaking은 다음과 같은 단계로 이루어집니다:</p>
+<ol>
+<li><strong>SYN</strong>: 클라이언트가 서버에 연결 요청을 보내는 SYN(Synchronize) 패킷을 전송합니다. 이 패킷은 클라이언트의 초기 시퀀스 번호를 포함합니다.</li>
+<li><strong>SYN-ACK</strong>: 서버가 클라이언트의 SYN 패킷을 수신하고, 연결 요청을 승인하는 SYN-ACK(Synchronize-Acknowledge) 패킷을 전송합니다.
+이 패킷은 서버의 초기 시퀀스 번호와 클라이언트의 초기 시퀀스 번호에 대한 ACK(Acknowledgment)를 포함합니다.</li>
+<li><strong>ACK</strong>: 클라이언트가 서버의 SYN-ACK 패킷을 수신하고, 연결을 승인하는 ACK(Acknowledge) 패킷을 전송합니다.
+이 패킷은 서버의 초기 시퀀스 번호에 대한 ACK를 포함합니다.</li>
+</ol>
+<hr>
+<h3 id="tcp-congestion-control은-어떤-원리로-동작하는가">TCP congestion control은 어떤 원리로 동작하는가?</h3>
+<blockquote>
+<p>TCP 혼잡 제어는 AIMD로 동작하빈다.
+대역폭을 선형적으로 늘리다가, 패킷 로스가 감지되면 1/n로 감소시킵니다.
+이를 반복하면 모든 연결의 대역폭이 일정 지점으로 수렴하게 됩니다.</p>
+</blockquote>
+<hr>
+<h3 id="tcp는-어떻게-발전하였는가">TCP는 어떻게 발전하였는가?</h3>
+<blockquote>
+<p>처음엔 군용 목적으로 개발되었고,
+현재는 TLS가 추가되어 안전한 네트워크 통신을 위한 기본 요소가 되었스빈다.
+SYN flood 공격에 대한 방비도 발전의 일종인 것 같습니다.
+다양한 하드웨어 오프로딩도 재밌습니다.</p>
+</blockquote>
+<hr>
+<h2 id="generalized-forwarding에-대해-설명하라">Generalized forwarding에 대해 설명하라.</h2>
+<blockquote>
+<p>전통적인 포워딩은 iptable의 longest prefix matching을 통해 라우팅을 진행합니다.
+현대에선 더 다양한 요소, (포트번호, dst와 src의 관계)들을 이용하여 라우팅을 하려고 하고,
+이를 Generalized forwarding이라고 합니다.
+수업 과제에선 openflow를 통해 이를 구현했던 것 같습니다.</p>
+</blockquote>
+<p>기본적으로 포워딩은 ip 주소가 가장 길게 매치되는 라우팅 테이블을 찾아서 패킷을 전달하는 것입니다.
+하지만 Generalized forwarding은 단순히 IP 주소 매칭을 넘어서, 다양한 프로토콜과 포워딩 메커니즘을 지원하는 확장된 포워딩 방식을 의미합니다.
+openflow 프로토콜을 사용하여, 네트워크 장치가 다양한 포워딩 규칙을 정의하고 적용할 수 있도록 합니다.
+즉, Generalized forwarding은 단순한 IP 주소 매칭을 넘어서, 다양한 프로토콜과 포워딩 메커니즘을 지원하는 확장된 포워딩 방식을 의미합니다.</p>
+<hr>
+<h3 id="internet-routing은-어떻게-일어나는가">Internet routing은 어떻게 일어나는가?</h3>
+<blockquote>
+<p>출발지에서 목적지까지 적절한 라우터에게 패킷을 전달하는 방식으로 이루어집니다.
+세상에 많은 AS와 각 AS가 관리하는 ip 대역이 있고, 이를 바탕으로 어떤 AS로 패킷을 전달해야 할지 결정할 수 있습니다.</p>
+</blockquote>
+<p>라우터를 패킷을 받으면 어떤 포트로 전달할지 결정하는데, 이를 위해 라우팅 테이블을 사용합니다.
+라우팅 테이블은 목적지 IP 주소와 해당 IP 주소로 패킷을 전달할 포트 정보를 포함합니다.
+라우터는 패킷의 목적지 IP 주소를 확인하고, 라우팅 테이블에서 해당 IP 주소와 가장 길게 매치되는 항목을 찾아 패킷을 해당 포트로 전달합니다.
+이 과정에서 라우터는 패킷의 TTL(Time To Live) 값을 감소시키고, TTL 값이 0이 되면 패킷을 폐기합니다.</p>
+<hr>
+<h3 id="bgp가-어떻게-작동하는지-설명하여라">BGP가 어떻게 작동하는지 설명하여라.</h3>
+<blockquote>
+<p>BGP는 in out 두가지로 나눌 수 있습니다.
+둘 다 자신이 라우팅할 수 있는 ip를 홍보하며,
+홍보받은 라우터들은 이를 바탕으로 다음으로 전달알 라우터를 결정합니다.</p>
+</blockquote>
+<p>BGP는 인터넷에서 AS간에 라우팅 정보를 교환하는 프로토콜입니다.
+AS간의 대표적인 관계로 peer (동등한 관계)와 customer-provider 관계가 있습니다.
+BGP는 각 AS가 자신의 라우팅 정보를 광고하고, 다른 AS의 라우팅 정보를 수신하여 라우팅 테이블을 업데이트합니다.</p>
+<p>같은 as node 내에선 iBGP (Internal BGP)를 사용하여 라우팅 정보를 교환하고,
+다른 AS와는 eBGP(External BGP)를 사용하여 라우팅 정보를 교환합니다.
+iBGP는 일반적으로 최단 경로를 선택하는 데 사용되며,eBGP는 AS 간의 경로 선택을 위해 사용됩니다.</p>
+<p>또한 Hot Potato Routing과 같은 기법을 사용하여, BGP는 경로 선택을 최적화합니다.
+Hot Potato Routing은 패킷을 가능한 한 빨리 다른 AS로 전달하기 위해,
+가장 짧은 경로를 선택하는 기법입니다.</p>
+<hr>
+<h2 id="link-layer">Link Layer</h2>
+<h3 id="csmacd란">CSMA/CD란?</h3>
+<blockquote>
+<p>이는 이더넷에서 주로 이용하는 충돌 방지 프로토콜입니다
+통신을 시작하기 전 버스 내에서의 충돌을 먼저 감지해 보고, 사용중인 기기가 없다면 통신을 시도합니다.
+만약 충돌이 있다면, 백오프 시간만큼 기다린 뒤 다시 충돌을 감지합니다.</p>
+</blockquote>
+<p>이더넷에서 충돌을 감지하기 위한 프로토콜로, Carrier Sense Multiple Access with Collision Detection의 약자입니다.
+버스 내의 장치가 전송을 하기 전에 충돌이 있는지 확인하고,
+충돌이 있다면 랜덤한 시간 동안 대기한 후 다시 전송을 시도합니다.</p>
+<hr>
+<h3 id="mac-address란-ip-address가-mac-address에-비해-갖는-장점은">MAC address란? IP address가 MAC address에 비해 갖는 장점은?</h3>
+<blockquote>
+<p>맥 주소는 네트워크 기기에 고유하게 할당된 주소값입니다.
+IP주소는 AS별로 대역폭을 나누어 할당되어 있는 계층적 구조인 반면,
+맥주소는 이러한 계층적 구조가 없어 동적으로 할당하고 해제하기 어렵습니다.
+IP는 이러한 할당이 쉽고 로컬 네트워크를 위해 보장된 대역이 있어서 로컬에서 동적 할당이 쉽습니다.</p>
+</blockquote>
+<hr>
+<h3 id="wireless-network에서는-왜-collision-avoidance를-채택하는가-어떻게-하면-효율성을-증가시킬-수-있는가">Wireless network에서는 왜 Collision avoidance를 채택하는가? 어떻게 하면 효율성을 증가시킬 수 있는가?</h3>
+<blockquote>
+<p>무선에선 이더넷처럼 Collision Detection이 안되어서 CA를 선택합니다.
+그래서 일단 통신을 하다가 충돌이 감지된다면 Random backoff를 이용하여 이 충돌을 확률적으로 최소화합니다.</p>
+</blockquote>
+<p>무선 네트워크는 이더넷과 달리 충돌 감지가 어렵습니다. 따라서 충돌 회피 기법을 이용합니다.
+충돌 회피 기법은 다음과 같은 방법으로 효율성을 증가시킬 수 있습니다:</p>
+<ol>
+<li><strong>CSMA/CA (Carrier Sense Multiple Access with Collision Avoidance)</strong>: 무선 네트워크에서 사용되는 프로토콜로, 전송을 시작하기 전에 채널을 감지하고, 채널이 비어 있을 때만 전송을 시작합니다.</li>
+<li><strong>RTS/CTS (Request to Send / Clear to Send)</strong>: 전송을 시작하기 전에 RTS 패킷을 보내고, 수신 측에서 CTS 패킷을 보내어 전송을 허용합니다. 이를 통해 충돌을 방지할 수 있습니다</li>
+<li><strong>백오프 알고리즘</strong>: 충돌이 발생했을 때, 랜덤한 시간 동안 대기한 후 다시 전송을 시도합니다. 이를 통해 충돌 확률을 줄일 수 있습니다.</li>
+<li><strong>채널 분할</strong>: 주파수 대역을 여러 개의 채널로 나누어, 각 채널에서 독립적으로 전송을 수행합니다. 이를 통해 충돌을 줄이고, 네트워크의 효율성을 증가시킬 수 있습니다.</li>
+<li><strong>다중 접속 기술</strong>: OFDM(Orthogonal Frequency Division Multiplexing)과 같은 다중 접속 기술을 사용하여, 여러 사용자가 동시에 데이터를 전송할 수 있도록 합니다. 이를 통해 네트워크의 효율성을 증가시킬 수 있습니다.</li>
+</ol>
+<hr>
+<h3 id="80211-프로토콜의-특징을-설명하여라">802.11 프로토콜의 특징을 설명하여라.</h3>
+<blockquote>
+<p>보통 wifi와 혼용하여 부르는 프로토콜로 알고 있습니다.
+SCMA/CA를 통해 충돌을 회피하고,
+버전이 올라갈수록 다양한 대역폭을 이용하여 그 속도를 올리고 있습니다.</p>
+</blockquote>
+<p>wifi로 흔히 불리는 802.11 프로토콜은 무선 LAN(WLAN)에서 사용되는 표준 프로토콜입니다.</p>
+<hr>
+<h2 id="security-in-network">Security in Network</h2>
+<h3 id="network-security의-4개-구성요소는-무엇인가">Network security의 4개 구성요소는 무엇인가?</h3>
+<blockquote>
+<p>보안의 3대요소인 CIA와 비슷하지 않을까요..?</p>
+</blockquote>
+<ol>
+<li>access control</li>
+<li>Confidentiality &#x26; Integrity</li>
+<li>Availability</li>
+<li>Threat Detection &#x26; Response</li>
+</ol>
+<hr>
+<h3 id="tls에-대해-설명하여라">TLS에 대해 설명하여라</h3>
+<blockquote>
+<p>전송계층 보안은 confidentaility를 보장하기 위한 암호화 기법입니다.
+4-way handwhake에서 대칭키를 교환하고 이를 바탕으로 패킷을 암호화하여 주고받아 기밀성을 지킵니다.</p>
+</blockquote>
+<ol>
+<li><strong>암호화</strong>: TLS는 데이터를 암호화하여, 네트워크을 통해 전송되는 데이터의 기밀성을 보장합니다. 이를 통해 중간에서 데이터를 가로채더라도 내용을 알 수 없습니다.</li>
+<li><strong>무결성</strong>: TLS는 데이터의 무결성을 보장합니다. 즉, 데이터가 전송 중에 변경되지 않았음을 확인할 수 있습니다. 이를 위해 해시 함수를 사용하여 데이터의 무결성을 검증합니다.</li>
+<li><strong>인증</strong>: TLS는 클라이언트와 서버 간의 인증을 제공합니다. 이를 통해 클라이언트는 서버가 신뢰할 수 있는지 확인할 수 있습니다. TLS는 디지털 인증서를 사용하여 서버의 신원을 검증합니다</li>
+<li><strong>세션 재개</strong>: TLS는 세션 재개 기능을 제공하여, 이전에 설정된 TLS 세션을 재사용할 수 있습니다. 이를 통해 연결 설정 시간을 단축시킬 수 있습니다.</li>
+<li><strong>핸드쉐이크 프로토콜</strong>: TLS는 핸드쉐이크 프로토콜을 사용하여 클라이언트와 서버 간의 연결을 설정합니다. 핸드쉐이크 과정에서 암호화 알고리즘, 키 교환 방식, 인증서 등을 협상합니다.</li>
+<li><strong>버전 관리</strong>: TLS는 다양한 버전을 지원하여, 최신 보안 기능을 제공하고, 이전 버전과의 호환성을 유지합니다.
+TLS는 HTTPS(HTTP Secure)와 같은 애플리케이션 계층 프로토콜에서 널리 사용되며, 웹 브라우저와 서버 간의 보안 통신을 제공합니다.</li>
+</ol>
+<hr>
+<h3 id="network에서-checksum을-위해-사용하는-hash-function과-security에서-data-integrity를-위해-사용하는-hash-function이-서로-interchangeable한가">Network에서 checksum을 위해 사용하는 hash function과 security에서 data integrity를 위해 사용하는 hash function이 서로 interchangeable한가?</h3>
+<blockquote>
+<p>그렇지 않습니다. 네트워크의 저계층에서 쓰이는 해쉬는 검증 속도가 중요하고 오류 검출을 위해 이용합니다.
+따라서 일부 충돌을 감수하더라도 속도를 챙겨야 합니다.
+하지만 보안에서의 hash는 속도가 느리더라고 충돌 면역을 챙기는 것이 매우 중요합니다.</p>
+</blockquote> </div> <!-- Newsletter CTA (shown after post body when feature is enabled) -->  <!-- Social sharing links --> <div class="social-share" data-astro-cid-vfzijd4d> <p class="share-label" data-astro-cid-vfzijd4d>Share</p> <div class="share-icons" data-astro-cid-vfzijd4d> <a href="https://twitter.com/intent/tweet?text=6.%20Network&amp;url=https%3A%2F%2Fseungjong-ha.github.io%2Fblog%2Finterview-06-network%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X (Twitter)" title="Share on X (Twitter)" class="share-link" data-astro-cid-vfzijd4d> <svg width="1em" height="1em" aria-hidden="true" data-astro-cid-vfzijd4d="true" data-icon="fa-brands:twitter">   <symbol id="ai:fa-brands:twitter" viewBox="0 0 512 512"><path fill="currentColor" d="M459.37 151.716c.325 4.548.325 9.097.325 13.645c0 138.72-105.583 298.558-298.558 298.558c-59.452 0-114.68-17.219-161.137-47.106c8.447.974 16.568 1.299 25.34 1.299c49.055 0 94.213-16.568 130.274-44.832c-46.132-.975-84.792-31.188-98.112-72.772c6.498.974 12.995 1.624 19.818 1.624c9.421 0 18.843-1.3 27.614-3.573c-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319c-28.264-18.843-46.781-51.005-46.781-87.391c0-19.492 5.197-37.36 14.294-52.954c51.655 63.675 129.3 105.258 216.365 109.807c-1.624-7.797-2.599-15.918-2.599-24.04c0-57.828 46.782-104.934 104.934-104.934c30.213 0 57.502 12.67 76.67 33.137c23.715-4.548 46.456-13.32 66.599-25.34c-7.798 24.366-24.366 44.833-46.132 57.827c21.117-2.273 41.584-8.122 60.426-16.243c-14.292 20.791-32.161 39.308-52.628 54.253"/></symbol><use href="#ai:fa-brands:twitter"></use>  </svg> </a><a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Fseungjong-ha.github.io%2Fblog%2Finterview-06-network%2F&amp;title=6.%20Network" target="_blank" rel="noopener noreferrer" aria-label="Share on LinkedIn" title="Share on LinkedIn" class="share-link" data-astro-cid-vfzijd4d> <svg width="0.88em" height="1em" aria-hidden="true" data-astro-cid-vfzijd4d="true" data-icon="fa-brands:linkedin">   <symbol id="ai:fa-brands:linkedin" viewBox="0 0 448 512"><path fill="currentColor" d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5c0 21.3-17.2 38.5-38.5 38.5m282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7c-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5c67.2 0 79.7 44.3 79.7 101.9z"/></symbol><use href="#ai:fa-brands:linkedin"></use>  </svg> </a><a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fseungjong-ha.github.io%2Fblog%2Finterview-06-network%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook" title="Share on Facebook" class="share-link" data-astro-cid-vfzijd4d> <svg width="1em" height="1em" aria-hidden="true" data-astro-cid-vfzijd4d="true" data-icon="fa-brands:facebook">   <symbol id="ai:fa-brands:facebook" viewBox="0 0 512 512"><path fill="currentColor" d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48c27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256"/></symbol><use href="#ai:fa-brands:facebook"></use>  </svg> </a><a href="mailto:?subject=6.%20Network&amp;body=%0A%0Ahttps%3A%2F%2Fseungjong-ha.github.io%2Fblog%2Finterview-06-network%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on Email" title="Share on Email" class="share-link" data-astro-cid-vfzijd4d> <svg width="1em" height="1em" aria-hidden="true" data-astro-cid-vfzijd4d="true" data-icon="fa-solid:envelope">   <symbol id="ai:fa-solid:envelope" viewBox="0 0 512 512"><path fill="currentColor" d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7c22.4 17.4 52.1 39.5 154.1 113.6c21.1 15.4 56.7 47.8 92.2 47.6c35.7.3 72-32.8 92.3-47.6c102-74.1 131.6-96.3 154-113.7M256 320c23.2.4 56.6-29.2 73.4-41.4c132.7-96.3 142.8-104.7 173.4-128.7c5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9c30.6 23.9 40.7 32.4 173.4 128.7c16.8 12.2 50.2 41.8 73.4 41.4"/></symbol><use href="#ai:fa-solid:envelope"></use>  </svg> </a> <button id="native-share-btn" aria-label="Share via device" title="Share via device" class="share-link share-native" hidden data-astro-cid-vfzijd4d> <svg width="0.88em" height="1em" aria-hidden="true" data-astro-cid-vfzijd4d="true" data-icon="fa-solid:share-alt">   <symbol id="ai:fa-solid:share-alt" viewBox="0 0 448 512"><path fill="currentColor" d="M352 320c-22.608 0-43.387 7.819-59.79 20.895l-102.486-64.054a96.55 96.55 0 0 0 0-41.683l102.486-64.054C308.613 184.181 329.392 192 352 192c53.019 0 96-42.981 96-96S405.019 0 352 0s-96 42.981-96 96c0 7.158.79 14.13 2.276 20.841L155.79 180.895C139.387 167.819 118.608 160 96 160c-53.019 0-96 42.981-96 96s42.981 96 96 96c22.608 0 43.387-7.819 59.79-20.895l102.486 64.054A96.3 96.3 0 0 0 256 416c0 53.019 42.981 96 96 96s96-42.981 96-96s-42.981-96-96-96"/></symbol><use href="#ai:fa-solid:share-alt"></use>  </svg> </button> </div> </div> <script>(function(){const shareTitle = "6. Network";
+const shareUrl = "https://seungjong-ha.github.io/blog/interview-06-network/";
+const shareText = "";
+
+  const btn = document.getElementById('native-share-btn');
+  if (navigator.share && btn) {
+    btn.hidden = false;
+    btn.addEventListener('click', () => {
+      navigator.share({ title: shareTitle, url: shareUrl, text: shareText }).catch(() => {});
+    });
+  }
+})();</script> <!-- Related posts -->  <!-- Comments -->  </article> </div> </div>  </main> <!-- Newsletter (shown in footer area if enabled) -->  <footer style="background-color: var(--global-footer-bg-color); color: var(--global-footer-text-color); padding: 1rem 0; position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;" data-astro-cid-sz7xmlte> <div class="page-container text-center text-sm" data-astro-cid-sz7xmlte> <p data-astro-cid-sz7xmlte>
+&copy; 2026 SeungJong Ha.
+<span data-astro-cid-sz7xmlte>Powered by <a href="https://github.com/dadangnh/as-folio" target="_blank" rel="noopener noreferrer">as-folio</a>.
+      Hosted by <a href="https://pages.github.com/" target="_blank" rel="noopener noreferrer">GitHub Pages</a>.</span>  </p>  </div> </footer> <!-- Cookie consent (vanilla-cookieconsent via CDN) -->  <!-- Back to top button --> <button id="back-to-top" aria-label="Back to top" title="Back to top"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="m18 15-6-6-6 6"></path> </svg> </button> <script type="module">let t=document.getElementById("back-to-top");function e(){t?.classList.toggle("visible",window.scrollY>300)}function o(){t?.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}))}window.addEventListener("scroll",e,{passive:!0});o();document.addEventListener("astro:after-swap",()=>{t=document.getElementById("back-to-top"),o(),e()});</script> </body> </html> <!-- Code copy button (text-label approach, no innerHTML) --> <script type="module">function n(){document.querySelectorAll("#post-content pre").forEach(e=>{if(e.querySelector(".copy-btn"))return;const t=document.createElement("button");t.className="copy-btn",t.setAttribute("aria-label","Copy code"),t.textContent="copy",t.addEventListener("click",async()=>{const o=e.querySelector("code");o&&(await navigator.clipboard.writeText(o.innerText),t.textContent="copied!",setTimeout(()=>{t.textContent="copy"},2e3))}),e.style.position="relative",e.appendChild(t)})}document.addEventListener("astro:page-load",n);</script> <!-- Medium zoom for post images --> <script type="module" src="/_astro/Post.astro_astro_type_script_index_1_lang.Czjq4-dD.js"></script> <!-- ── Per-post CDN widgets ──────────────────────────────────────────────── -->             

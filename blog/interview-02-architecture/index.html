@@ -1,0 +1,282 @@
+<!DOCTYPE html><html lang="en" data-theme="light"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="SeungJong Ha — M.S. student at KAIST School of Computing (CASYS Lab). Systems, operating systems, and Rust."><link rel="canonical" href="https://seungjong-ha.github.io/blog/interview-02-architecture/"><title>2. Architecture | SeungJong Ha</title><!-- Favicon --><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="alternate icon" href="/favicon.ico"><!-- Fonts are self-hosted via Fontsource (imported in global.css) — no FOUT --><!-- KaTeX CSS is bundled via global.css (@import 'katex/dist/katex.min.css') --><!-- Theme color override (from site.theme.color — 'auto' means use _colors.css defaults) --><style>:root,[data-theme='light']{--global-theme-color:#0ea5e9!important;--global-hover-color:#0ea5e9!important;}</style><!-- Open Graph + Twitter Card --><meta property="og:title" content="2. Architecture | SeungJong Ha"><meta property="og:description" content="SeungJong Ha — M.S. student at KAIST School of Computing (CASYS Lab). Systems, operating systems, and Rust."><meta property="og:url" content="https://seungjong-ha.github.io/blog/interview-02-architecture/"><meta property="og:type" content="website"><meta property="og:image" content="https://seungjong-ha.github.io/og/blog/interview-02-architecture.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="2. Architecture | SeungJong Ha"><meta name="twitter:description" content="SeungJong Ha — M.S. student at KAIST School of Computing (CASYS Lab). Systems, operating systems, and Rust."><meta name="twitter:image" content="https://seungjong-ha.github.io/og/blog/interview-02-architecture.png"><!-- Analytics verification tags --><!-- GA4 via Partytown (production only) --><script type="text/partytown" src="https://www.googletagmanager.com/gtag/js?id=G-TCXZ1MQHX6"></script><script type="text/partytown">(function(){const ga4 = "G-TCXZ1MQHX6";
+
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+              dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+            gtag('config', ga4);
+          })();</script><!-- Cronitor RUM --><!-- Pirsch analytics --><!-- OpenPanel analytics --><!-- Person JSON-LD (homepage only) --><!-- View Transitions (smooth page-to-page navigation) --><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.BAAUdx5Y.js"></script><!-- Named slot for page-specific head content (e.g. JSON-LD from Post.astro) --> <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"2. Architecture","datePublished":"2025-08-08T00:00:00.000Z","url":"https://seungjong-ha.github.io/blog/interview-02-architecture/","author":{"@type":"Person","name":"SeungJong Ha","url":"https://seungjong-ha.github.io"},"image":"https://seungjong-ha.github.io/og/blog/interview-02-architecture.png"}</script> <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Blog","item":"https://seungjong-ha.github.io/blog/"},{"@type":"ListItem","position":2,"name":"2. Architecture","item":"https://seungjong-ha.github.io/blog/interview-02-architecture/"}]}</script> <!--
+      Dark mode: must run BEFORE any CSS to prevent FOUC.
+      Reads stored preference, falls back to system preference, then site default.
+      Re-applies after each View Transition swap to keep the theme consistent.
+    --><script>(function(){const defaultTheme = "system";
+
+      function applyTheme() {
+        const stored = localStorage.getItem('theme');
+        let theme;
+        if (stored === 'light' || stored === 'dark') {
+          theme = stored;
+        } else if (defaultTheme === 'system') {
+          theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        } else {
+          theme = defaultTheme;
+        }
+        document.documentElement.setAttribute('data-theme', theme);
+        document.documentElement.setAttribute('data-theme-setting', stored || 'system');
+      }
+      applyTheme();
+      document.addEventListener('astro:after-swap', applyTheme);
+    })();</script><link rel="stylesheet" href="/_s/CuShRENE.css"><style>.giscus-notice[data-astro-cid-an2nl7ar]{font-size:.85rem;color:var(--global-text-color-light);margin-bottom:.75rem}.giscus-notice[data-astro-cid-an2nl7ar] a[data-astro-cid-an2nl7ar]{color:var(--global-theme-color);text-decoration:none}.giscus-notice[data-astro-cid-an2nl7ar] a[data-astro-cid-an2nl7ar]:hover{text-decoration:underline}.giscus-btn[data-astro-cid-an2nl7ar]{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1.1rem;border-radius:4px;border:1px solid var(--global-divider-color);background:transparent;color:var(--global-text-color);font-size:.875rem;font-family:var(--font-sans);cursor:pointer;transition:border-color .15s ease,color .15s ease}.giscus-btn[data-astro-cid-an2nl7ar]:hover{border-color:var(--global-theme-color);color:var(--global-theme-color)}
+</style><link rel="stylesheet" href="/_s/B-FGpDiK.css"><script type="module" src="/_astro/page.52P97FCf.js"></script><script>!(function(w,p,f,c){if(!window.crossOriginIsolated && !navigator.serviceWorker) return;c=w[p]=Object.assign(w[p]||{},{"lib":"/~partytown/","debug":false});c[f]=(c[f]||[]).concat(["dataLayer.push"])})(window,'partytown','forward');/* Partytown 0.13.2 - MIT QwikDev */
+const t={preserveBehavior:!1},e=e=>{if("string"==typeof e)return[e,t];const[n,r=t]=e;return[n,{...t,...r}]},n=Object.freeze((t=>{const e=new Set;let n=[];do{Object.getOwnPropertyNames(n).forEach((t=>{"function"==typeof n[t]&&e.add(t)}))}while((n=Object.getPrototypeOf(n))!==Object.prototype);return Array.from(e)})());!function(t,r,o,i,a,s,c,l,d,p,u=t,f){function h(){f||(f=1,"/"==(c=(s.lib||"/~partytown/")+(s.debug?"debug/":""))[0]&&(d=r.querySelectorAll('script[type="text/partytown"]'),i!=t?i.dispatchEvent(new CustomEvent("pt1",{detail:t})):(l=setTimeout(v,(null==s?void 0:s.fallbackTimeout)||1e4),r.addEventListener("pt0",w),a?y(1):o.serviceWorker?o.serviceWorker.register(c+(s.swPath||"partytown-sw.js"),{scope:c}).then((function(t){t.active?y():t.installing&&t.installing.addEventListener("statechange",(function(t){"activated"==t.target.state&&y()}))}),console.error):v())))}function y(e){p=r.createElement(e?"script":"iframe"),t._pttab=Date.now(),e||(p.style.display="block",p.style.width="0",p.style.height="0",p.style.border="0",p.style.visibility="hidden",p.setAttribute("aria-hidden",!0)),p.src=c+"partytown-"+(e?"atomics.js?v=0.13.2":"sandbox-sw.html?"+t._pttab),r.querySelector(s.sandboxParent||"body").appendChild(p)}function v(n,o){for(w(),i==t&&(s.forward||[]).map((function(n){const[r]=e(n);delete t[r.split(".")[0]]})),n=0;n<d.length;n++)(o=r.createElement("script")).innerHTML=d[n].innerHTML,o.nonce=s.nonce,r.head.appendChild(o);p&&p.parentNode.removeChild(p)}function w(){clearTimeout(l)}s=t.partytown||{},i==t&&(s.forward||[]).map((function(r){const[o,{preserveBehavior:i}]=e(r);u=t,o.split(".").map((function(e,r,o){var a;u=u[o[r]]=r+1<o.length?u[o[r]]||(a=o[r+1],n.includes(a)?[]:{}):(()=>{let e=null;if(i){const{methodOrProperty:n,thisObject:r}=((t,e)=>{let n=t;for(let t=0;t<e.length-1;t+=1)n=n[e[t]];return{thisObject:n,methodOrProperty:e.length>0?n[e[e.length-1]]:void 0}})(t,o);"function"==typeof n&&(e=(...t)=>n.apply(r,...t))}return function(){let n;return e&&(n=e(arguments)),(t._ptf=t._ptf||[]).push(o,arguments),n}})()}))})),"complete"==r.readyState?h():(t.addEventListener("DOMContentLoaded",h),t.addEventListener("load",h))}(window,document,navigator,top,window.crossOriginIsolated);;(e=>{e.addEventListener("astro:before-swap",e=>{let r=document.body.querySelector("iframe[src*='/~partytown/']");if(r)e.newDocument.body.append(r)})})(document);</script></head> <body class="min-h-screen flex flex-col" style="padding-top: var(--navbar-height);" data-footer-position="sticky"> <!-- Skip to main content (accessibility) --> <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 px-4 py-2 rounded" style="background-color: var(--global-theme-color); color: var(--global-hover-text-color);">
+Skip to main content
+</a> <nav class="navbar fixed top-0 right-0 left-0 z-40" style="background-color: var(--global-bg-color); border-bottom: 1px solid var(--global-divider-color); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); height: 57px;" data-astro-cid-5blmo7yk> <div class="page-container flex h-full items-center justify-between" style="max-width: 930px; margin: 0 auto; padding: 0 1rem;" data-astro-cid-5blmo7yk> <!-- Brand --> <a href="/" class="text-lg font-bold" style="color: var(--global-text-color); text-decoration: none;" data-astro-cid-5blmo7yk> SeungJong Ha </a> <!-- Desktop nav --> <div class="hidden items-center gap-1 md:flex" data-astro-cid-5blmo7yk> <a href="/" class="px-3 py-1 text-sm transition-colors " style="color: var(--global-text-color); text-decoration: none;" data-astro-cid-5blmo7yk> about </a><a href="/blog/" class="px-3 py-1 text-sm transition-colors font-bold" style="color: var(--global-theme-color); text-decoration: none;" data-astro-cid-5blmo7yk> blog </a> <!-- Search pill (desktop) --> <button id="search-toggle" class="search-pill" aria-label="Search" title="Search" type="button" data-astro-cid-5blmo7yk> <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-5blmo7yk> <circle cx="11" cy="11" r="8" data-astro-cid-5blmo7yk></circle> <line x1="21" y1="21" x2="16.65" y2="16.65" data-astro-cid-5blmo7yk></line> </svg> <span class="search-pill-text" data-astro-cid-5blmo7yk>Search…</span> <kbd class="search-kbd" data-astro-cid-5blmo7yk>⌘K</kbd> </button> <button data-light-toggle title="Toggle theme" aria-label="Toggle theme" style="padding: 0; border: 0; background-color: inherit; color: var(--global-text-color); width: 2rem; height: 2rem; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;"> <!-- Moon icon: shown in light mode (click to go dark) --> <span data-light-toggle-icon="moon"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </span> <!-- Sun icon: shown in dark mode (click to go light) --> <span data-light-toggle-icon="sun" style="display: none;"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <circle cx="12" cy="12" r="5"></circle> <line x1="12" y1="1" x2="12" y2="3"></line> <line x1="12" y1="21" x2="12" y2="23"></line> <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line> <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line> <line x1="1" y1="12" x2="3" y2="12"></line> <line x1="21" y1="12" x2="23" y2="12"></line> <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line> <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line> </svg> </span> </button> <script type="module">function e(t){document.querySelectorAll("[data-light-toggle-icon]").forEach(n=>{const c=t==="dark"&&n.getAttribute("data-light-toggle-icon")==="sun"||t==="light"&&n.getAttribute("data-light-toggle-icon")==="moon";n.style.display=c?"inline-block":"none"})}function d(t){document.documentElement.setAttribute("data-theme",t),localStorage.setItem("theme",t),e(t)}function o(){const t=document.documentElement.getAttribute("data-theme")??"light";d(t==="dark"?"light":"dark")}function a(){document.querySelectorAll("[data-light-toggle]").forEach(t=>{t.removeEventListener("click",o),t.addEventListener("click",o)})}a();e(document.documentElement.getAttribute("data-theme")??"light");document.addEventListener("astro:after-swap",()=>{a(),e(document.documentElement.getAttribute("data-theme")??"light")});window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",t=>{localStorage.getItem("theme")||(document.documentElement.setAttribute("data-theme",t.matches?"dark":"light"),e(t.matches?"dark":"light"))});</script> </div> <!-- Mobile controls (icon-only search + theme + hamburger) --> <div class="flex items-center gap-2 md:hidden" data-astro-cid-5blmo7yk> <button id="search-toggle" aria-label="Search" type="button" style="padding: 0; border: 0; background: inherit; color: var(--global-text-color); cursor: pointer;" data-astro-cid-5blmo7yk> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-5blmo7yk> <circle cx="11" cy="11" r="8" data-astro-cid-5blmo7yk></circle> <line x1="21" y1="21" x2="16.65" y2="16.65" data-astro-cid-5blmo7yk></line> </svg> </button> <button data-light-toggle title="Toggle theme" aria-label="Toggle theme" style="padding: 0; border: 0; background-color: inherit; color: var(--global-text-color); width: 2rem; height: 2rem; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;"> <!-- Moon icon: shown in light mode (click to go dark) --> <span data-light-toggle-icon="moon"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </span> <!-- Sun icon: shown in dark mode (click to go light) --> <span data-light-toggle-icon="sun" style="display: none;"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <circle cx="12" cy="12" r="5"></circle> <line x1="12" y1="1" x2="12" y2="3"></line> <line x1="12" y1="21" x2="12" y2="23"></line> <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line> <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line> <line x1="1" y1="12" x2="3" y2="12"></line> <line x1="21" y1="12" x2="23" y2="12"></line> <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line> <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line> </svg> </span> </button>  <button id="navbar-toggler" class="navbar-toggler collapsed" aria-label="Toggle navigation" aria-expanded="false" type="button" style="padding: 0.25rem; border: 0; background: inherit; cursor: pointer;" data-astro-cid-5blmo7yk> <span class="icon-bar top-bar" style="display: block; width: 22px; height: 2px; background-color: var(--global-text-color); border-radius: 1px; margin-bottom: 4px;" data-astro-cid-5blmo7yk></span> <span class="icon-bar middle-bar" style="display: block; width: 22px; height: 2px; background-color: var(--global-text-color); border-radius: 1px; margin-bottom: 4px;" data-astro-cid-5blmo7yk></span> <span class="icon-bar bottom-bar" style="display: block; width: 22px; height: 2px; background-color: var(--global-text-color); border-radius: 1px;" data-astro-cid-5blmo7yk></span> </button> </div> </div> <!-- Mobile nav collapse --> <div id="navbar-collapse" class="hidden md:hidden" style="background-color: var(--global-bg-color); border-top: 1px solid var(--global-divider-color); padding: 0.5rem 0;" data-astro-cid-5blmo7yk> <a href="/" class="block px-4 py-2 text-sm" style="color: var(--global-text-color); font-weight: 400; text-decoration: none;" data-astro-cid-5blmo7yk> about </a><a href="/blog/" class="block px-4 py-2 text-sm" style="color: var(--global-theme-color); font-weight: 700; text-decoration: none;" data-astro-cid-5blmo7yk> blog </a> </div> </nav> <!-- Platform detection: update ⌘K / Ctrl K label before first paint --> <script>
+  (function () {
+    var isMac = /Mac|iPhone|iPad|iPod/.test(navigator.platform);
+    document.querySelectorAll('.search-kbd').forEach(function (el) {
+      el.textContent = isMac ? '⌘K' : 'Ctrl K';
+    });
+  })();
+</script>  <script type="module">let c=null;function f(){c?.abort(),c=new AbortController;const{signal:a}=c,o=document.getElementById("navbar-toggler"),d=document.getElementById("navbar-collapse");o?.addEventListener("click",()=>{!d?.classList.contains("hidden")?(d?.classList.add("hidden"),o.setAttribute("aria-expanded","false"),o.classList.add("collapsed"),document.body.style.overflow=""):(d?.classList.remove("hidden"),o.setAttribute("aria-expanded","true"),o.classList.remove("collapsed"),document.body.style.overflow="hidden")},{signal:a}),document.querySelectorAll("#navbar-collapse a").forEach(e=>{e.addEventListener("click",()=>{d?.classList.add("hidden"),o?.setAttribute("aria-expanded","false"),o?.classList.add("collapsed"),document.body.style.overflow=""},{signal:a})}),document.querySelectorAll(".mobile-dropdown-trigger").forEach(e=>{e.addEventListener("click",()=>{const t=e.closest(".mobile-dropdown")?.querySelector(".mobile-dropdown-children"),r=e.querySelector(".mobile-dropdown-chevron");!t?.classList.contains("hidden")?(t?.classList.add("hidden"),e.setAttribute("aria-expanded","false"),r&&(r.style.transform="")):(t?.classList.remove("hidden"),e.setAttribute("aria-expanded","true"),r&&(r.style.transform="rotate(180deg)"))},{signal:a})}),document.querySelectorAll(".nav-dropdown").forEach(e=>{const l=e.querySelector(".nav-dropdown-trigger"),t=[...e.querySelectorAll('[role="menuitem"]')];function r(){e.classList.add("is-open"),l?.setAttribute("aria-expanded","true"),t[0]?.focus()}function i(){e.classList.remove("is-open"),l?.setAttribute("aria-expanded","false")}l?.addEventListener("keydown",n=>{n.key==="Enter"||n.key===" "||n.key==="ArrowDown"?(n.preventDefault(),r()):n.key==="ArrowUp"&&(n.preventDefault(),r(),t[t.length-1]?.focus())},{signal:a}),t.forEach((n,u)=>{n.setAttribute("tabindex","-1"),n.addEventListener("keydown",s=>{s.key==="ArrowDown"?(s.preventDefault(),t[(u+1)%t.length]?.focus()):s.key==="ArrowUp"?(s.preventDefault(),t[(u-1+t.length)%t.length]?.focus()):(s.key==="Escape"||s.key==="Tab")&&(i(),s.key==="Escape"&&(s.preventDefault(),l?.focus()))},{signal:a})}),document.addEventListener("click",n=>{e.contains(n.target)||i()},{signal:a})})}f();document.addEventListener("astro:after-swap",f);document.addEventListener("astro:before-swap",()=>{document.body.style.overflow=""});</script> <!-- ⌘K Search (ninja-keys + Pagefind) — persisted across View Transitions --> <!-- ninja-keys web component --><ninja-keys id="ninja-search" placeholder="Search or jump to…" hideBreadcrumbs="true" data-nav-items="[{&quot;id&quot;:&quot;nav-about&quot;,&quot;title&quot;:&quot;About&quot;,&quot;section&quot;:&quot;Navigation&quot;,&quot;href&quot;:&quot;/&quot;},{&quot;id&quot;:&quot;nav-blog&quot;,&quot;title&quot;:&quot;Blog&quot;,&quot;section&quot;:&quot;Navigation&quot;,&quot;href&quot;:&quot;/blog/&quot;}]" data-content-items="[{&quot;id&quot;:&quot;post-interview-01-pl&quot;,&quot;title&quot;:&quot;1. PL&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-01-pl/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-02-architecture&quot;,&quot;title&quot;:&quot;2. Architecture&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-02-architecture/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-03-os&quot;,&quot;title&quot;:&quot;3. OS&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-03-os/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-04-db&quot;,&quot;title&quot;:&quot;4. DB&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-04-db/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-05-math&quot;,&quot;title&quot;:&quot;5. Math&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-05-math/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-06-network&quot;,&quot;title&quot;:&quot;6. Network&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-06-network/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-08-ml&quot;,&quot;title&quot;:&quot;8. AI/ML&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-08-ml/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-09-algorithm&quot;,&quot;title&quot;:&quot;9. Algorithm&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-09-algorithm/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-interview-11-security&quot;,&quot;title&quot;:&quot;11. Security&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/interview-11-security/&quot;,&quot;keywords&quot;:&quot;interview Interview Prep&quot;},{&quot;id&quot;:&quot;post-review-asterinas&quot;,&quot;title&quot;:&quot;논문 리뷰: Asterinas: A Linux ABI-Compatible, Rust-Based Framekernel OS with a Small and Sound TCB&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/review-asterinas/&quot;,&quot;keywords&quot;:&quot;paper-review Review&quot;},{&quot;id&quot;:&quot;post-review-mkernel&quot;,&quot;title&quot;:&quot;논문 리뷰: On µ-Kernel Construction&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/review-mkernel/&quot;,&quot;keywords&quot;:&quot;paper-review Review&quot;},{&quot;id&quot;:&quot;post-review-omniglot&quot;,&quot;title&quot;:&quot;논문 리뷰: Building Bridges: Safe Interactions with Foreign Languages through Omniglot&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/review-omniglot/&quot;,&quot;keywords&quot;:&quot;paper-review Review&quot;},{&quot;id&quot;:&quot;post-review-rust-lwn-post&quot;,&quot;title&quot;:&quot;How to write Rust in the kernel: 한국어 요약본&quot;,&quot;section&quot;:&quot;Blog Posts&quot;,&quot;href&quot;:&quot;/blog/review-rust-lwn-post/&quot;,&quot;keywords&quot;:&quot;paper-review Review&quot;}]" data-pagefind-base></ninja-keys> <script type="module" src="/_astro/SearchTrigger.astro_astro_type_script_index_0_lang.CLmTwsfW.js"></script> <main id="main-content" class="flex-1" data-pagefind-body>   <div id="reading-progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background-color: var(--global-theme-color);
+    z-index: 9999;
+    transition: width 0.1s linear;
+  "></div> <script type="module">const t=document.getElementById("reading-progress");function o(){const i=window.scrollY,e=document.documentElement.scrollHeight-window.innerHeight,n=e>0?Math.min(100,Math.round(i/e*100)):0;t&&(t.style.width=`${n}%`,t.setAttribute("aria-valuenow",String(n)))}window.addEventListener("scroll",o,{passive:!0});o();</script><div class="page-container py-8"> <div class="flex gap-8"> <!-- TOC sidebar (desktop only) --> <aside class="hidden lg:block w-52 flex-shrink-0"> <nav aria-label="Table of contents" class="toc sticky top-20" style="font-size: 0.8rem; max-height: calc(100vh - 6rem); overflow-y: auto;" data-astro-cid-obewoz47> <p class="mb-2 font-semibold tracking-wide uppercase" style="font-size: 0.7rem; color: var(--global-text-color-light);" data-astro-cid-obewoz47>
+Table of Contents
+</p> <ul class="space-y-1" style="list-style: none; padding: 0; margin: 0;" data-astro-cid-obewoz47> <li style data-astro-cid-obewoz47> <a href="#isa-instruction-set-architecture" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> ISA (Instruction set architecture) </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#cisc와-risc의-차이점은-무엇인가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> CISC와 RISC의 차이점은 무엇인가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#register-file과-cache의-차이는-무엇인가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Register File과 Cache의 차이는 무엇인가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#intel과-amd가-만드는-cpu의-공통점과-차이점은-무엇인가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Intel과 AMD가 만드는 CPU의 공통점과 차이점은 무엇인가? </a> </li><li style data-astro-cid-obewoz47> <a href="#pipelined-architecture" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Pipelined Architecture </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#파이프라이닝은-왜-하는가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> 파이프라이닝은 왜 하는가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#파이프라인-해저드pipeline-hazard란-무엇인가-그리고-종류에는-무엇이-있는가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> 파이프라인 해저드(Pipeline Hazard)란 무엇인가? 그리고 종류에는 무엇이 있는가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#파이프라이닝에서-branch-prediction의-역할은-무엇인가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> 파이프라이닝에서 Branch Prediction의 역할은 무엇인가? </a> </li><li style data-astro-cid-obewoz47> <a href="#memory-hierarchy" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Memory Hierarchy </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#캐시가-필요한-이유는-cache-hit-ratio-에-대해-설명하시오" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> 캐시가 필요한 이유는? Cache hit ratio 에 대해 설명하시오 </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#메모리-접근하는데-x-사이클이-걸리고-캐시에-접근하는데-y-사이클이-걸리며-캐시-hit-rate-가-h-일-때-effective-access-time은" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> 메모리 접근하는데 x 사이클이 걸리고 캐시에 접근하는데 y 사이클이 걸리며 캐시 hit rate 가 h %일 때 effective access time은? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#페이지-폴트는-언제-발생하는가-페이지-폴트-비율과-cache-miss-비율-중-큰-것은-그-이유는" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> 페이지 폴트는 언제 발생하는가? 페이지 폴트 비율과 cache miss 비율 중 큰 것은? 그 이유는? </a> </li><li style data-astro-cid-obewoz47> <a href="#virtual-memory" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Virtual Memory </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#캐시-메모리와-메인-메모리의-주소-지정-방식의-차이점이-무엇인가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> 캐시 메모리와 메인 메모리의 주소 지정 방식의 차이점이 무엇인가? </a> </li><li style data-astro-cid-obewoz47> <a href="#ilp-instruction-level-parallelism" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> ILP (Instruction Level Parallelism) </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#superscalar와-out-of-order-executionooo의-모두-cpu의-성능을-높이기-위한-기법이다-두-기법의-공통점과-차이점에-대해서-설명하시오" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Superscalar와 Out-of-Order execution(OoO)의 모두 CPU의 성능을 높이기 위한 기법이다. 두 기법의 공통점과 차이점에 대해서 설명하시오. </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#슈퍼스칼라와-vliwvery-long-instruction-word의-차이점은-무엇인가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> 슈퍼스칼라와 VLIW(Very Long Instruction Word)의 차이점은 무엇인가? </a> </li><li style data-astro-cid-obewoz47> <a href="#cache" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Cache </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#캐시를-구성하는-컴포넌트에-무엇이-있는가-각-컴포넌트는-어떤-역할을-하는가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> 캐시를 구성하는 컴포넌트에 무엇이 있는가? 각 컴포넌트는 어떤 역할을 하는가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#캐시에서-태그-매칭이-무엇이고-왜-필요한가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> 캐시에서 태그 매칭이 무엇이고 왜 필요한가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#캐시에서-블록라인-크기를-크게-했을-때와-작게-했을-때-어떤-장단점이-있을까" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> 캐시에서 블록(라인) 크기를 크게 했을 때와 작게 했을 때 어떤 장단점이 있을까? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#direct-mapped-cache와-set-associative-cache의-장단점은-무엇인가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Direct-mapped cache와 set-associative cache의 장단점은 무엇인가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#write-through-cache와-write-back-cache에-대해서-설명해-보시오" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Write-through cache와 write-back cache에 대해서 설명해 보시오. </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#write-through-cache는-write-buffer를-보통-사용하는데-이의-역할은-무엇인가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Write-through cache는 write buffer를 보통 사용하는데 이의 역할은 무엇인가? </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#cache에서-사용하는-replacement-policy에는-어떤-것이-있는가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Cache에서 사용하는 replacement policy에는 어떤 것이 있는가? </a> </li><li style data-astro-cid-obewoz47> <a href="#multiprocessor-multi-core" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> Multiprocessor, Multi-core </a> </li><li style="padding-left: 0.75rem;" data-astro-cid-obewoz47> <a href="#코어가-10개-있는-cpu에서-프로세스-하나를-균등하게-처리하면-이상적인-경우-시간이-얼마나-줄어드는가-그런데-프로세스에서-분할되지-않는-20의-작업이-있다고-하면-시간이-얼마나-줄어드는가-이제-코어가-수백개-혹은-무한개-있다고-하면-얼마나-줄어드는가" class="toc-link block py-0.5 transition-colors" style="color: var(--global-text-color-light); text-decoration: none; line-height: 1.4;" data-astro-cid-obewoz47> 코어가 10개 있는 cpu에서 프로세스 하나를 균등하게 처리하면 이상적인 경우, 시간이 얼마나 줄어드는가? 그런데 프로세스에서 분할되지 않는 20%의 작업이 있다고 하면, 시간이 얼마나 줄어드는가? 이제 코어가 수백개, 혹은 무한개 있다고 하면 얼마나 줄어드는가? </a> </li> </ul> </nav> <script type="module">const r=document.querySelectorAll(".toc-link"),n=Array.from(r).map(t=>t.getAttribute("href")?.slice(1)??"");function c(t){r.forEach(e=>{const o=e.getAttribute("href")===`#${t}`;e.style.color=o?"var(--global-theme-color)":"var(--global-text-color-light)",e.style.fontWeight=o?"600":"400"})}const s=parseInt(getComputedStyle(document.documentElement).getPropertyValue("--navbar-height"))||57,i=new IntersectionObserver(t=>{for(const e of t)if(e.isIntersecting){c(e.target.id);break}},{rootMargin:`-${s}px 0px -80% 0px`,threshold:0});n.forEach(t=>{const e=document.getElementById(t);e&&i.observe(e)});</script> </aside> <!-- Post content --> <article class="flex-1 min-w-0"> <!-- Hidden metadata for pagefind structured search --> <span data-pagefind-meta="date" style="display:none">2025-08-08</span> <!-- Breadcrumb --> <nav aria-label="Breadcrumb" class="breadcrumb-nav"> <a href="/blog/" class="breadcrumb-link">← Blog</a> </nav> <!-- Header --> <header class="post-header"> <h1 class="post-title" style="margin-bottom: 0.75rem;" data-pagefind-weight="10"> 2. Architecture </h1> <div class="post-meta mt-1 flex flex-wrap items-center gap-2 text-xs" style="color: var(--global-text-color-light);"> <time datetime="2025-08-08T00:00:00.000Z">August 8, 2025</time>  <span aria-hidden="true">·</span> <span>9 min read</span>   <span aria-hidden="true">·</span> <div class="flex flex-wrap gap-1"> <a href="/blog/category/Interview Prep/" class="badge-abbr text-xs" style="background-color: var(--global-text-color-light); color: var(--global-hover-text-color);"> Interview Prep </a> </div>   <span aria-hidden="true">·</span> <div class="flex flex-wrap gap-1"> <a href="/blog/tag/interview/" class="badge-abbr text-xs" style="background-color: var(--global-theme-color); color: var(--global-hover-text-color);"> interview </a> </div>  </div>  </header> <!-- Body --> <div class="prose max-w-none" id="post-content"> <h1 id="tldr">TL;DR</h1>
+<p>이 글은 2025년도 봄학기 KAIST 전산학부 대학원 면접을 준비하며, 면접 참고자료(Architecture)에 대한 대답을 정리한 글입니다.</p>
+<p>문제에 대한 정답이 아니며, 제가 공부하며 생각한 바들을 정리한 것입니다.</p>
+<p>후에 같은 목표로 면접을 준비하는 학우분들께 도움이 되기를 바랍니다.</p>
+<p>이 풀이노트는 질문만 본 상태에서 답변한 내용에 대한 채점, 그리고 이 면접을 준비하며 이전에 한번 LLM과 함께 작성해본 답안이 이어져 있습니다.</p>
+<h1 id="문제">문제</h1>
+<h2 id="isa-instruction-set-architecture">ISA (Instruction set architecture)</h2>
+<h3 id="cisc와-risc의-차이점은-무엇인가">CISC와 RISC의 차이점은 무엇인가?</h3>
+<blockquote>
+<p>CISC와 RISC의 차이는 명령어셋의 수와, 그 복잡성에 있습니다.
+CISC가 월씬 많은 명령어셋이 있으며, 명령어에 따라 사이클 수가 다른 경우도 있습니다.</p>
+</blockquote>
+<p>CISC는 Complex Insttruction Set Computer의 약자입니다.
+RISC에 비해 다양하고 복잡한 연산을 지원하는 대신, 명렬어의 실행 속도가 느리고, 파이프라이닝이 어렵습니다.
+과거 어셈블리를 이용하려 개발하는 시절 복잡한 연산을 지원하기 위해 이용되었습니다.<br>
+RISC는 적고 간단한 고정 길이의 명령어셋으로 이루어져 있습니다.
+파이프라이닝에 용이하며, 명령어의 실행 속도가 빠릅니다.
+점차 고수준의 언어와 컴파일러를 이용하여 어셈블리를 생성하는 시대가 오면서, RISC가 대세가 되었습니다.</p>
+<hr>
+<h3 id="register-file과-cache의-차이는-무엇인가">Register File과 Cache의 차이는 무엇인가?</h3>
+<blockquote>
+<p>레지스터는 캐시에 비해 그 크기가 매우 작으며, 접근속도가 매우 빠릅니다.
+캐시는 레지스터 많은 워드를 저장하며, 메모리 주소와 데이터 블록의 쌍으로 이루어져 있습니다.</p>
+</blockquote>
+<p>Register File은 CPU 내부에 있는 고속의 저장장치입니다. CPU가 Instruction에 필요한 데이터를 저장합니다.
+Cache는 메인 메모리 접근속도를 높이기 위한 장치로, 이전에 접근한 메모리의 주소와 값 쌍을 저장합니다.
+Register File의 개수가 훨씬 적습니다. Register는 매우 빠르게(단일 사이클 내에) 데이터를 읽고 쓸 수 있지만,
+Cache는 메모리 접근 속도에 따라 다르지만 일반적으로 수십 사이클이 걸립니다.
+레지스터는 플립플롭이고, 캐시는 SRAM으로 구현됩니다.</p>
+<hr>
+<h3 id="intel과-amd가-만드는-cpu의-공통점과-차이점은-무엇인가">Intel과 AMD가 만드는 CPU의 공통점과 차이점은 무엇인가?</h3>
+<blockquote>
+<p>둘 다 amd64 ISA를 이용합니다.
+하지만 인텔은 칩을 통째로 사용하는 통합 다이였고, AMD는 각 역할을 담당하는 칩을 묶어둔 칩렛 구조입니다.
+이처럼 같은 ISA를 사용하더라고 세부 구현이나 확장에서 차이가 있습니다.</p>
+</blockquote>
+<p>둘다 x86 아키텍처를 기반으로 하는 CPU를 만듭니다. 하지만, 제조 공정, 아키텍처 설계, 캐시 구조 등에서 차이가 있습니다.
+Intel은 일반적으로 더 높은 클럭 속도와 더 많은 캐시를 제공하는 반면, AMD는 멀티코어 성능과 가격 대비 성능에서 우수한
+경쟁력을 보입니다. 또한, AMD는 Zen 아키텍처를 기반으로 하여 높은 IPC(Instructions Per Cycle)를 제공합니다.</p>
+<p>차이점은 amd는 칩렛 구조로, 각 칩렛이 독립적으로 동작할 수 있는 반면,
+Intel은 monolithic 구조로, 하나의 칩에 모든 코어가 통합되어 있습니다. 따라서 수율이 높고, 제조 비용이 낮은 amd가 가격 대비 성능에서 우수합니다.</p>
+<hr>
+<h2 id="pipelined-architecture">Pipelined Architecture</h2>
+<h3 id="파이프라이닝은-왜-하는가">파이프라이닝은 왜 하는가?</h3>
+<blockquote>
+<p>파이프라이닝은 IPC을 1 초과로 올리기 위해 사용합니다.
+한 사이클을 여러 스텝으로 나누어, 여러 인스트럭션을 동시에 실행할 수 있습니다.</p>
+</blockquote>
+<p>IPC를 올리기 위해섭니다.(= throughput을 올리기 위해서입니다.) 여러 명령을 동시에 실행하기 위해,
+하나의 명령을 여러 스텝으로 나누고,각 스텝을 담당하는 유닛이 서로 다른 명령을 수행하고 있습니다. pipeline register = 래치 메모</p>
+<hr>
+<h3 id="파이프라인-해저드pipeline-hazard란-무엇인가-그리고-종류에는-무엇이-있는가">파이프라인 해저드(Pipeline Hazard)란 무엇인가? 그리고 종류에는 무엇이 있는가?</h3>
+<blockquote>
+<p>파이프라인 해저드란 파이프라인 도중에 버블이 끼는 경우를 말합니다.
+데이터 해저드, 컨트롤 해저드, 스트럭처 해저드가 있습니다.
+데이터 해저드는 이전 명령어의 결과가 다음 명령어의 인수인 경우 발생하빈다.
+컨트롤 해저드는 분기 명령어에서 발생합니다.</p>
+</blockquote>
+<p>해저드란 인스트럭션 사이에 버블(nop과 유사하지만 약간 다름)이 끼는 현상을 말합니다.
+데이터 해저드(데이터 처리가 끝나지 않은경우), 컨트롤 해저드, structural 해저드로 나눌 수 있습니다.
+현실에선 structural 해저드가 일어나지 않음</p>
+<hr>
+<h3 id="파이프라이닝에서-branch-prediction의-역할은-무엇인가">파이프라이닝에서 Branch Prediction의 역할은 무엇인가?</h3>
+<blockquote>
+<p>브랜치 예측은 분기 지점에서 하나의 분기를 선택하여 미리 실행하고,
+예측 결과가 맞을 경우 이어서 실행하고 틀렸다면 복구를 시도하여 실행속도를 높입니다.</p>
+</blockquote>
+<p>Branch Prediction은 파이프라인에서 분기 명령어가 발생했을 때, 다음에 실행할 명령어를 예측하여 파이프라인의 흐름을 유지하는 역할을 합니다.
+분기 명령어가 발생하면, 파이프라인이 멈추고 분기 결과를 기다리는 경우가 많습니다.
+이때, Branch Prediction을 통해 다음에 실행할 명령어를 예측하여 파이프라인을 계속 진행시킬 수 있습니다.
+Branch Prediction은 예측이 맞으면 파이프라인의 흐름을 유지하고, 예측이 틀리면 파이프라인을 플러시하고 다시 시작해야 합니다.</p>
+<hr>
+<h2 id="memory-hierarchy">Memory Hierarchy</h2>
+<h3 id="캐시가-필요한-이유는-cache-hit-ratio-에-대해-설명하시오">캐시가 필요한 이유는? Cache hit ratio 에 대해 설명하시오</h3>
+<blockquote>
+<p>캐시는 느린 메모리 접근 속도를 극복하기 위해 사용합니다.
+캐시 히트 비율은 전체 접근 수로 캐시 히트 수를 나눈 값입니다.</p>
+</blockquote>
+<p>mem latency를 줄이기 위해 캐시를 사용합니다.
+캐시는 메모리 접근 속도를 높이기 위해, 자주 사용하는 데이터를 저장하는 고속 메모리입니다.
+Cache hit ratio는 캐시에서 데이터를 찾을 확률을 나타내는 지표입니다.
+캐시 hit ratio가 높을수록 캐시에서 데이터를 찾을 확률이 높아져, 메모리 접근 속도가 빨라집니다.</p>
+<hr>
+<h3 id="메모리-접근하는데-x-사이클이-걸리고-캐시에-접근하는데-y-사이클이-걸리며-캐시-hit-rate-가-h-일-때-effective-access-time은">메모리 접근하는데 x 사이클이 걸리고 캐시에 접근하는데 y 사이클이 걸리며 캐시 hit rate 가 h %일 때 effective access time은?</h3>
+<blockquote>
+<p>y * h/100 + x * (100-h)/100 입니다.</p>
+</blockquote>
+<p>y * h/100 + x * (1 - h/100)</p>
+<hr>
+<h3 id="페이지-폴트는-언제-발생하는가-페이지-폴트-비율과-cache-miss-비율-중-큰-것은-그-이유는">페이지 폴트는 언제 발생하는가? 페이지 폴트 비율과 cache miss 비율 중 큰 것은? 그 이유는?</h3>
+<blockquote>
+<p>페이지 폴트는 가상 메모리 페이지에 매핑되는 물리 메모리 프레임이 없을 때 발생하빈다.
+페이지 폴트가 페널티가 더 커서 캐시 미스 비율이 더 큽니다.</p>
+</blockquote>
+<p>페이지 폴트는 프로세스가 접근하려는 페이지가 메모리에 없을 때 발생합니다.
+이때 운영체제는 페이지를 디스크에서 메모리로 가져와야 합니다.
+캐시 미스 비율이 페이지 폴트 비율보다 큰 경우가 많습니다. 그 이유는 페이지 폴트는 디스크 I/O가 발생하기 때문에 메모리 접근 속도가 느려지기 때문입니다.</p>
+<hr>
+<h2 id="virtual-memory">Virtual Memory</h2>
+<h3 id="캐시-메모리와-메인-메모리의-주소-지정-방식의-차이점이-무엇인가">캐시 메모리와 메인 메모리의 주소 지정 방식의 차이점이 무엇인가?</h3>
+<blockquote>
+<p>캐시는 보통 물리 주소와 데이터 블록의 쌍을 저장합니다.
+메인 메모리는 접근은 보통 가상 메모리 주소를 이용합니다.
+가상 메모리 주소를 MMU가 물리 메모리 주소로 변환하고 캐시에 존재하는지 확인합니다.</p>
+</blockquote>
+<p>캐시 메모리는 물리 주소를 사용하고, 메인 메모리는 가상 주소를 사용합니다.
+캐시 메모리는 CPU와 가까운 위치에 있어 빠른 접근 속도를 제공합니다.
+메인 메모리는 CPU와 멀리 떨어져 있어 상대적으로 느린 접근 속도를 제공합니다.
+캐시 메모리는 CPU가 직접 접근하고, 메인 메모리는 운영체제가 관리합니다.</p>
+<hr>
+<h2 id="ilp-instruction-level-parallelism">ILP (Instruction Level Parallelism)</h2>
+<h3 id="superscalar와-out-of-order-executionooo의-모두-cpu의-성능을-높이기-위한-기법이다-두-기법의-공통점과-차이점에-대해서-설명하시오">Superscalar와 Out-of-Order execution(OoO)의 모두 CPU의 성능을 높이기 위한 기법이다. 두 기법의 공통점과 차이점에 대해서 설명하시오.</h3>
+<blockquote>
+<p>슈퍼스칼라는 동일한 회로를 여러개 두어 여러 명령어를 동시에 실행하는 기법입니다.
+OoO도여러 명령어를 동시에 실행하고, 이를 순서에 맞추어 결과를 돌려줍니다.
+슈퍼스칼라는 명령어의 실행 순서를 보장할 수 있지만, OoO는 실행 순서는 보장하지 않고, 결과가 순서대로 나오는것만 보장합니다.</p>
+</blockquote>
+<p>둘다 IPC를 높이기 위한 기법입니다.
+Superscalar는 한 사이클에 여러 개의 명령어를 실행하는 기법입니다. 여러 개의 ALU를 사용하여 동시에 여러 개의 명령어를 실행합니다.
+Superscalar는 명령어의 순서를 유지해야 합니다.
+Out-of-Order execution(OoO)는 명령어를 순서대로 받지만, 실행 순서를 재배치하여 병렬로 실행하는 기법입니다.
+명령어의 의존성을 분석하여, 실행 가능한 명령어를 먼저 실행합니다.</p>
+<hr>
+<h3 id="슈퍼스칼라와-vliwvery-long-instruction-word의-차이점은-무엇인가">슈퍼스칼라와 VLIW(Very Long Instruction Word)의 차이점은 무엇인가?</h3>
+<blockquote>
+<p>슈퍼스칼라는 기존과 동일한 명령어셋을 사용하고, 이를 하드웨어에서 처리합니다.
+VLIW는 실행을 위해 별도로 컴파일된 명령어가 필요합니다.</p>
+</blockquote>
+<p>슈퍼스칼라는 명령어를 동적으로 분석하여 병렬로 실행하는 기법입니다.
+명령어의 의존성을 분석하여, 실행 가능한 명령어를 먼저 실행합니다.
+VLIW는 컴파일러가 판단하고, 병렬로 실행할 명령어를 미리 지정하는 기법입니다.
+슈퍼스칼라는 하드웨어가 명령어의 의존성을 분석하고, 실행 순서를 재배치합니다.
+VLIW는 그래서 하드웨어 자체는 단순합니다. 명령어의 의존성을 컴파일러가 분석하고, 실행 순서를 미리 지정합니다.
+VLIW도 in-order</p>
+<hr>
+<h2 id="cache">Cache</h2>
+<h3 id="캐시를-구성하는-컴포넌트에-무엇이-있는가-각-컴포넌트는-어떤-역할을-하는가">캐시를 구성하는 컴포넌트에 무엇이 있는가? 각 컴포넌트는 어떤 역할을 하는가?</h3>
+<blockquote>
+<p>캐시는 태그와 블록 데이터로 이루어진 테이블입니다.
+물리 주소의 인덱스 비트를 이용하여 캐시 라인을 확인하고, 물리 주소의 태그와 캐시의 태그를 비교하여 일치하면,
+데이터 블록에서 오프셋에 맞추어 데이터를 가져옵니다.</p>
+</blockquote>
+<p>인덱스, 태그, 데이터, 각종 비트마스크로 구성됩니다.
+인덱스는 캐시에서 데이터를 찾기 위한 주소입니다.
+태그는 캐시에서 데이터를 찾기 위한 주소의 상위 비트입니다.
+데이터는 캐시에 저장된 실제 데이터입니다.
+비트마스크는 캐시의 상태를 표기하는 비트입니다. 예를 들어, 유효 비트(valid bit)는 해당 캐시 라인이 유효한지 여부를 나타냅니다.</p>
+<hr>
+<h3 id="캐시에서-태그-매칭이-무엇이고-왜-필요한가">캐시에서 태그 매칭이 무엇이고 왜 필요한가?</h3>
+<blockquote>
+<p>캐시의 태그 매칭은 캐시가 보관하는 데이터가 실제물리 주소와 일치하는지 확인합니다.
+태그 길이는 물리 주소의 비트 수에서 오프셋 비트 수와 인덱스 비트 수를 빼서 구할 수 있습니다.</p>
+</blockquote>
+<hr>
+<h3 id="캐시에서-블록라인-크기를-크게-했을-때와-작게-했을-때-어떤-장단점이-있을까">캐시에서 블록(라인) 크기를 크게 했을 때와 작게 했을 때 어떤 장단점이 있을까?</h3>
+<blockquote>
+<p>블록 라인 크기를 크게 하면 한번에 가져오는 데이터 양이 늘어나 spatial locality에 유리하지만,
+한번에 가져오는 데이터 수가 늘어 캐시 미스 페널티가 늘어나고, 불필요한 데이터를 많이 가져올 수 있습니다.</p>
+</blockquote>
+<p>블록 크기를 크게 하면, 캐시의 hit ratio가 높아집니다.
+하지만, 캐시의 크기가 커지므로, 캐시의 miss penalty가 커집니다.
+블록 크기를 작게 하면, 캐시의 hit ratio가 낮아집니다.
+하지만, 캐시의 크기가 작아지므로, 캐시의 miss penalty가 작아집니다.</p>
+<hr>
+<h3 id="direct-mapped-cache와-set-associative-cache의-장단점은-무엇인가">Direct-mapped cache와 set-associative cache의 장단점은 무엇인가?</h3>
+<blockquote>
+<p>Direct-mapped cache는 캐시 탐색 시간이 가장 짧습니다.
+하지만 같은 인덱스에 대해 하나의 태그만 보관할 수 있어 hit ratio가 낮습니다.
+set-associative cache는 동일한 인덱스에 대해 여러 태그를 보관할 수 있어서 hit ratio가 높습니다.
+하지만 태그를 확인하는 시간이 길어져 탐색 시간이 깁니다.</p>
+</blockquote>
+<p>검색 속도는 Direct-mapped cache가 빠릅니다. 하지만, 충돌이 발생할 확률이 높습니다.
+Set-associative cache는 검색 속도가 느리지만, 충돌이 발생할 확률이 낮습니다.
+회로의 복잡성은 Direct-mapped cache가 낮습니다. Set-associative cache는 회로가 복잡합니다.</p>
+<hr>
+<h3 id="write-through-cache와-write-back-cache에-대해서-설명해-보시오">Write-through cache와 write-back cache에 대해서 설명해 보시오.</h3>
+<blockquote>
+<p>메모리 write이 일어났을 때 캐시의 두 가지 전략입니다.
+Write-through cache는 변경된 블록을 바로 메모리에 적용합니다.
+write-back cache는 변경된 블록을 바로 적용하지 않고, flush가 일어나는 순간 적용합니다.</p>
+</blockquote>
+<p>Write-through cache는 캐시에 데이터를 쓸 때, 메인 메모리에도 동시에 데이터를 쓰는 방식입니다. 이 방식은 데이터의 일관성을 유지할 수 있지만, 쓰기 속도가 느립니다.
+Write-back cache는 캐시에 데이터를 쓸 때, 메인 메모리에 데이터를 쓰지 않고, 캐시에서만 데이터를 업데이트하는 방식입니다. 이 방식은 쓰기 속도가 빠르지만, 데이터의 일관성을 유지하기 위해 캐시에서 데이터를 메인 메모리에 쓰는 과정이 필요합니다. 이 과정을 write-back이라고 합니다.</p>
+<hr>
+<h3 id="write-through-cache는-write-buffer를-보통-사용하는데-이의-역할은-무엇인가">Write-through cache는 write buffer를 보통 사용하는데 이의 역할은 무엇인가?</h3>
+<blockquote>
+<p>Write-through cache가 직접 write을 수행할경우 오버헤드가 큽니다.
+그래서 캐시와 메모리 사이에 write buffer를 두고 비동기적으로 write를 수행하는 것으로 압니다.</p>
+</blockquote>
+<p>Write buffer는 캐시에 데이터를 쓸 때, 메인 메모리에 데이터를 쓰는 작업을 버퍼링하는 역할을 합니다.
+Write buffer는 캐시에 데이터를 쓸 때, 메인 메모리에 데이터를 쓰는 작업을 비동기적으로 수행합니다.
+이렇게 하면, 캐시에 데이터를 쓰는 작업과 메인 메모리에 데이터를 쓰는 작업을 동시에 수행할 수 있습니다.
+Write buffer는 캐시에 데이터를 쓸 때, 메인 메모리에 데이터를 쓰는 작업을 버퍼링하여, 캐시에 데이터를 쓰는 작업의 속도를 높이는 역할을 합니다.</p>
+<hr>
+<h3 id="cache에서-사용하는-replacement-policy에는-어떤-것이-있는가">Cache에서 사용하는 replacement policy에는 어떤 것이 있는가?</h3>
+<blockquote>
+<p>FIFO, LIFO, LRU, LFU 등이 있습니다.</p>
+</blockquote>
+<p>캐시에서 사용하는 replacement policy에는 LRU(Least Recently Used), FIFO(First In First Out),
+LFU(Least Frequently Used) 등이 있습니다. Random replacement policy, Clock algorithm, second chance 도 있습니다.
+LRU는 가장 오랫동안 사용 되지 않은 데이터를 교체하는 정책입니다.
+FIFO는 가장 먼저 들어온 데이터를 교체하는 정책입니다.
+LFU는 가장 적게 사용된 데이터를 교체하는 정책입니다.
+Random replacement policy는 랜덤하게 데이터를 교체하는 정책입니다.
+Clock algorithm은 LRU와 비슷하지만, 캐시를 원형으로 돌면서 데이터를 교체하는 정책입니다.
+Second chance는 Clock algorithm의 변형으로, 사용된 데이터를 교체하지 않고, 사용되지 않은 데이터를 교체하는 정책입니다.</p>
+<hr>
+<h2 id="multiprocessor-multi-core">Multiprocessor, Multi-core</h2>
+<h3 id="코어가-10개-있는-cpu에서-프로세스-하나를-균등하게-처리하면-이상적인-경우-시간이-얼마나-줄어드는가-그런데-프로세스에서-분할되지-않는-20의-작업이-있다고-하면-시간이-얼마나-줄어드는가-이제-코어가-수백개-혹은-무한개-있다고-하면-얼마나-줄어드는가">코어가 10개 있는 cpu에서 프로세스 하나를 균등하게 처리하면 이상적인 경우, 시간이 얼마나 줄어드는가? 그런데 프로세스에서 분할되지 않는 20%의 작업이 있다고 하면, 시간이 얼마나 줄어드는가? 이제 코어가 수백개, 혹은 무한개 있다고 하면 얼마나 줄어드는가?</h3>
+<blockquote>
+<p>암달의 법칙에 의해 무한개여도 속도는 최대 5배 빨라집니다.</p>
+</blockquote>
+<p>암달의 법칙을 따른다
+이론적으로 코어가 10개일 때, 프로세스가 균등하게 분할되면 10배 빨라집니다.
+하지만, 분할되지 않는 20%의 작업이 있다면, 10배 빨라지지 않습니다.
+암달의 법칙에 따르면, 병렬화 가능한 부분이 80%라면, 28%로 줄어듭니다.</p>
+<hr> </div> <!-- Newsletter CTA (shown after post body when feature is enabled) -->  <!-- Social sharing links --> <div class="social-share" data-astro-cid-vfzijd4d> <p class="share-label" data-astro-cid-vfzijd4d>Share</p> <div class="share-icons" data-astro-cid-vfzijd4d> <a href="https://twitter.com/intent/tweet?text=2.%20Architecture&amp;url=https%3A%2F%2Fseungjong-ha.github.io%2Fblog%2Finterview-02-architecture%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X (Twitter)" title="Share on X (Twitter)" class="share-link" data-astro-cid-vfzijd4d> <svg width="1em" height="1em" aria-hidden="true" data-astro-cid-vfzijd4d="true" data-icon="fa-brands:twitter">   <symbol id="ai:fa-brands:twitter" viewBox="0 0 512 512"><path fill="currentColor" d="M459.37 151.716c.325 4.548.325 9.097.325 13.645c0 138.72-105.583 298.558-298.558 298.558c-59.452 0-114.68-17.219-161.137-47.106c8.447.974 16.568 1.299 25.34 1.299c49.055 0 94.213-16.568 130.274-44.832c-46.132-.975-84.792-31.188-98.112-72.772c6.498.974 12.995 1.624 19.818 1.624c9.421 0 18.843-1.3 27.614-3.573c-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319c-28.264-18.843-46.781-51.005-46.781-87.391c0-19.492 5.197-37.36 14.294-52.954c51.655 63.675 129.3 105.258 216.365 109.807c-1.624-7.797-2.599-15.918-2.599-24.04c0-57.828 46.782-104.934 104.934-104.934c30.213 0 57.502 12.67 76.67 33.137c23.715-4.548 46.456-13.32 66.599-25.34c-7.798 24.366-24.366 44.833-46.132 57.827c21.117-2.273 41.584-8.122 60.426-16.243c-14.292 20.791-32.161 39.308-52.628 54.253"/></symbol><use href="#ai:fa-brands:twitter"></use>  </svg> </a><a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Fseungjong-ha.github.io%2Fblog%2Finterview-02-architecture%2F&amp;title=2.%20Architecture" target="_blank" rel="noopener noreferrer" aria-label="Share on LinkedIn" title="Share on LinkedIn" class="share-link" data-astro-cid-vfzijd4d> <svg width="0.88em" height="1em" aria-hidden="true" data-astro-cid-vfzijd4d="true" data-icon="fa-brands:linkedin">   <symbol id="ai:fa-brands:linkedin" viewBox="0 0 448 512"><path fill="currentColor" d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5c0 21.3-17.2 38.5-38.5 38.5m282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7c-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5c67.2 0 79.7 44.3 79.7 101.9z"/></symbol><use href="#ai:fa-brands:linkedin"></use>  </svg> </a><a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fseungjong-ha.github.io%2Fblog%2Finterview-02-architecture%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook" title="Share on Facebook" class="share-link" data-astro-cid-vfzijd4d> <svg width="1em" height="1em" aria-hidden="true" data-astro-cid-vfzijd4d="true" data-icon="fa-brands:facebook">   <symbol id="ai:fa-brands:facebook" viewBox="0 0 512 512"><path fill="currentColor" d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48c27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256"/></symbol><use href="#ai:fa-brands:facebook"></use>  </svg> </a><a href="mailto:?subject=2.%20Architecture&amp;body=%0A%0Ahttps%3A%2F%2Fseungjong-ha.github.io%2Fblog%2Finterview-02-architecture%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on Email" title="Share on Email" class="share-link" data-astro-cid-vfzijd4d> <svg width="1em" height="1em" aria-hidden="true" data-astro-cid-vfzijd4d="true" data-icon="fa-solid:envelope">   <symbol id="ai:fa-solid:envelope" viewBox="0 0 512 512"><path fill="currentColor" d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7c22.4 17.4 52.1 39.5 154.1 113.6c21.1 15.4 56.7 47.8 92.2 47.6c35.7.3 72-32.8 92.3-47.6c102-74.1 131.6-96.3 154-113.7M256 320c23.2.4 56.6-29.2 73.4-41.4c132.7-96.3 142.8-104.7 173.4-128.7c5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9c30.6 23.9 40.7 32.4 173.4 128.7c16.8 12.2 50.2 41.8 73.4 41.4"/></symbol><use href="#ai:fa-solid:envelope"></use>  </svg> </a> <button id="native-share-btn" aria-label="Share via device" title="Share via device" class="share-link share-native" hidden data-astro-cid-vfzijd4d> <svg width="0.88em" height="1em" aria-hidden="true" data-astro-cid-vfzijd4d="true" data-icon="fa-solid:share-alt">   <symbol id="ai:fa-solid:share-alt" viewBox="0 0 448 512"><path fill="currentColor" d="M352 320c-22.608 0-43.387 7.819-59.79 20.895l-102.486-64.054a96.55 96.55 0 0 0 0-41.683l102.486-64.054C308.613 184.181 329.392 192 352 192c53.019 0 96-42.981 96-96S405.019 0 352 0s-96 42.981-96 96c0 7.158.79 14.13 2.276 20.841L155.79 180.895C139.387 167.819 118.608 160 96 160c-53.019 0-96 42.981-96 96s42.981 96 96 96c22.608 0 43.387-7.819 59.79-20.895l102.486 64.054A96.3 96.3 0 0 0 256 416c0 53.019 42.981 96 96 96s96-42.981 96-96s-42.981-96-96-96"/></symbol><use href="#ai:fa-solid:share-alt"></use>  </svg> </button> </div> </div> <script>(function(){const shareTitle = "2. Architecture";
+const shareUrl = "https://seungjong-ha.github.io/blog/interview-02-architecture/";
+const shareText = "";
+
+  const btn = document.getElementById('native-share-btn');
+  if (navigator.share && btn) {
+    btn.hidden = false;
+    btn.addEventListener('click', () => {
+      navigator.share({ title: shareTitle, url: shareUrl, text: shareText }).catch(() => {});
+    });
+  }
+})();</script> <!-- Related posts -->  <!-- Comments -->  </article> </div> </div>  </main> <!-- Newsletter (shown in footer area if enabled) -->  <footer style="background-color: var(--global-footer-bg-color); color: var(--global-footer-text-color); padding: 1rem 0; position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;" data-astro-cid-sz7xmlte> <div class="page-container text-center text-sm" data-astro-cid-sz7xmlte> <p data-astro-cid-sz7xmlte>
+&copy; 2026 SeungJong Ha.
+<span data-astro-cid-sz7xmlte>Powered by <a href="https://github.com/dadangnh/as-folio" target="_blank" rel="noopener noreferrer">as-folio</a>.
+      Hosted by <a href="https://pages.github.com/" target="_blank" rel="noopener noreferrer">GitHub Pages</a>.</span>  </p>  </div> </footer> <!-- Cookie consent (vanilla-cookieconsent via CDN) -->  <!-- Back to top button --> <button id="back-to-top" aria-label="Back to top" title="Back to top"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="m18 15-6-6-6 6"></path> </svg> </button> <script type="module">let t=document.getElementById("back-to-top");function e(){t?.classList.toggle("visible",window.scrollY>300)}function o(){t?.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}))}window.addEventListener("scroll",e,{passive:!0});o();document.addEventListener("astro:after-swap",()=>{t=document.getElementById("back-to-top"),o(),e()});</script> </body> </html> <!-- Code copy button (text-label approach, no innerHTML) --> <script type="module">function n(){document.querySelectorAll("#post-content pre").forEach(e=>{if(e.querySelector(".copy-btn"))return;const t=document.createElement("button");t.className="copy-btn",t.setAttribute("aria-label","Copy code"),t.textContent="copy",t.addEventListener("click",async()=>{const o=e.querySelector("code");o&&(await navigator.clipboard.writeText(o.innerText),t.textContent="copied!",setTimeout(()=>{t.textContent="copy"},2e3))}),e.style.position="relative",e.appendChild(t)})}document.addEventListener("astro:page-load",n);</script> <!-- Medium zoom for post images --> <script type="module" src="/_astro/Post.astro_astro_type_script_index_1_lang.Czjq4-dD.js"></script> <!-- ── Per-post CDN widgets ──────────────────────────────────────────────── -->             
