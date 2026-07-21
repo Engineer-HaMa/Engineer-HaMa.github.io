@@ -95,7 +95,7 @@ export const site = {
     // link. Email is shown via our EmailCopy component (see author.contactEmail).
     email: undefined as string | undefined,
     x_username: undefined as string | undefined,
-    linkedin_username: undefined as string | undefined,
+    linkedin_username: 'seungjong-ha',
     github_username: 'SeungJong-Ha',
     gitlab_username: undefined as string | undefined,
     /** Google Scholar user ID — the part after user= in your Scholar URL */
